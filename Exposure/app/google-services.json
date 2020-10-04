@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "372923969238",
+    "firebase_url": "https://exposure-40658.firebaseio.com",
+    "project_id": "exposure-40658",
+    "storage_bucket": "exposure-40658.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372923969238:android:35d7b3ff69aede181de377",
+        "android_client_info": {
+          "package_name": "com.exposure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "372923969238-bgeo2j1n59ielplab5gqmstvp5lj3u3d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd9LGsDLqFjoA0bMyxJ2iTe4beE0-J-Ns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "372923969238-bgeo2j1n59ielplab5gqmstvp5lj3u3d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
