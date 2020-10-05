@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpActivity">
+    tools:context=".LoginActivity">
 
     <ProgressBar
-        android:id="@+id/sign_up_progress_bar"
+        android:id="@+id/login_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
+        android:progressBackgroundTint="@color/colorAccent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,41 +48,24 @@
             />
 
         <TextView
-            android:id="@+id/sign_up_text"
+            android:id="@+id/sign_in_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/exposure_text"
             android:layout_centerHorizontal="true"
-            android:text="@string/sign_up"
+            android:text="@string/login"
             android:textSize="30sp"
             android:textColor="@color/colorPrimary"
-            android:layout_marginVertical="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="10dp"
             />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/full_name_field"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sign_up_text"
-            android:hint="@string/full_name"
-            android:layout_marginVertical="7.5dp"
-            app:boxBackgroundMode="outline"
-            style="@style/TextInputLayoutStyle">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:inputType="textPersonName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/full_name_field"
-            android:layout_marginVertical="7.5dp"
+            android:layout_below="@id/sign_in_text"
+            android:layout_marginVertical="12.5dp"
             android:hint="@string/email"
             app:boxBackgroundMode="outline"
             style="@style/TextInputLayoutStyle">
@@ -100,11 +84,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/email_field"
             android:hint="@string/password"
-            android:layout_marginVertical="7.5dp"
+            android:layout_marginVertical="12.5dp"
             app:boxBackgroundMode="outline"
             app:endIconMode="password_toggle"
+            app:helperText="Forgot password?"
             style="@style/TextInputLayoutStyle">
-
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -114,47 +98,18 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/repeat_password_field"
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/password_field"
-            android:hint="@string/repeat_password"
-            android:layout_marginVertical="7.5dp"
-            app:boxBackgroundMode="outline"
-            app:endIconMode="password_toggle"
-            style="@style/TextInputLayoutStyle">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/terms_of_service_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:layout_below="@id/repeat_password_field"
             android:layout_centerHorizontal="true"
-            android:checked="false"
-            android:textSize="12sp"
-            android:text="@string/terms_and_service_agreement" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/sign_up_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/terms_of_service_checkbox"
-            android:layout_centerHorizontal="true"
-            android:text="@string/sign_up"
+            android:layout_marginVertical="12.5dp"
+            android:text="@string/login"
             android:textColor="#000000"
-            android:onClick="signUpUser"
-            app:backgroundTint="@color/colorAccent"
+            android:onClick="loginUser"
+            android:backgroundTint="@color/colorAccent"
             app:cornerRadius="200dp" />
 
     </RelativeLayout>
@@ -164,29 +119,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:paddingVertical="20dp"
+        android:paddingVertical="45dp"
         android:paddingHorizontal="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         >
 
         <TextView
-            android:id="@+id/already_have_an_account_text"
+            android:id="@+id/do_not_have_account_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/already_have_an_account"
+            android:text="@string/don_t_have_an_account_sign_up_now"
             android:layout_centerHorizontal="true"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/sign_in_button"
+            android:id="@+id/sign_up_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/already_have_an_account_text"
+            android:layout_below="@id/do_not_have_account_text"
             android:layout_centerHorizontal="true"
-            android:text="@string/sign_in"
+            android:text="@string/sign_up"
             android:textColor="#000000"
-            android:onClick="startLoginActivity"
-            app:cornerRadius="200dp" />
+            android:backgroundTint="@color/colorPrimary"
+            android:onClick="startSignUpActivity"
+            app:cornerRadius="200dp"
+            />
 
     </RelativeLayout>
 
