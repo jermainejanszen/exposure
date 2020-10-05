@@ -31,6 +31,15 @@ public class SignUpActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        /**
+         * If the user is already logged in, navigate to the map activity page.
+         * I'm leaving this as a comment until we actually need to use it.
+         *
+         * if (null != mAuth.getCurrentUser()) {
+         *     startActivity(new Intent(this, MapActivity.class));
+         * }
+         */
+
         fullNameField = findViewById(R.id.full_name_field);
         emailField = findViewById(R.id.email_field);
         passwordField = findViewById(R.id.password_field);
