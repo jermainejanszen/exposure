@@ -11,4 +11,9 @@
     <string name="exposure">Exposure</string>
     <string name="login">Login</string>
     <string name="don_t_have_an_account_sign_up_now">Don\'t have an account? Sign up now</string>
+    <string name="map">Map</string>
+    <string name="chats">Chats</string>
+    <string name="profile">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
