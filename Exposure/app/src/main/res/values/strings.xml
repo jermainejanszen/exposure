@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Exposure</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="terms_and_service_agreement">By signing up you accept the Terms of Service and Privacy Policy</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="sign_in">Sign in</string>
+    <string name="exposure">Exposure</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account_sign_up_now">Don\'t have an account? Sign up now</string>
 </resources>
