@@ -10,7 +10,10 @@
         android:id="@+id/top_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp">
+        android:layout_marginVertical="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="30dp"
+        >
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
@@ -60,17 +63,15 @@
 
         <com.google.android.material.button.MaterialButton
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="95dp"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:gravity="center_vertical"
             android:text="@string/edit"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
             android:textColor="@color/colorSecondary"
-            app:icon="@drawable/edit_icon"
-            app:iconTint="@color/colorSecondary"
-            app:iconGravity="start"
-            app:backgroundTint="@android:color/transparent"
+            android:drawableLeft="@drawable/edit_icon"
             />
 
     </RelativeLayout>
