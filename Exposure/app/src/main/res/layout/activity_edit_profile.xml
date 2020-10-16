@@ -333,6 +333,7 @@
             android:layout_toEndOf="@id/personal_details_options"
             android:paddingEnd="30dp"
             android:paddingStart="7.5dp"
+            android:paddingBottom="10dp"
             >
 
             <androidx.recyclerview.widget.RecyclerView
@@ -435,13 +436,6 @@
                 />
 
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorBorder"
-            android:layout_below="@id/about_you_options"
-            />
 
     </RelativeLayout>
 
