@@ -88,5 +88,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void startLoginActivity(View view) {
         startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 }
