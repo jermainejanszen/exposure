@@ -1,17 +1,16 @@
-package com.exposure;
+package com.exposure.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
+import com.exposure.R;
+import com.exposure.adapters.RecyclerViewAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class ProfileFragment extends Fragment {
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalityTypesAdapter;
 
     public ProfileFragment() {
-        // Needs empty constructor
+        // Required empty public constructor
     }
 
     @Override
@@ -78,5 +77,4 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
-
 }

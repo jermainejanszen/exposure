@@ -1,4 +1,4 @@
-package com.exposure;
+package com.exposure.activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -7,6 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.exposure.R;
+import com.exposure.fragments.ChatsFragment;
+import com.exposure.fragments.MapFragment;
+import com.exposure.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         chatsFragment = new ChatsFragment();
         profileFragment = new ProfileFragment();
 
-        // Map is the default fragment
+        // Set map as the default fragment
         setFragment(mapFragment);
 
         navigationView = findViewById(R.id.bottom_navigation);
