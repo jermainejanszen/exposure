@@ -13,4 +13,9 @@
     <string name="map">Map</string>
     <string name="chats">Chats</string>
     <string name="profile">Profile</string>
+    <string name="edit">EDIT</string>
+    <string name="studied_at">Studied at</string>
+    <string name="lived_in">Lived in</string>
+    <string name="hobbies">Hobbies</string>
+    <string name="personality_types">Personality Types</string>
 </resources>
