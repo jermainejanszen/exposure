@@ -32,10 +32,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        if (null != mAuth.getCurrentUser()) {
-            startActivity(new Intent(this, MainActivity.class));
-         }
-
         fullNameField = findViewById(R.id.full_name_field);
         emailField = findViewById(R.id.email_field);
         passwordField = findViewById(R.id.password_field);

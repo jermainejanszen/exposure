@@ -1,5 +1,6 @@
 package com.exposure.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -12,6 +13,7 @@ import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
@@ -21,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (null == FirebaseAuth.getInstance().getCurrentUser()) {
+            startActivity(new Intent(this, SignUpActivity.class));
+        }
 
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();
