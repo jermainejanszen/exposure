@@ -1,4 +1,4 @@
-package com.exposure;
+package com.exposure.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.exposure.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,15 +31,6 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         mAuth = FirebaseAuth.getInstance();
-
-        /**
-         * If the user is already logged in, navigate to the map activity page.
-         * I'm leaving this as a comment until we actually need to use it.
-         *
-         * if (null != mAuth.getCurrentUser()) {
-         *     startActivity(new Intent(this, MapActivity.class));
-         * }
-         */
 
         fullNameField = findViewById(R.id.full_name_field);
         emailField = findViewById(R.id.email_field);

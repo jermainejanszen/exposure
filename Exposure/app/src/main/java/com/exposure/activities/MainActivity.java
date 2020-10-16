@@ -1,5 +1,6 @@
-package com.exposure;
+package com.exposure.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -7,22 +8,36 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.exposure.R;
+import com.exposure.fragments.ChatsFragment;
+import com.exposure.fragments.MapFragment;
+import com.exposure.fragments.ProfileFragment;
+import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
     private Fragment mapFragment, chatsFragment, profileFragment;
+    private CurrentUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (null == FirebaseAuth.getInstance().getCurrentUser()) {
+            startActivity(new Intent(this, SignUpActivity.class));
+            finish();
+        }
+
+        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();
         profileFragment = new ProfileFragment();
 
-        // Map is the default fragment
+        // Set map as the default fragment
         setFragment(mapFragment);
 
         navigationView = findViewById(R.id.bottom_navigation);

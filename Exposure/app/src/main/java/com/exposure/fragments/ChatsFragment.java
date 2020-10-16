@@ -1,4 +1,4 @@
-package com.exposure;
+package com.exposure.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+
+import com.exposure.R;
 
 public class ChatsFragment extends Fragment {
 
