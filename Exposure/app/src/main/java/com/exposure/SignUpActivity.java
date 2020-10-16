@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    private TextInputLayout fullNameField, emailField, passwordField, repeatPasswordField;
+    private TextInputLayout fullNameField, emailField, passwordField;
     private CheckBox termsOfService;
     private ProgressBar signUpProgressBar;
 
@@ -43,7 +43,6 @@ public class SignUpActivity extends AppCompatActivity {
         fullNameField = findViewById(R.id.full_name_field);
         emailField = findViewById(R.id.email_field);
         passwordField = findViewById(R.id.password_field);
-        repeatPasswordField = findViewById(R.id.repeat_password_field);
         termsOfService = findViewById(R.id.terms_of_service_checkbox);
         signUpProgressBar = findViewById(R.id.sign_up_progress_bar);
     }
@@ -52,7 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
         String fullName = fullNameField.getEditText().getText().toString().trim();
         String email = emailField.getEditText().getText().toString().trim();
         String password = passwordField.getEditText().getText().toString().trim();
-        String repeatPassword = repeatPasswordField.getEditText().getText().toString().trim();
 
         if (fullName.isEmpty()) {
             fullNameField.getEditText().setError("Full name required.", null);
@@ -63,11 +61,6 @@ public class SignUpActivity extends AppCompatActivity {
         } else if (password.isEmpty()) {
             passwordField.getEditText().setError("Password required.", null);
             passwordField.getEditText().requestFocus();
-        } else if (repeatPassword.isEmpty()) {
-            repeatPasswordField.getEditText().setError("Password confirmation required.", null);
-            repeatPasswordField.getEditText().requestFocus();
-        } else if (!password.equals(repeatPassword)) {
-            repeatPasswordField.getEditText().setError("Passwords don't match.");
         } else if (!termsOfService.isChecked()) {
             Toast.makeText(getApplicationContext(), "You must accept the Terms of Service and Privacy Policy to sign up.", Toast.LENGTH_SHORT).show();
         } else {
