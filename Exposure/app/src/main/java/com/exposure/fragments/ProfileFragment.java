@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment {
 
         studyLocationsAdapter = new RecyclerViewAdapter(getActivity(), studyLocations);
         areasLivedInAdapter = new RecyclerViewAdapter(getActivity(), areasLivedIn);
-        hobbiesAdapter = new RecyclerViewAdapter(getActivity(), areasLivedIn);
+        hobbiesAdapter = new RecyclerViewAdapter(getActivity(), hobbies);
         personalityTypesAdapter = new RecyclerViewAdapter(getActivity(), personalityTypes);
 
         RecyclerView studyLocationsRecyclerView = view.findViewById(R.id.study_locations_recycler_view);
