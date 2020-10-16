@@ -1,14 +1,17 @@
 package com.exposure.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
+import com.exposure.activities.EditProfileActivity;
 import com.exposure.adapters.RecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.List;
 public class ProfileFragment extends Fragment {
     private List<String> studyLocations, areasLivedIn, hobbies, personalityTypes;
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalityTypesAdapter;
+    private Button editProfileButton;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -74,6 +78,15 @@ public class ProfileFragment extends Fragment {
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
         personalityTypesRecyclerView.setAdapter(personalityTypesAdapter);
+
+        editProfileButton = view.findViewById(R.id.edit_profile_button);
+
+        editProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(getContext(), EditProfileActivity.class), 0);
+            }
+        });
 
         return view;
     }

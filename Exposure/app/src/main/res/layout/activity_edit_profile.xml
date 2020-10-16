@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <RelativeLayout
+            android:id="@+id/profile_image_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingVertical="20dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/default_display_image"
+                app:civ_border_width="0dp"
+                app:civ_border_color="#FF000000"/>
+
+            <TextView
+                android:id="@+id/change_profile_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/profile_image"
+                android:text="@string/change_profile_picture"
+                android:textColor="@color/colorPrimary"
+                />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBorder"
+            android:layout_below="@id/profile_image_section"
+            />
+
+        <RelativeLayout
+            android:id="@+id/personal_details_options"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_image_section"
+            android:paddingStart="30dp"
+            android:paddingEnd="7.5dp"
+            >
+
+            <TextView
+                android:id="@+id/name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:text="@string/name"
+                />
+
+            <TextView
+                android:id="@+id/nickname_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name_text"
+                android:paddingVertical="20dp"
+                android:text="@string/nickname"
+                />
+
+            <TextView
+                android:id="@+id/birthday_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nickname_text"
+                android:paddingVertical="20dp"
+                android:text="@string/birthday"
+                />
+
+            <TextView
+                android:id="@+id/bio_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:layout_below="@id/birthday_text"
+                android:text="@string/bio"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/personal_details_answers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_image_section"
+            android:layout_toEndOf="@id/personal_details_options"
+            android:paddingEnd="30dp"
+            android:paddingStart="7.5dp"
+            >
+
+            <EditText
+                android:id="@+id/name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:hint="@string/name"
+                android:textSize="14sp"
+                android:inputType="textPersonName"
+                android:background="@android:color/transparent"
+                />
+
+            <EditText
+                android:id="@+id/nickname_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_below="@id/name_edit_text"
+                android:paddingVertical="20dp"
+                android:hint="@string/nickname"
+                android:textSize="14sp"
+                android:inputType="textPersonName"
+                android:background="@android:color/transparent"
+                />
+
+            <EditText
+                android:id="@+id/birthday_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_below="@id/nickname_edit_text"
+                android:paddingVertical="20dp"
+                android:hint="@string/birthday"
+                android:textSize="14sp"
+                android:inputType="date"
+                android:background="@android:color/transparent"
+                />
+
+            <EditText
+                android:id="@+id/bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:paddingVertical="20dp"
+                android:layout_below="@id/birthday_edit_text"
+                android:hint="@string/bio"
+                android:textSize="14sp"
+                android:inputType="textMultiLine"
+                android:background="@android:color/transparent"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/name_edit_text"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/nickname_edit_text"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/birthday_edit_text"
+                />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBorder"
+            android:layout_below="@id/personal_details_options"
+            />
+
+        <TextView
+            android:id="@+id/contact_information_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/personal_details_options"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="30dp"
+            android:text="@string/contact_information"
+            android:textColor="@color/colorSubheading"
+            android:textSize="20sp"/>
+
+        <RelativeLayout
+            android:id="@+id/contact_information_options"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_information_text"
+            android:paddingStart="30dp"
+            android:paddingEnd="7.5dp"
+            >
+
+            <TextView
+                android:id="@+id/email_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:text="@string/email"
+                />
+
+            <TextView
+                android:id="@+id/phone_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/email_text"
+                android:paddingVertical="20dp"
+                android:text="@string/phone"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/contact_information_answers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_information_text"
+            android:layout_toEndOf="@id/personal_details_options"
+            android:paddingEnd="30dp"
+            android:paddingStart="7.5dp"
+            >
+
+            <EditText
+                android:id="@+id/email_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:hint="@string/email"
+                android:textSize="14sp"
+                android:inputType="textEmailAddress"
+                android:background="@android:color/transparent"
+                />
+
+            <EditText
+                android:id="@+id/phone_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_below="@id/email_edit_text"
+                android:paddingVertical="20dp"
+                android:hint="@string/phone"
+                android:textSize="14sp"
+                android:inputType="phone"
+                android:background="@android:color/transparent"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/email_edit_text"
+                />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBorder"
+            android:layout_below="@id/contact_information_answers"
+            />
+
+        <TextView
+            android:id="@+id/about_you_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_information_options"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="30dp"
+            android:text="@string/about_you"
+            android:textColor="@color/colorSubheading"
+            android:textSize="20sp"/>
+
+        <RelativeLayout
+            android:id="@+id/about_you_options"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/about_you_text"
+            android:paddingStart="30dp"
+            android:paddingEnd="7.5dp"
+            >
+
+            <TextView
+                android:id="@+id/study_locations_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:text="@string/studied_at"
+                />
+
+            <TextView
+                android:id="@+id/areas_lived_in_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/study_locations_text"
+                android:paddingVertical="20dp"
+                android:text="@string/lived_in"
+                />
+
+            <TextView
+                android:id="@+id/hobbies_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/areas_lived_in_text"
+                android:paddingVertical="20dp"
+                android:text="@string/hobbies"
+                />
+
+            <TextView
+                android:id="@+id/personality_types_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hobbies_text"
+                android:paddingVertical="20dp"
+                android:text="@string/personality"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/about_you_answers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/about_you_text"
+            android:layout_toEndOf="@id/personal_details_options"
+            android:paddingEnd="30dp"
+            android:paddingStart="7.5dp"
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/study_locations_recycler_view"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="12.5dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/areas_lived_in_recycler_view"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/study_locations_recycler_view"
+                android:layout_marginVertical="12.5dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hobbies_recycler_view"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/areas_lived_in_recycler_view"
+                android:layout_marginVertical="12.5dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/personality_types_recycler_view"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hobbies_recycler_view"
+                android:layout_marginVertical="12.5dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
+
+            <ImageButton
+                android:id="@+id/study_locations_add_button"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_toEndOf="@id/study_locations_recycler_view"
+                android:layout_marginVertical="17dp"
+                android:background="@drawable/add"/>
+
+            <ImageButton
+                android:id="@+id/areas_lived_in_add_button"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_toEndOf="@id/areas_lived_in_recycler_view"
+                android:layout_below="@id/study_locations_add_button"
+                android:layout_marginVertical="17dp"
+                android:background="@drawable/add"/>
+
+            <ImageButton
+                android:id="@+id/hobbies_add_button"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_toEndOf="@id/hobbies_recycler_view"
+                android:layout_below="@id/areas_lived_in_add_button"
+                android:layout_marginVertical="17dp"
+                android:background="@drawable/add"/>
+
+            <ImageButton
+                android:id="@+id/personality_types_add_button"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_toEndOf="@id/personality_types_recycler_view"
+                android:layout_below="@id/hobbies_add_button"
+                android:layout_marginVertical="17dp"
+                android:background="@drawable/add"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/study_locations_recycler_view"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/areas_lived_in_recycler_view"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/hobbies_recycler_view"
+                />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBorder"
+            android:layout_below="@id/about_you_options"
+            />
+
+    </RelativeLayout>
+
+</ScrollView>
