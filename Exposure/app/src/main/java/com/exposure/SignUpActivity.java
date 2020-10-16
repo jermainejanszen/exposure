@@ -44,7 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
         emailField = findViewById(R.id.email_field);
         passwordField = findViewById(R.id.password_field);
         termsOfService = findViewById(R.id.terms_of_service_checkbox);
-        signUpProgressBar = findViewById(R.id.sign_up_progress_bar);
+        signUpProgressBar = findViewById(R.id.progress_bar);
     }
 
     public void signUpUser(View view) {

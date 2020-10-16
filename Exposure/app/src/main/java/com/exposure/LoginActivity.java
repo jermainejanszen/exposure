@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
         emailField = findViewById(R.id.email_field);
         passwordField = findViewById(R.id.password_field);
-        loginProgressBar = findViewById(R.id.login_progress_bar);
+        loginProgressBar = findViewById(R.id.progress_bar);
     }
 
     public void loginUser(View view) {
