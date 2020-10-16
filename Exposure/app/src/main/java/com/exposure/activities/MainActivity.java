@@ -12,12 +12,14 @@ import com.exposure.R;
 import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
+import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
     private Fragment mapFragment, chatsFragment, profileFragment;
+    private CurrentUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (null == FirebaseAuth.getInstance().getCurrentUser()) {
             startActivity(new Intent(this, SignUpActivity.class));
+            finish();
         }
+
+        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();
