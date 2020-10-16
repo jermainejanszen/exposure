@@ -3,6 +3,9 @@ package com.exposure.user;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Abstract User class to hold all of a user's details.
+ */
 abstract class User {
 
     /* Server Details */
@@ -26,6 +29,8 @@ abstract class User {
     /* Constructor */
     public User(String uid) {
         this.uid = uid;
+
+        // TODO: Load fields from Firebase
     }
 
     /* Getters */

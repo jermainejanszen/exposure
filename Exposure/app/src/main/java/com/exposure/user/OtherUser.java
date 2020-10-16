@@ -3,10 +3,15 @@ package com.exposure.user;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Used to store information about other users that the current user
+ * may have a connection with.
+ */
 public class OtherUser extends User {
 
     private final Map<UserField, Boolean> exposedInfo = new HashMap<UserField, Boolean>();
 
+    /* Constructor */
     public OtherUser(String uid) {
         super(uid);
 
