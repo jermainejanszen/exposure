@@ -467,7 +467,7 @@
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/personality_types"
+                android:text="@string/personality"
                 />
 
             <androidx.recyclerview.widget.RecyclerView

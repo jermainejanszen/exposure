@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragment extends Fragment {
-    private List<String> studyLocations, areasLivedIn, hobbies, personalityTypes;
-    private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalityTypesAdapter;
+    private List<String> studyLocations, areasLivedIn, hobbies, personalities;
+    private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private Button editProfileButton;
 
     public ProfileFragment() {
@@ -58,16 +58,16 @@ public class ProfileFragment extends Fragment {
         hobbies.add("Guitar");
         hobbies.add("Piano");
 
-        personalityTypes = new ArrayList<>();
-        personalityTypes.add("Introvert");
-        personalityTypes.add("Memer");
-        personalityTypes.add("Gamer");
-        personalityTypes.add("Musician");
+        personalities = new ArrayList<>();
+        personalities.add("Introvert");
+        personalities.add("Memer");
+        personalities.add("Gamer");
+        personalities.add("Musician");
 
         studyLocationsAdapter = new RecyclerViewAdapter(getActivity(), studyLocations);
         areasLivedInAdapter = new RecyclerViewAdapter(getActivity(), areasLivedIn);
         hobbiesAdapter = new RecyclerViewAdapter(getActivity(), hobbies);
-        personalityTypesAdapter = new RecyclerViewAdapter(getActivity(), personalityTypes);
+        personalitiesAdapter = new RecyclerViewAdapter(getActivity(), personalities);
 
         RecyclerView studyLocationsRecyclerView = view.findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = view.findViewById(R.id.areas_lived_in_recycler_view);
@@ -77,7 +77,7 @@ public class ProfileFragment extends Fragment {
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
-        personalityTypesRecyclerView.setAdapter(personalityTypesAdapter);
+        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
 
         editProfileButton = view.findViewById(R.id.edit_profile_button);
 

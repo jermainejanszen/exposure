@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private List<String> studyLocations, areasLivedIn, hobbies, personalityTypes;
-    private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalityTypesAdapter;
+    private List<String> studyLocations, areasLivedIn, hobbies, personalities;
+    private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +38,16 @@ public class EditProfileActivity extends AppCompatActivity {
         hobbies.add("Guitar");
         hobbies.add("Piano");
 
-        personalityTypes = new ArrayList<>();
-        personalityTypes.add("Introvert");
-        personalityTypes.add("Memer");
-        personalityTypes.add("Gamer");
-        personalityTypes.add("Musician");
+        personalities = new ArrayList<>();
+        personalities.add("Introvert");
+        personalities.add("Memer");
+        personalities.add("Gamer");
+        personalities.add("Musician");
 
         studyLocationsAdapter = new RecyclerViewAdapter(this, studyLocations);
         areasLivedInAdapter = new RecyclerViewAdapter(this, areasLivedIn);
         hobbiesAdapter = new RecyclerViewAdapter(this, hobbies);
-        personalityTypesAdapter = new RecyclerViewAdapter(this, personalityTypes);
+        personalitiesAdapter = new RecyclerViewAdapter(this, personalities);
 
         RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
@@ -57,6 +57,6 @@ public class EditProfileActivity extends AppCompatActivity {
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
-        personalityTypesRecyclerView.setAdapter(personalityTypesAdapter);
+        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
     }
 }

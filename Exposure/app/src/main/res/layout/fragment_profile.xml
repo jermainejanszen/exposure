@@ -180,7 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
-                android:text="@string/personality_types"
+                android:text="@string/personality"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
