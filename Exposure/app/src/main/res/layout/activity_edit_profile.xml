@@ -283,7 +283,7 @@
                     android:layout_toEndOf="@id/phone_text"
                     android:layout_centerVertical="true"
                     android:paddingVertical="20dp"
-                    android:hint="@string/email"
+                    android:hint="@string/phone"
                     android:textSize="14sp"
                     android:inputType="phone"
                     android:background="@android:color/transparent"
