@@ -48,8 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_image_section"
-            android:paddingStart="30dp"
-            android:paddingEnd="7.5dp"
+            android:layout_marginHorizontal="30dp"
             >
 
             <RelativeLayout
@@ -189,7 +188,7 @@
                     android:paddingVertical="20dp"
                     android:hint="@string/bio"
                     android:textSize="14sp"
-                    android:inputType="textPersonName"
+                    android:inputType="textMultiLine"
                     android:background="@android:color/transparent"
                     />
 
@@ -220,8 +219,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/contact_information_text"
-            android:paddingStart="30dp"
-            android:paddingEnd="7.5dp"
+            android:layout_marginHorizontal="30dp"
             >
 
             <RelativeLayout
@@ -317,8 +315,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/about_you_text"
-            android:paddingStart="30dp"
-            android:paddingEnd="7.5dp"
+            android:layout_marginHorizontal="30dp"
             >
 
             <TextView
@@ -364,8 +361,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/study_locations_section"
-            android:paddingStart="30dp"
-            android:paddingEnd="7.5dp"
+            android:layout_marginHorizontal="30dp"
             >
 
             <TextView
@@ -411,8 +407,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/areas_lived_in_section"
-            android:paddingStart="30dp"
-            android:paddingEnd="7.5dp"
+            android:layout_marginHorizontal="30dp"
             >
 
             <TextView
@@ -458,8 +453,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/hobbies_section"
-            android:paddingStart="30dp"
-            android:paddingEnd="7.5dp"
+            android:layout_marginHorizontal="30dp"
             >
 
             <TextView
