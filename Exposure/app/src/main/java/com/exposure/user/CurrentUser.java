@@ -1,6 +1,7 @@
 package com.exposure.user;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Holds information about the current user including the other users they
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  */
 public class CurrentUser extends User {
 
-    private ArrayList<OtherUser> connections = new ArrayList<>();
+    private List<OtherUser> connections = new ArrayList<>();
 
     public CurrentUser(String uid) {
         super(uid);
@@ -17,7 +18,7 @@ public class CurrentUser extends User {
     }
 
     /* Getters */
-    public ArrayList<OtherUser> getConnections() {
+    public List<OtherUser> getConnections() {
         return connections;
     }
 

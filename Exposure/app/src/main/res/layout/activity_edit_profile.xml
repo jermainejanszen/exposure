@@ -32,6 +32,8 @@
                 android:layout_below="@id/profile_image"
                 android:text="@string/change_profile_picture"
                 android:textColor="@color/colorPrimary"
+                android:onClick="onChangeProfileImageClick"
+                android:focusable="true"
                 />
 
         </RelativeLayout>

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,13 +16,21 @@ import com.exposure.R;
 import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
+import com.exposure.handlers.DateHandler;
 import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
+    private static int CAMERA_REQUEST = 101;
+    private static int GALLERY_REQUEST = 102;
+    private static int EDIT_PROFILE_REQUEST = 103;
+
     private BottomNavigationView navigationView;
     private ProfileFragment profileFragment;
     private MapFragment mapFragment;
@@ -40,9 +49,26 @@ public class MainActivity extends AppCompatActivity {
 
         currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+        /* Temporarily creating date instance for birthday */
+        try {
+            currentUser.setBirthday(DateHandler.convertToDate("02/10/1998"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        currentUser.setEmail("bgane@live.com.au");
+        currentUser.setName("Ben");
+        currentUser.setPhone("0432250691");
+        currentUser.setNickname("Benji");
+        currentUser.setHobbies(new ArrayList<>(Arrays.asList("Guitar", "Piano")));
+        currentUser.setPersonalities(new ArrayList<>(Arrays.asList("Memer", "Introvert")));
+        currentUser.setPlacesLived(new ArrayList<>(Arrays.asList("Sydney", "Melbourne")));
+        currentUser.setPlacesStudied(new ArrayList<>(Arrays.asList("The University of Sydney")));
+
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();
-        profileFragment = new ProfileFragment();
+
+        profileFragment = ProfileFragment.newInstance(currentUser);
 
         // Set map as the default fragment
         setFragment(mapFragment);
@@ -69,20 +95,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main,
-                fragment).commit();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (ProfileFragment.CAMERA_REQUEST == requestCode) {
+        if (CAMERA_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 profileFragment.addBitmap((Bitmap) data.getExtras().get("data"));
             }
-        } else if (ProfileFragment.GALLERY_REQUEST == requestCode) {
+        } else if (GALLERY_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 try {
                     profileFragment.addBitmap(
@@ -92,6 +113,38 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 };
             }
+        } else if (EDIT_PROFILE_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                currentUser = (CurrentUser) data.getSerializableExtra("current user");
+                profileFragment = ProfileFragment.newInstance(currentUser);
+                setFragment(profileFragment);
+            }
         }
+    }
+
+    /* onClick handler for the profile fragment */
+    public void onAddImageButtonClick(View view) {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }
+
+    /* onClick handler for the profile fragment */
+    public void onEditProfileClick(View view) {
+        Intent editProfileIntent = new Intent(this, EditProfileActivity.class);
+        editProfileIntent.putExtra("current user", currentUser);
+        startActivityForResult(editProfileIntent, EDIT_PROFILE_REQUEST);
+    }
+
+    /* onClick handler for the profile fragment */
+    public void onGalleryClick(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST);
+    }
+
+    private void setFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main,
+                fragment).commit();
     }
 }

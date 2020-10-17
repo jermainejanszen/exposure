@@ -17,7 +17,7 @@ public enum UserField {
 
     private final String name;
 
-    private UserField(String name) {
+    UserField(String name) {
         this.name = name;
     }
 

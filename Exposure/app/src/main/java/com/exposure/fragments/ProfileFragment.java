@@ -2,38 +2,42 @@ package com.exposure.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
-import com.exposure.activities.EditProfileActivity;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.adapters.RecyclerViewAdapter;
+import com.exposure.handlers.DateHandler;
+import com.exposure.user.CurrentUser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ProfileFragment extends Fragment {
-    public static int CAMERA_REQUEST = 101;
-    public static int GALLERY_REQUEST = 102;
-
-    private List<String> studyLocations, areasLivedIn, hobbies, personalities;
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
-    private Button editProfileButton;
-    private ImageButton addImageButton, galleryButton;
     private List<Bitmap> bitmaps;
     private GridViewAdapter gridViewAdapter;
+    private CurrentUser currentUser;
+
+    public static ProfileFragment newInstance(CurrentUser currentUser) {
+        ProfileFragment profileFragment = new ProfileFragment();
+        Bundle args =  new Bundle();
+        args.putSerializable("current user", currentUser);
+        profileFragment.setArguments(args);
+        return profileFragment;
+    }
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -42,6 +46,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.currentUser = (CurrentUser) getArguments().getSerializable("current user");
     }
 
     @Override
@@ -52,35 +57,10 @@ public class ProfileFragment extends Fragment {
 
         assert null != getActivity();
 
-        /* Placeholder values for the profile page */
-        studyLocations = new ArrayList<>();
-        studyLocations.add("University of Sydney");
-        studyLocations.add("Highschool");
-        studyLocations.add("Harvard University");
-
-        areasLivedIn = new ArrayList<>();
-        areasLivedIn.add("Sydney, Australia");
-        areasLivedIn.add("Abu Dhabi, UAE");
-        areasLivedIn.add("Melbourne, Australia");
-
-        hobbies = new ArrayList<>();
-        hobbies.add("Beach");
-        hobbies.add("Partying");
-        hobbies.add("Photography");
-        hobbies.add("Dancing");
-        hobbies.add("Guitar");
-        hobbies.add("Piano");
-
-        personalities = new ArrayList<>();
-        personalities.add("Introvert");
-        personalities.add("Memer");
-        personalities.add("Gamer");
-        personalities.add("Musician");
-
-        studyLocationsAdapter = new RecyclerViewAdapter(getActivity(), studyLocations, false);
-        areasLivedInAdapter = new RecyclerViewAdapter(getActivity(), areasLivedIn, false);
-        hobbiesAdapter = new RecyclerViewAdapter(getActivity(), hobbies, false);
-        personalitiesAdapter = new RecyclerViewAdapter(getActivity(), personalities, false);
+        studyLocationsAdapter = new RecyclerViewAdapter(getActivity(), currentUser.getPlacesStudied(), false);
+        areasLivedInAdapter = new RecyclerViewAdapter(getActivity(), currentUser.getPlacesLived(), false);
+        hobbiesAdapter = new RecyclerViewAdapter(getActivity(), currentUser.getHobbies(), false);
+        personalitiesAdapter = new RecyclerViewAdapter(getActivity(), currentUser.getPersonalities(), false);
 
         RecyclerView studyLocationsRecyclerView = view.findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = view.findViewById(R.id.areas_lived_in_recycler_view);
@@ -91,15 +71,6 @@ public class ProfileFragment extends Fragment {
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
-
-        editProfileButton = view.findViewById(R.id.edit_profile_button);
-
-        editProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(getContext(), EditProfileActivity.class), 0);
-            }
-        });
 
         bitmaps = new ArrayList<>();
 
@@ -137,25 +108,21 @@ public class ProfileFragment extends Fragment {
 
         gridView.setAdapter(gridViewAdapter);
 
-        addImageButton = view.findViewById(R.id.add_image_button);
-        addImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                getActivity().startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            }
-        });
+        /* Set the display name to the nickname if it exists, otherwise just use the users name */
+        TextView displayNameText = view.findViewById(R.id.display_name);
+        displayNameText.setText(
+                currentUser.getNickname() == null ? currentUser.getName() : currentUser.getNickname());
 
-        galleryButton = view.findViewById(R.id.gallery_button);
-        galleryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                getActivity().startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST);
-            }
-        });
+        /* Set the users age if they have entered their birthday */
+        if (null != currentUser.getBirthday()) {
+            TextView ageText = view.findViewById(R.id.age);
+            ageText.setText(
+                    String.format(Locale.ENGLISH,
+                            "Age %d",
+                            DateHandler.yearsBetween(currentUser.getBirthday(), new Date())
+                    )
+            );
+        }
 
         return view;
     }
