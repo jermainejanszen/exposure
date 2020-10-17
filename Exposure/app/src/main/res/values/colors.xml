@@ -6,6 +6,7 @@
     <color name="colorSecondary">#775447</color>
     <color name="colorAccent">#BEDDF1</color>
     <color name="colorBorder">#14212121</color>
-    <color name="profileImageBorder">#20212121</color>
+    <color name="colorBorderSecondary">#20212121</color>
+    <color name="colorBorderLight">#08212121</color>
     <color name="colorSubheading">#5B3F36</color>
 </resources>

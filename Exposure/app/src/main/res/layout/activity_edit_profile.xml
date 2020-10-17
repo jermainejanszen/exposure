@@ -1,513 +1,559 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout android:layout_width="match_parent"
+
+    <RelativeLayout
+        android:id="@+id/cancel_or_save_section"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:paddingVertical="10dp"
+        android:background="@color/colorBorderLight">
 
-        <RelativeLayout
-            android:id="@+id/profile_image_section"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:paddingVertical="20dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_width="85dp"
-                android:layout_height="85dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="7.5dp"
-                android:src="@drawable/default_display_image"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@color/profileImageBorder"/>
-
-            <TextView
-                android:id="@+id/change_profile_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/profile_image"
-                android:text="@string/change_profile_picture"
-                android:textColor="@color/colorPrimary"
-                android:onClick="onChangeProfileImageClick"
-                android:focusable="true"
-                />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorBorder"
-            android:layout_below="@id/profile_image_section"
-            />
-
-        <RelativeLayout
-            android:id="@+id/personal_details_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/profile_image_section"
-            android:layout_marginHorizontal="30dp"
-            >
-
-            <RelativeLayout
-                android:id="@+id/name_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-
-                <TextView
-                    android:id="@+id/name_text"
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/name"
-                    />
-
-                <EditText
-                    android:id="@+id/name_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/name_text"
-                    android:layout_centerVertical="true"
-                    android:paddingVertical="20dp"
-                    android:hint="@string/name"
-                    android:textSize="14sp"
-                    android:maxLength="20"
-                    android:inputType="textPersonName"
-                    android:background="@android:color/transparent"
-                    />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/name_edit_text"
-                    android:layout_alignStart="@id/name_edit_text"
-                    android:background="@color/colorBorder"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/nickname_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/name_section"
-                >
-
-                <TextView
-                    android:id="@+id/nickname_text"
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/nickname"
-                    />
-
-                <EditText
-                    android:id="@+id/nickname_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/nickname_text"
-                    android:layout_centerVertical="true"
-                    android:paddingVertical="20dp"
-                    android:hint="@string/nickname"
-                    android:textSize="14sp"
-                    android:maxLength="20"
-                    android:inputType="textPersonName"
-                    android:background="@android:color/transparent"
-                    />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/nickname_edit_text"
-                    android:layout_alignStart="@id/nickname_edit_text"
-                    android:background="@color/colorBorder"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/birthday_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/nickname_section"
-                >
-
-                <TextView
-                    android:id="@+id/birthday_text"
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/birthday"
-                    />
-
-                <EditText
-                    android:id="@+id/birthday_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/birthday_text"
-                    android:layout_centerVertical="true"
-                    android:paddingVertical="20dp"
-                    android:hint="@string/birthday"
-                    android:textSize="14sp"
-                    android:maxLength="10"
-                    android:inputType="date"
-                    android:background="@android:color/transparent"
-                    />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/birthday_edit_text"
-                    android:layout_alignStart="@id/birthday_edit_text"
-                    android:background="@color/colorBorder"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/preferences_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/birthday_section"
-                >
-
-                <TextView
-                    android:id="@+id/preferences_text"
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingVertical="20dp"
-                    android:text="@string/preferences"
-                    />
-
-                <CheckBox
-                    android:id="@+id/male_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/preferences_text"
-                    android:layout_marginEnd="5dp"
-                    android:text="@string/males"/>
-
-                <CheckBox
-                    android:id="@+id/female_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/male_checkbox"
-                    android:layout_marginHorizontal="5dp"
-                    android:text="@string/females"/>
-
-                <CheckBox
-                    android:id="@+id/other_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/female_checkbox"
-                    android:layout_marginHorizontal="5dp"
-                    android:text="@string/others"/>
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorBorder"
-            android:layout_below="@id/personal_details_section"
+            android:layout_marginHorizontal="15dp"
+            android:text="@string/cancel"
+            android:textSize="18sp"
+            android:onClick="onCancelClick"
             />
 
         <TextView
-            android:id="@+id/contact_information_text"
+            android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/personal_details_section"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:text="@string/contact_information"
-            android:textColor="@color/colorSubheading"
-            android:textSize="20sp"/>
-
-        <RelativeLayout
-            android:id="@+id/contact_information_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/contact_information_text"
-            android:layout_marginHorizontal="30dp"
-            >
-
-            <RelativeLayout
-                android:id="@+id/email_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-
-                <TextView
-                    android:id="@+id/email_text"
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/email"
-                    />
-
-                <EditText
-                    android:id="@+id/email_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/email_text"
-                    android:layout_centerVertical="true"
-                    android:paddingVertical="20dp"
-                    android:hint="@string/email"
-                    android:textSize="14sp"
-                    android:maxLength="30"
-                    android:inputType="textEmailAddress"
-                    android:background="@android:color/transparent"
-                    />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/email_edit_text"
-                    android:layout_alignStart="@id/email_edit_text"
-                    android:background="@color/colorBorder"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/phone_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/email_section"
-                >
-
-                <TextView
-                    android:id="@+id/phone_text"
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/phone"
-                    />
-
-                <EditText
-                    android:id="@+id/phone_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/phone_text"
-                    android:layout_centerVertical="true"
-                    android:paddingVertical="20dp"
-                    android:hint="@string/phone"
-                    android:maxLength="13"
-                    android:textSize="14sp"
-                    android:inputType="phone"
-                    android:background="@android:color/transparent"
-                    />
-
-            </RelativeLayout>
-
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorBorder"
-            android:layout_below="@id/contact_information_section"
+            android:layout_marginHorizontal="15dp"
+            android:layout_alignParentEnd="true"
+            android:text="@string/save"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:onClick="onSaveClick"
             />
-
-        <TextView
-            android:id="@+id/about_you_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/contact_information_section"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:text="@string/about_you"
-            android:textColor="@color/colorSubheading"
-            android:textSize="20sp"/>
-
-        <RelativeLayout
-            android:id="@+id/study_locations_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/about_you_text"
-            android:layout_marginHorizontal="30dp"
-            >
-
-            <TextView
-                android:id="@+id/study_locations_text"
-                android:layout_width="95dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/studied_at"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/study_locations_recycler_view"
-                android:layout_width="225dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/study_locations_text"
-                android:layout_marginVertical="15dp"
-                android:minHeight="35dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
-
-            <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@id/study_locations_recycler_view"
-                android:layout_centerVertical="true"
-                android:background="@drawable/add"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/study_locations_recycler_view"
-                android:layout_alignStart="@id/study_locations_recycler_view"
-                android:background="@color/colorBorder"
-                />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/areas_lived_in_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/study_locations_section"
-            android:layout_marginHorizontal="30dp"
-            >
-
-            <TextView
-                android:id="@+id/areas_lived_in_text"
-                android:layout_width="95dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/lived_in"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/areas_lived_in_recycler_view"
-                android:layout_width="225dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/areas_lived_in_text"
-                android:layout_marginVertical="15dp"
-                android:minHeight="35dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
-
-            <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@id/areas_lived_in_recycler_view"
-                android:layout_centerVertical="true"
-                android:background="@drawable/add"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/areas_lived_in_recycler_view"
-                android:layout_alignStart="@id/areas_lived_in_recycler_view"
-                android:background="@color/colorBorder"
-                />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/hobbies_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/areas_lived_in_section"
-            android:layout_marginHorizontal="30dp"
-            >
-
-            <TextView
-                android:id="@+id/hobbies_text"
-                android:layout_width="95dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/hobbies"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/hobbies_recycler_view"
-                android:layout_width="225dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/hobbies_text"
-                android:layout_marginVertical="15dp"
-                android:minHeight="35dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
-
-            <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@id/hobbies_recycler_view"
-                android:layout_centerVertical="true"
-                android:background="@drawable/add"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/hobbies_recycler_view"
-                android:layout_alignStart="@id/hobbies_recycler_view"
-                android:background="@color/colorBorder"
-                />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/personality_types_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/hobbies_section"
-            android:layout_marginHorizontal="30dp"
-            >
-
-            <TextView
-                android:id="@+id/personality_types_text"
-                android:layout_width="95dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/personality"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/personality_types_recycler_view"
-                android:layout_width="225dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/personality_types_text"
-                android:layout_marginVertical="15dp"
-                android:minHeight="35dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
-
-            <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@id/personality_types_recycler_view"
-                android:layout_centerVertical="true"
-                android:background="@drawable/add"/>
-
-        </RelativeLayout>
 
     </RelativeLayout>
 
-</ScrollView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorBorderSecondary"
+        android:layout_below="@id/cancel_or_save_section"
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/cancel_or_save_section">
+
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <RelativeLayout
+                android:id="@+id/profile_image_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:paddingVertical="20dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="7.5dp"
+                    android:src="@drawable/default_display_image"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@color/colorBorderSecondary"/>
+
+                <TextView
+                    android:id="@+id/change_profile_image_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/profile_image"
+                    android:text="@string/change_profile_picture"
+                    android:textColor="@color/colorPrimary"
+                    android:onClick="onChangeProfileImageClick"
+                    android:focusable="true"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/profile_image_section"
+                />
+
+            <RelativeLayout
+                android:id="@+id/personal_details_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_image_section"
+                android:layout_marginHorizontal="30dp"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/name_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:id="@+id/name_text"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/name"
+                        />
+
+                    <EditText
+                        android:id="@+id/name_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/name_text"
+                        android:layout_centerVertical="true"
+                        android:paddingVertical="20dp"
+                        android:hint="@string/name"
+                        android:textSize="14sp"
+                        android:maxLength="20"
+                        android:inputType="textPersonName"
+                        android:background="@android:color/transparent"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/name_edit_text"
+                        android:layout_alignStart="@id/name_edit_text"
+                        android:background="@color/colorBorder"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/nickname_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/name_section"
+                    >
+
+                    <TextView
+                        android:id="@+id/nickname_text"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/nickname"
+                        />
+
+                    <EditText
+                        android:id="@+id/nickname_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/nickname_text"
+                        android:layout_centerVertical="true"
+                        android:paddingVertical="20dp"
+                        android:hint="@string/nickname"
+                        android:textSize="14sp"
+                        android:maxLength="20"
+                        android:inputType="textPersonName"
+                        android:background="@android:color/transparent"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/nickname_edit_text"
+                        android:layout_alignStart="@id/nickname_edit_text"
+                        android:background="@color/colorBorder"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/birthday_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/nickname_section"
+                    >
+
+                    <TextView
+                        android:id="@+id/birthday_text"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/birthday"
+                        />
+
+                    <EditText
+                        android:id="@+id/birthday_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/birthday_text"
+                        android:layout_centerVertical="true"
+                        android:paddingVertical="20dp"
+                        android:hint="@string/birthday"
+                        android:textSize="14sp"
+                        android:maxLength="10"
+                        android:inputType="date"
+                        android:background="@android:color/transparent"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/birthday_edit_text"
+                        android:layout_alignStart="@id/birthday_edit_text"
+                        android:background="@color/colorBorder"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/preferences_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/birthday_section"
+                    >
+
+                    <TextView
+                        android:id="@+id/preferences_text"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingVertical="20dp"
+                        android:text="@string/preferences"
+                        />
+
+                    <CheckBox
+                        android:id="@+id/male_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/preferences_text"
+                        android:layout_marginEnd="5dp"
+                        android:text="@string/males"/>
+
+                    <CheckBox
+                        android:id="@+id/female_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/male_checkbox"
+                        android:layout_marginHorizontal="5dp"
+                        android:text="@string/females"/>
+
+                    <CheckBox
+                        android:id="@+id/other_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/female_checkbox"
+                        android:layout_marginHorizontal="5dp"
+                        android:text="@string/others"/>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/personal_details_section"
+                />
+
+            <TextView
+                android:id="@+id/contact_information_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/personal_details_section"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="30dp"
+                android:text="@string/contact_information"
+                android:textColor="@color/colorSubheading"
+                android:textSize="20sp"/>
+
+            <RelativeLayout
+                android:id="@+id/contact_information_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/contact_information_text"
+                android:layout_marginHorizontal="30dp"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/email_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:id="@+id/email_text"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/email"
+                        />
+
+                    <EditText
+                        android:id="@+id/email_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/email_text"
+                        android:layout_centerVertical="true"
+                        android:paddingVertical="20dp"
+                        android:hint="@string/email"
+                        android:textSize="14sp"
+                        android:maxLength="30"
+                        android:inputType="textEmailAddress"
+                        android:background="@android:color/transparent"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/email_edit_text"
+                        android:layout_alignStart="@id/email_edit_text"
+                        android:background="@color/colorBorder"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/phone_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/email_section"
+                    >
+
+                    <TextView
+                        android:id="@+id/phone_text"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/phone"
+                        />
+
+                    <EditText
+                        android:id="@+id/phone_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/phone_text"
+                        android:layout_centerVertical="true"
+                        android:paddingVertical="20dp"
+                        android:hint="@string/phone"
+                        android:maxLength="13"
+                        android:textSize="14sp"
+                        android:inputType="phone"
+                        android:background="@android:color/transparent"
+                        />
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorBorder"
+                android:layout_below="@id/contact_information_section"
+                />
+
+            <TextView
+                android:id="@+id/about_you_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/contact_information_section"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="30dp"
+                android:text="@string/about_you"
+                android:textColor="@color/colorSubheading"
+                android:textSize="20sp"/>
+
+            <RelativeLayout
+                android:id="@+id/study_locations_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/about_you_text"
+                android:layout_marginHorizontal="30dp"
+                >
+
+                <TextView
+                    android:id="@+id/study_locations_text"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/studied_at"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/study_locations_recycler_view"
+                    android:layout_width="225dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/study_locations_text"
+                    android:layout_marginVertical="15dp"
+                    android:minHeight="35dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    />
+
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/study_locations_recycler_view"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/add"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/study_locations_recycler_view"
+                    android:layout_alignStart="@id/study_locations_recycler_view"
+                    android:background="@color/colorBorder"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/areas_lived_in_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/study_locations_section"
+                android:layout_marginHorizontal="30dp"
+                >
+
+                <TextView
+                    android:id="@+id/areas_lived_in_text"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/lived_in"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/areas_lived_in_recycler_view"
+                    android:layout_width="225dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/areas_lived_in_text"
+                    android:layout_marginVertical="15dp"
+                    android:minHeight="35dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    />
+
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/areas_lived_in_recycler_view"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/add"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/areas_lived_in_recycler_view"
+                    android:layout_alignStart="@id/areas_lived_in_recycler_view"
+                    android:background="@color/colorBorder"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/hobbies_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/areas_lived_in_section"
+                android:layout_marginHorizontal="30dp"
+                >
+
+                <TextView
+                    android:id="@+id/hobbies_text"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/hobbies"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/hobbies_recycler_view"
+                    android:layout_width="225dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/hobbies_text"
+                    android:layout_marginVertical="15dp"
+                    android:minHeight="35dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    />
+
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/hobbies_recycler_view"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/add"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/hobbies_recycler_view"
+                    android:layout_alignStart="@id/hobbies_recycler_view"
+                    android:background="@color/colorBorder"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/personality_types_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hobbies_section"
+                android:layout_marginHorizontal="30dp"
+                >
+
+                <TextView
+                    android:id="@+id/personality_types_text"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/personality"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/personality_types_recycler_view"
+                    android:layout_width="225dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/personality_types_text"
+                    android:layout_marginVertical="15dp"
+                    android:minHeight="35dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    />
+
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/personality_types_recycler_view"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/add"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

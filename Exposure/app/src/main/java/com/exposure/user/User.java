@@ -62,4 +62,8 @@ abstract class User implements Serializable {
     public void setHobbies(List<String> hobbies) { this.hobbies = hobbies; }
     public void setPersonalities(List<String> personalities) { this.personalities = personalities; }
     public void setPreferences(List<String> preferences) { this.preferences = preferences; }
+
+    public boolean validState() {
+        return !(null == name || null == birthday || 0 == preferences.size()|| null == email);
+    }
 }

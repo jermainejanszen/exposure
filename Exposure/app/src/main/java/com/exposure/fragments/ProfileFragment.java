@@ -129,16 +129,14 @@ public class ProfileFragment extends Fragment {
         List<String> preferences = currentUser.getPreferences();
 
         if (!preferences.isEmpty()) {
-            String preferencesString = "Interested in ";
-
             Collections.sort(preferences);
 
-            for (int i = 0; i < preferences.size(); i++) {
-                preferencesString += preferences.get(i);
-                if (preferences.size() - 1 != i) {
-                    preferencesString += ", ";
-                }
+            String preferencesString = "Interested in " + preferences.get(0);
+
+            for (int i = 1; i < preferences.size(); i++) {
+                preferencesString += ", " + preferences.get(i);
             }
+
             TextView preferencesText = view.findViewById(R.id.preferences);
             preferencesText.setText(preferencesString);
         }

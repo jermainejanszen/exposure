@@ -33,4 +33,6 @@
     <string name="males">Males</string>
     <string name="females">Females</string>
     <string name="others">Others</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

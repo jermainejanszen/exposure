@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,7 +30,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private ImageView profileImage;
     private EditText nameEditText, nicknameEditText, emailEditText, phoneEditText, birthdayEditText;
-    private CheckBox maleCheckBox, femaleCheckBox, otherCheckBox;
+    private CheckBox malesCheckBox, femalesCheckBox, othersCheckBox;
     private CurrentUser currentUser;
 
     @Override
@@ -74,94 +76,6 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-
-        /* Retrieve any edits from edit texts and set the current user data */
-        String name = nameEditText.getText().toString();
-        String nickname = nicknameEditText.getText().toString();
-        String email = emailEditText.getText().toString();
-        String phone = phoneEditText.getText().toString();
-        String birthday = birthdayEditText.getText().toString();
-
-        /* Invalid edit checking */
-        if (name.isEmpty()) {
-            nameEditText.setError("Name can't be empty.");
-            nameEditText.requestFocus();
-            return;
-        } else if (email.isEmpty()) {
-            /* Need to check if this email is valid in firebase */
-            emailEditText.setError("Email required.");
-            emailEditText.requestFocus();
-            return;
-        } else if (birthday.contains("-")) {
-            birthdayEditText.setError("Birthday must be of the format dd/MM/yyyy");
-            birthdayEditText.requestFocus();
-            return;
-        }
-
-        Date birthdayDate;
-
-        /* If birthday isn't formatted correctly, create error message */
-        try {
-            birthdayDate = DateHandler.convertToDate(birthday);
-        } catch (ParseException e) {
-            birthdayEditText.setError("Birthday must be of the format dd/MM/yyyy");
-            birthdayEditText.requestFocus();
-            return;
-        }
-
-        /* If the user has specified an invalid age, create error message */
-        int age = DateHandler.yearsBetween(birthdayDate, new Date());
-
-        if (age < 18 || age > 120) {
-            birthdayEditText.setError(
-                    String.format(
-                            Locale.ENGLISH,
-                            "Age specified is %d but must between 18 and 120",
-                            age
-                    ));
-            birthdayEditText.requestFocus();
-            return;
-        }
-
-        currentUser.setName(name);
-        currentUser.setEmail(email);
-
-        /* If no nickname provided, need to set it to null for data consistency and edit text hints */
-        currentUser.setNickname(nickname.isEmpty() ? null : nickname);
-
-        /* If no phone number is provided, need to set it to null for data consistency and edit text hints */
-        currentUser.setPhone(phone.isEmpty() ? null : phone);
-
-        List<String> preferences = currentUser.getPreferences();
-
-        /* Set the preferences data */
-        if (maleCheckBox.isChecked() && !preferences.contains("Males")) {
-            preferences.add("Males");
-        } else if (!maleCheckBox.isChecked()){
-            preferences.remove("Males");
-        }
-
-        if (femaleCheckBox.isChecked() && !preferences.contains("Females")) {
-            preferences.add("Females");
-        } else if (!femaleCheckBox.isChecked()) {
-            preferences.remove("Females");
-        }
-
-        if (otherCheckBox.isChecked() && !preferences.contains("Others")) {
-            preferences.add("Others");
-        } else if (!otherCheckBox.isChecked()) {
-            preferences.remove("Others");
-        }
-
-        /* Pass serialized user object to the intent data */
-        Intent data = new Intent();
-        data.putExtra("current user", currentUser);
-        setResult(RESULT_OK, data);
-        finish();
-    }
-
     private void initialiseFields() {
         nameEditText = findViewById(R.id.name_edit_text);
         nicknameEditText = findViewById(R.id.nickname_edit_text);
@@ -169,9 +83,9 @@ public class EditProfileActivity extends AppCompatActivity {
         phoneEditText = findViewById(R.id.phone_edit_text);
         birthdayEditText = findViewById(R.id.birthday_edit_text);
 
-        maleCheckBox = findViewById(R.id.male_checkbox);
-        femaleCheckBox = findViewById(R.id.female_checkbox);
-        otherCheckBox = findViewById(R.id.other_checkbox);
+        malesCheckBox = findViewById(R.id.male_checkbox);
+        femalesCheckBox = findViewById(R.id.female_checkbox);
+        othersCheckBox = findViewById(R.id.other_checkbox);
 
         if (null != currentUser.getName()) {
             nameEditText.setText(currentUser.getName());
@@ -195,9 +109,15 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if (null != currentUser.getPreferences()) {
             List<String> preferences = currentUser.getPreferences();
-            maleCheckBox.setChecked(preferences.contains("Males"));
-            femaleCheckBox.setChecked(preferences.contains("Females"));
-            otherCheckBox.setChecked(preferences.contains("Others"));
+            malesCheckBox.setChecked(preferences.contains("Males"));
+            femalesCheckBox.setChecked(preferences.contains("Females"));
+            othersCheckBox.setChecked(preferences.contains("Others"));
+        }
+
+        /* If the current user object is in an invalid state, hide the cancel button */
+        if (!currentUser.validState()) {
+            TextView cancel = findViewById(R.id.cancel);
+            cancel.setVisibility(View.GONE);
         }
     }
 
@@ -206,5 +126,105 @@ public class EditProfileActivity extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, GALLERY_REQUEST);
+    }
+
+    public void onSaveClick(View view) {
+        /* Retrieve any edits from edit texts and set the current user data */
+        String name = nameEditText.getText().toString();
+        String nickname = nicknameEditText.getText().toString();
+        String email = emailEditText.getText().toString();
+        String phone = phoneEditText.getText().toString();
+        String birthday = birthdayEditText.getText().toString();
+
+        /* Invalid edit checking */
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Name required", Toast.LENGTH_LONG).show();
+            nameEditText.requestFocus();
+            return;
+        } else if (email.isEmpty()) {
+            /* Need to check if this email is valid in firebase */
+            Toast.makeText(this, "Email required", Toast.LENGTH_LONG).show();
+            emailEditText.requestFocus();
+            return;
+        } else if (birthday.contains("-")) {
+            Toast.makeText(this, "Birthday must be of the format dd/MM/yyyy", Toast.LENGTH_LONG).show();
+            birthdayEditText.requestFocus();
+            return;
+        }
+
+        Date birthdayDate;
+
+        /* If birthday isn't formatted correctly, create error message */
+        try {
+            birthdayDate = DateHandler.convertToDate(birthday);
+        } catch (ParseException e) {
+            Toast.makeText(this, "Birthday must be of the format dd/MM/yyyy", Toast.LENGTH_LONG).show();
+            birthdayEditText.requestFocus();
+            return;
+        }
+
+        /* If the user has specified an invalid age, create error message */
+        int age = DateHandler.yearsBetween(birthdayDate, new Date());
+
+        if (age < 18 || age > 120) {
+            String ageErrorString =
+                    String.format(
+                            Locale.ENGLISH,
+                            "Age specified is %d but must between 18 and 120",
+                            age
+                    );
+            Toast.makeText(this, ageErrorString, Toast.LENGTH_LONG).show();
+            birthdayEditText.requestFocus();
+            return;
+        }
+
+        /* If the user hasn't selected a preference, create error message */
+        if (!malesCheckBox.isChecked() && !femalesCheckBox.isChecked() && !othersCheckBox.isChecked()) {
+            Toast.makeText(this, "You must select at least one preference", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        /* Error checking has been performed so we can now manipulate the data */
+        currentUser.setName(name);
+        currentUser.setEmail(email);
+        currentUser.setBirthday(birthdayDate);
+
+        /* If no nickname provided, need to set it to null for data consistency and edit text hints */
+        currentUser.setNickname(nickname.isEmpty() ? null : nickname);
+
+        /* If no phone number is provided, need to set it to null for data consistency and edit text hints */
+        currentUser.setPhone(phone.isEmpty() ? null : phone);
+
+        List<String> preferences = currentUser.getPreferences();
+
+        /* Set the preferences data */
+        if (malesCheckBox.isChecked() && !preferences.contains("Males")) {
+            preferences.add("Males");
+        } else if (!malesCheckBox.isChecked()){
+            preferences.remove("Males");
+        }
+
+        if (femalesCheckBox.isChecked() && !preferences.contains("Females")) {
+            preferences.add("Females");
+        } else if (!femalesCheckBox.isChecked()) {
+            preferences.remove("Females");
+        }
+
+        if (othersCheckBox.isChecked() && !preferences.contains("Others")) {
+            preferences.add("Others");
+        } else if (!othersCheckBox.isChecked()) {
+            preferences.remove("Others");
+        }
+
+        /* Pass serialized user object to the intent data */
+        Intent data = new Intent();
+        data.putExtra("current user", currentUser);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    public void onCancelClick(View view) {
+        setResult(RESULT_CANCELED, new Intent());
+        finish();
     }
 }

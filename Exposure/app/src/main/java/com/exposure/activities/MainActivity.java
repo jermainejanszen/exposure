@@ -49,30 +49,19 @@ public class MainActivity extends AppCompatActivity {
 
         currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        /* Temporarily creating date instance for birthday */
-        try {
-            currentUser.setBirthday(DateHandler.convertToDate("02/10/1998"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
         currentUser.setEmail("bgane@live.com.au");
         currentUser.setName("Ben");
-        currentUser.setPhone("0432250691");
-        currentUser.setNickname("Benji");
         currentUser.setHobbies(new ArrayList<>(Arrays.asList("Guitar", "Piano")));
         currentUser.setPersonalities(new ArrayList<>(Arrays.asList("Memer", "Introvert")));
         currentUser.setPlacesLived(new ArrayList<>(Arrays.asList("Sydney", "Melbourne")));
         currentUser.setPlacesStudied(new ArrayList<>(Arrays.asList("The University of Sydney")));
-        currentUser.setPreferences(new ArrayList<>(Arrays.asList("Females")));
 
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();
-
         profileFragment = ProfileFragment.newInstance(currentUser);
 
-        // Set map as the default fragment
-        setFragment(mapFragment);
+        /* Set profile fragment as the default fragment */
+        setFragment(profileFragment);
 
         navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -94,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        /* When the user first signs up, send them to the edit profile page to fill in necessary details */
+        if (!currentUser.validState()) {
+            onEditProfileClick(null);
+        }
     }
 
     @Override

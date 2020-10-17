@@ -45,23 +45,23 @@ public class SignUpActivity extends AppCompatActivity {
         String password = passwordField.getEditText().getText().toString().trim();
 
         if (fullName.isEmpty()) {
-            fullNameField.getEditText().setError("Full name required.", null);
+            Toast.makeText(this, "Full name required", Toast.LENGTH_LONG).show();
             fullNameField.getEditText().requestFocus();
         } else if (email.isEmpty()) {
-            emailField.getEditText().setError("Email required.", null);
+            Toast.makeText(this, "Email required", Toast.LENGTH_LONG).show();
             emailField.getEditText().requestFocus();
         } else if (password.isEmpty()) {
-            passwordField.getEditText().setError("Password required.", null);
+            Toast.makeText(this, "Password required", Toast.LENGTH_LONG).show();
             passwordField.getEditText().requestFocus();
         } else if (!termsOfService.isChecked()) {
-            Toast.makeText(getApplicationContext(), "You must accept the Terms of Service and Privacy Policy to sign up.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "You must accept the Terms of Service and Privacy Policy to sign up.", Toast.LENGTH_LONG).show();
         } else {
             signUpProgressBar.setVisibility(View.VISIBLE);
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            Toast.makeText(getApplicationContext(), "Successful sign up.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Successful sign up.", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                     }).addOnFailureListener(new OnFailureListener() {
