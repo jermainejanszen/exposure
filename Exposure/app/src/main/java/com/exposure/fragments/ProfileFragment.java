@@ -1,14 +1,21 @@
 package com.exposure.fragments;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,9 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragment extends Fragment {
+    public static int CAMERA_REQUEST = 101;
+    public static int GALLERY_REQUEST = 102;
+
     private List<String> studyLocations, areasLivedIn, hobbies, personalities;
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private Button editProfileButton;
+    private ImageButton addImageButton, galleryButton;
     private List<Bitmap> bitmaps;
     private GridViewAdapter gridViewAdapter;
 
@@ -96,20 +107,66 @@ public class ProfileFragment extends Fragment {
 
         bitmaps = new ArrayList<>();
 
-        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),
-                R.drawable.default_display_image);
-
-        for (int i = 0; i < 10; i++) {
-            bitmaps.add(icon);
-        }
-
         gridViewAdapter = new GridViewAdapter(getContext(), bitmaps);
-
         GridView gridView = view.findViewById(R.id.image_grid_view);
+
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Delete Image")
+                        .setMessage("Are you sure you want to delete this image?")
+                        .setPositiveButton("Delete",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        bitmaps.remove(position);
+                                        gridViewAdapter.notifyDataSetChanged();
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        /* Do nothing */
+                                    }
+                                })
+                        .create()
+                        .show();
+
+                return true;
+            }
+        });
 
         gridView.setAdapter(gridViewAdapter);
 
+        addImageButton = view.findViewById(R.id.add_image_button);
+        addImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                getActivity().startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+        });
+
+        galleryButton = view.findViewById(R.id.gallery_button);
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                getActivity().startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST);
+            }
+        });
 
         return view;
+    }
+
+    /* Will need to refactor this */
+    public void addBitmap(Bitmap bitmap) {
+        bitmaps.add(0, bitmap);
+        gridViewAdapter.notifyDataSetChanged();
     }
 }

@@ -210,21 +210,49 @@
             android:layout_marginVertical="20dp"
             />
 
-        <TextView
-            android:id="@+id/pictures_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:id="@+id/pictures_section"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@id/divider"
-            android:layout_marginStart="30dp"
-            android:text="@string/pictures"
-            android:textColor="@color/colorSubheading"
-            android:textSize="20sp"/>
+            android:layout_marginHorizontal="30dp">
+
+            <TextView
+                android:id="@+id/pictures_text"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/pictures"
+                android:textColor="@color/colorSubheading"
+                android:textSize="20sp"
+                />
+
+            <ImageButton
+                android:id="@+id/gallery_button"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_toStartOf="@id/add_image_button"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/gallery"
+                />
+
+            <ImageButton
+                android:id="@+id/add_image_button"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/add"
+                />
+
+        </RelativeLayout>
 
         <GridView
             android:id="@+id/image_grid_view"
             android:layout_width="wrap_content"
             android:layout_height="400dp"
-            android:layout_below="@id/pictures_text"
+            android:layout_below="@id/pictures_section"
             android:layout_marginTop="30dp"
             android:layout_marginHorizontal="30dp"
             android:layout_marginBottom="75dp"
@@ -236,4 +264,5 @@
             android:stretchMode="columnWidth" />
 
     </RelativeLayout>
+
 </androidx.core.widget.NestedScrollView>
