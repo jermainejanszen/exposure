@@ -17,5 +17,13 @@
     <string name="studied_at">Studied at</string>
     <string name="lived_in">Lived in</string>
     <string name="hobbies">Hobbies</string>
-    <string name="personality_types">Personality Types</string>
+    <string name="personality">Personality</string>
+    <string name="change_profile_picture">Change profile picture</string>
+    <string name="nickname">Nickname</string>
+    <string name="birthday">Birthday</string>
+    <string name="bio">Bio</string>
+    <string name="contact_information">Contact Information</string>
+    <string name="phone">Phone</string>
+    <string name="about_you">About You</string>
+    <string name="pictures">Pictures</string>
 </resources>
