@@ -1,10 +1,13 @@
 package com.exposure.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -16,9 +19,13 @@ import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
-    private Fragment mapFragment, chatsFragment, profileFragment;
+    private ProfileFragment profileFragment;
+    private MapFragment mapFragment;
+    private ChatsFragment chatsFragment;
     private CurrentUser currentUser;
 
     @Override
@@ -65,5 +72,26 @@ public class MainActivity extends AppCompatActivity {
     private void setFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main,
                 fragment).commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (ProfileFragment.CAMERA_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                profileFragment.addBitmap((Bitmap) data.getExtras().get("data"));
+            }
+        } else if (ProfileFragment.GALLERY_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                try {
+                    profileFragment.addBitmap(
+                            MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData())
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                };
+            }
+        }
     }
 }

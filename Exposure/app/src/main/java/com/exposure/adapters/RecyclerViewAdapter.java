@@ -1,6 +1,8 @@
 package com.exposure.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,12 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private Context context;
     private List<String> data;
+    private boolean editable;
 
-    public RecyclerViewAdapter(Context context, List<String> data) {
+    public RecyclerViewAdapter(Context context, List<String> data, boolean editable) {
         this.context = context;
         this.data = data;
+        this.editable = editable;
     }
 
     @NonNull
@@ -30,8 +34,36 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.getTextView().setText(data.get(position));
+        if (editable) {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Delete Item")
+                            .setMessage(String.format("Are you sure you want to delete the item '%s'?", data.get(position)))
+                            .setPositiveButton("Delete",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            data.remove(position);
+                                            notifyDataSetChanged();
+                                        }
+                                    })
+                            .setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            /* Do nothing */
+                                        }
+                                    })
+                            .create()
+                            .show();
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
