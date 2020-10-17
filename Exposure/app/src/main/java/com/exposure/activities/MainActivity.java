@@ -99,11 +99,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        /* Taken a new image */
         if (CAMERA_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 profileFragment.addBitmap((Bitmap) data.getExtras().get("data"));
             }
-        } else if (GALLERY_REQUEST == requestCode) {
+        }
+
+        /* Selected image from photo gallery */
+        if (GALLERY_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 try {
                     profileFragment.addBitmap(
@@ -113,7 +117,10 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 };
             }
-        } else if (EDIT_PROFILE_REQUEST == requestCode) {
+        }
+
+        /* Edited profile details */
+        if (EDIT_PROFILE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 currentUser = (CurrentUser) data.getSerializableExtra("current user");
                 profileFragment = ProfileFragment.newInstance(currentUser);
