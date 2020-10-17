@@ -1,17 +1,21 @@
 package com.exposure.fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.activities.EditProfileActivity;
+import com.exposure.adapters.GridViewAdapter;
 import com.exposure.adapters.RecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -21,6 +25,8 @@ public class ProfileFragment extends Fragment {
     private List<String> studyLocations, areasLivedIn, hobbies, personalities;
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private Button editProfileButton;
+    private List<Bitmap> bitmaps;
+    private GridViewAdapter gridViewAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -87,6 +93,22 @@ public class ProfileFragment extends Fragment {
                 startActivityForResult(new Intent(getContext(), EditProfileActivity.class), 0);
             }
         });
+
+        bitmaps = new ArrayList<>();
+
+        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.default_display_image);
+
+        for (int i = 0; i < 10; i++) {
+            bitmaps.add(icon);
+        }
+
+        gridViewAdapter = new GridViewAdapter(getContext(), bitmaps);
+
+        GridView gridView = view.findViewById(R.id.image_grid_view);
+
+        gridView.setAdapter(gridViewAdapter);
+
 
         return view;
     }

@@ -154,44 +154,6 @@
                     android:background="@android:color/transparent"
                     />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/birthday_edit_text"
-                    android:layout_alignStart="@id/birthday_edit_text"
-                    android:background="@color/colorBorder"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/bio_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/birthday_section"
-                >
-
-                <TextView
-                    android:id="@+id/bio_text"
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/bio"
-                    />
-
-                <EditText
-                    android:id="@+id/bio_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/bio_text"
-                    android:layout_centerVertical="true"
-                    android:paddingVertical="20dp"
-                    android:hint="@string/bio"
-                    android:textSize="14sp"
-                    android:inputType="textMultiLine"
-                    android:background="@android:color/transparent"
-                    />
-
             </RelativeLayout>
 
         </RelativeLayout>
