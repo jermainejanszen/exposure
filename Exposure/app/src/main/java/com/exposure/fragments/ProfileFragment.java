@@ -81,10 +81,10 @@ public class ProfileFragment extends Fragment {
         personalities.add("Gamer");
         personalities.add("Musician");
 
-        studyLocationsAdapter = new RecyclerViewAdapter(getActivity(), studyLocations);
-        areasLivedInAdapter = new RecyclerViewAdapter(getActivity(), areasLivedIn);
-        hobbiesAdapter = new RecyclerViewAdapter(getActivity(), hobbies);
-        personalitiesAdapter = new RecyclerViewAdapter(getActivity(), personalities);
+        studyLocationsAdapter = new RecyclerViewAdapter(getActivity(), studyLocations, false);
+        areasLivedInAdapter = new RecyclerViewAdapter(getActivity(), areasLivedIn, false);
+        hobbiesAdapter = new RecyclerViewAdapter(getActivity(), hobbies, false);
+        personalitiesAdapter = new RecyclerViewAdapter(getActivity(), personalities, false);
 
         RecyclerView studyLocationsRecyclerView = view.findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = view.findViewById(R.id.areas_lived_in_recycler_view);

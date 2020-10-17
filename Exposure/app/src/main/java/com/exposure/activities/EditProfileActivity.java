@@ -1,7 +1,14 @@
 package com.exposure.activities;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,10 +51,10 @@ public class EditProfileActivity extends AppCompatActivity {
         personalities.add("Gamer");
         personalities.add("Musician");
 
-        studyLocationsAdapter = new RecyclerViewAdapter(this, studyLocations);
-        areasLivedInAdapter = new RecyclerViewAdapter(this, areasLivedIn);
-        hobbiesAdapter = new RecyclerViewAdapter(this, hobbies);
-        personalitiesAdapter = new RecyclerViewAdapter(this, personalities);
+        studyLocationsAdapter = new RecyclerViewAdapter(this, studyLocations, true);
+        areasLivedInAdapter = new RecyclerViewAdapter(this, areasLivedIn, true);
+        hobbiesAdapter = new RecyclerViewAdapter(this, hobbies, true);
+        personalitiesAdapter = new RecyclerViewAdapter(this, personalities, true);
 
         RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
