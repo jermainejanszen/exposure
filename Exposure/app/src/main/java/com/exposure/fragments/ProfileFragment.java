@@ -21,6 +21,7 @@ import com.exposure.handlers.DateHandler;
 import com.exposure.user.CurrentUser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -122,6 +123,24 @@ public class ProfileFragment extends Fragment {
                             DateHandler.yearsBetween(currentUser.getBirthday(), new Date())
                     )
             );
+        }
+
+        /* Check if the user has entered any preferences */
+        List<String> preferences = currentUser.getPreferences();
+
+        if (!preferences.isEmpty()) {
+            String preferencesString = "Interested in ";
+
+            Collections.sort(preferences);
+
+            for (int i = 0; i < preferences.size(); i++) {
+                preferencesString += preferences.get(i);
+                if (preferences.size() - 1 != i) {
+                    preferencesString += ", ";
+                }
+            }
+            TextView preferencesText = view.findViewById(R.id.preferences);
+            preferencesText.setText(preferencesString);
         }
 
         return view;

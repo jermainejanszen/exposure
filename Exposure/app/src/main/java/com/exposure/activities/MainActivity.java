@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         currentUser.setPersonalities(new ArrayList<>(Arrays.asList("Memer", "Introvert")));
         currentUser.setPlacesLived(new ArrayList<>(Arrays.asList("Sydney", "Melbourne")));
         currentUser.setPlacesStudied(new ArrayList<>(Arrays.asList("The University of Sydney")));
+        currentUser.setPreferences(new ArrayList<>(Arrays.asList("Females")));
 
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();

@@ -21,8 +21,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="7.5dp"
                 android:src="@drawable/default_display_image"
-                app:civ_border_width="0dp"
-                app:civ_border_color="#FF000000"/>
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/profileImageBorder"/>
 
             <TextView
                 android:id="@+id/change_profile_image_button"
@@ -158,6 +158,59 @@
                     android:inputType="date"
                     android:background="@android:color/transparent"
                     />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/birthday_edit_text"
+                    android:layout_alignStart="@id/birthday_edit_text"
+                    android:background="@color/colorBorder"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/preferences_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/birthday_section"
+                >
+
+                <TextView
+                    android:id="@+id/preferences_text"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingVertical="20dp"
+                    android:text="@string/preferences"
+                    />
+
+                <CheckBox
+                    android:id="@+id/male_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/preferences_text"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/males"/>
+
+                <CheckBox
+                    android:id="@+id/female_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/male_checkbox"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="@string/females"/>
+
+                <CheckBox
+                    android:id="@+id/other_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/female_checkbox"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="@string/others"/>
 
             </RelativeLayout>
 

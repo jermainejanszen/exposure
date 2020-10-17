@@ -27,6 +27,7 @@ abstract class User implements Serializable {
     private List<String> placesLived = new ArrayList<>();
     private List<String> hobbies = new ArrayList<>();
     private List<String> personalities = new ArrayList<>();
+    private List<String> preferences = new ArrayList<>();
 
     /* Constructor */
     public User(String uid) {
@@ -46,6 +47,7 @@ abstract class User implements Serializable {
     public List<String> getPlacesLived() { return placesLived; }
     public List<String> getHobbies() { return hobbies; }
     public List<String> getPersonalities() { return personalities; }
+    public List<String> getPreferences() { return preferences; }
 
     /* Setters */
     public void setName(String name) { this.name = name; }
@@ -59,4 +61,5 @@ abstract class User implements Serializable {
     public void setPlacesLived(List<String> placesLived) { this.placesLived = placesLived; }
     public void setHobbies(List<String> hobbies) { this.hobbies = hobbies; }
     public void setPersonalities(List<String> personalities) { this.personalities = personalities; }
+    public void setPreferences(List<String> preferences) { this.preferences = preferences; }
 }

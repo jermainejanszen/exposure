@@ -3,12 +3,10 @@ package com.exposure.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +20,7 @@ import com.exposure.user.CurrentUser;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -29,6 +28,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private ImageView profileImage;
     private EditText nameEditText, nicknameEditText, emailEditText, phoneEditText, birthdayEditText;
+    private CheckBox maleCheckBox, femaleCheckBox, otherCheckBox;
     private CurrentUser currentUser;
 
     @Override
@@ -55,7 +55,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         profileImage = findViewById(R.id.profile_image);
 
-        initialiseEditTexts();
+        initialiseFields();
     }
 
     @Override
@@ -100,7 +100,7 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        Date birthdayDate = null;
+        Date birthdayDate;
 
         /* If birthday isn't formatted correctly, create error message */
         try {
@@ -134,6 +134,27 @@ public class EditProfileActivity extends AppCompatActivity {
         /* If no phone number is provided, need to set it to null for data consistency and edit text hints */
         currentUser.setPhone(phone.isEmpty() ? null : phone);
 
+        List<String> preferences = currentUser.getPreferences();
+
+        /* Set the preferences data */
+        if (maleCheckBox.isChecked() && !preferences.contains("Males")) {
+            preferences.add("Males");
+        } else if (!maleCheckBox.isChecked()){
+            preferences.remove("Males");
+        }
+
+        if (femaleCheckBox.isChecked() && !preferences.contains("Females")) {
+            preferences.add("Females");
+        } else if (!femaleCheckBox.isChecked()) {
+            preferences.remove("Females");
+        }
+
+        if (otherCheckBox.isChecked() && !preferences.contains("Others")) {
+            preferences.add("Others");
+        } else if (!otherCheckBox.isChecked()) {
+            preferences.remove("Others");
+        }
+
         /* Pass serialized user object to the intent data */
         Intent data = new Intent();
         data.putExtra("current user", currentUser);
@@ -141,12 +162,16 @@ public class EditProfileActivity extends AppCompatActivity {
         finish();
     }
 
-    private void initialiseEditTexts() {
+    private void initialiseFields() {
         nameEditText = findViewById(R.id.name_edit_text);
         nicknameEditText = findViewById(R.id.nickname_edit_text);
         emailEditText = findViewById(R.id.email_edit_text);
         phoneEditText = findViewById(R.id.phone_edit_text);
         birthdayEditText = findViewById(R.id.birthday_edit_text);
+
+        maleCheckBox = findViewById(R.id.male_checkbox);
+        femaleCheckBox = findViewById(R.id.female_checkbox);
+        otherCheckBox = findViewById(R.id.other_checkbox);
 
         if (null != currentUser.getName()) {
             nameEditText.setText(currentUser.getName());
@@ -166,6 +191,13 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if (null != currentUser.getBirthday()) {
             birthdayEditText.setText(DateHandler.convertToString(currentUser.getBirthday()));
+        }
+
+        if (null != currentUser.getPreferences()) {
+            List<String> preferences = currentUser.getPreferences();
+            maleCheckBox.setChecked(preferences.contains("Males"));
+            femaleCheckBox.setChecked(preferences.contains("Females"));
+            otherCheckBox.setChecked(preferences.contains("Others"));
         }
     }
 
