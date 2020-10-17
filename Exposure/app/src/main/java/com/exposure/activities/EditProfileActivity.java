@@ -3,24 +3,32 @@ package com.exposure.activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.adapters.RecyclerViewAdapter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EditProfileActivity extends AppCompatActivity {
+    private static int GALLERY_REQUEST = 101;
     private List<String> studyLocations, areasLivedIn, hobbies, personalities;
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
+    private ImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,5 +73,40 @@ public class EditProfileActivity extends AppCompatActivity {
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
+
+        final TextView changeProfileImageButton = findViewById(R.id.change_profile_image_button);
+
+        changeProfileImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeProfileImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST);
+                    }
+                });
+            }
+        });
+
+        profileImage = findViewById(R.id.profile_image);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (GALLERY_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                try {
+                    profileImage.setImageBitmap(
+                            MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
