@@ -16,13 +16,11 @@ import com.exposure.R;
 import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
-import com.exposure.handlers.DateHandler;
 import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
