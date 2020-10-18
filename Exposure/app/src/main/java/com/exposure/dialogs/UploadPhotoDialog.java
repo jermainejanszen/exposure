@@ -21,7 +21,7 @@ public class UploadPhotoDialog extends Dialog {
     }
 
     public void displayPopup() {
-        setContentView(R.layout.activity_camera_gallery_selection);
+        setContentView(R.layout.activity_camera_library_selection);
 
         TextView takePhoto = findViewById(R.id.take_photo);
         TextView chooseFromLibrary = findViewById(R.id.choose_from_library);
