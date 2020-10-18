@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.adapters.RecyclerViewAdapter;
+import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
 import com.exposure.user.CurrentUser;
 
@@ -47,7 +48,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.currentUser = (CurrentUser) getArguments().getSerializable("current user");
+        currentUser = (CurrentUser) getArguments().getSerializable("current user");
     }
 
     @Override

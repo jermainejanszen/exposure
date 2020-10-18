@@ -65,6 +65,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="7.5dp"
                     android:src="@drawable/default_display_image"
+                    android:onClick="onChangeProfileImageClick"
                     app:civ_border_width="1dp"
                     app:civ_border_color="@color/colorBorderSecondary"/>
 
@@ -76,9 +77,7 @@
                     android:layout_below="@id/profile_image"
                     android:text="@string/change_profile_picture"
                     android:textColor="@color/colorPrimary"
-                    android:onClick="onChangeProfileImageClick"
-                    android:focusable="true"
-                    />
+                    android:onClick="onChangeProfileImageClick" />
 
             </RelativeLayout>
 

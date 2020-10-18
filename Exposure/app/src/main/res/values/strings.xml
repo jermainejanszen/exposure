@@ -35,4 +35,6 @@
     <string name="others">Others</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="choose_from_library">Choose from library</string>
+    <string name="take_photo">Take photo</string>
 </resources>

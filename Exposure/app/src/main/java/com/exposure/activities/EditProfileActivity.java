@@ -1,6 +1,7 @@
 package com.exposure.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.adapters.RecyclerViewAdapter;
+import com.exposure.constants.RequestCodes;
+import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
 import com.exposure.user.CurrentUser;
 
@@ -26,12 +29,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private static int GALLERY_REQUEST = 101;
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private ImageView profileImage;
     private EditText nameEditText, nicknameEditText, emailEditText, phoneEditText, birthdayEditText;
     private CheckBox malesCheckBox, femalesCheckBox, othersCheckBox;
     private CurrentUser currentUser;
+    private UploadPhotoDialog uploadPhotoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +61,23 @@ public class EditProfileActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
 
         initialiseFields();
+
+        uploadPhotoDialog = new UploadPhotoDialog(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (GALLERY_REQUEST == requestCode) {
+        /* Taken a new image */
+        if (RequestCodes.TAKE_PHOTO_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                profileImage.setImageBitmap((Bitmap) data.getExtras().get("data"));
+            }
+        }
+
+        /* Choose image from library */
+        if (RequestCodes.CHOOSE_FROM_LIBRARY_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 try {
                     profileImage.setImageBitmap(
@@ -122,10 +135,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     public void onChangeProfileImageClick(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, GALLERY_REQUEST);
+        uploadPhotoDialog.displayPopup();
     }
 
     public void onSaveClick(View view) {

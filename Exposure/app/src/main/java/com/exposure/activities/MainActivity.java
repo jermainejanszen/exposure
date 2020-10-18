@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.exposure.R;
+import com.exposure.constants.RequestCodes;
+import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
@@ -25,15 +27,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
-    private static int CAMERA_REQUEST = 101;
-    private static int GALLERY_REQUEST = 102;
-    private static int EDIT_PROFILE_REQUEST = 103;
-
     private BottomNavigationView navigationView;
     private ProfileFragment profileFragment;
     private MapFragment mapFragment;
     private ChatsFragment chatsFragment;
     private CurrentUser currentUser;
+    private UploadPhotoDialog uploadPhotoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
         if (!currentUser.validState()) {
             onEditProfileClick(null);
         }
+
+        uploadPhotoDialog = new UploadPhotoDialog(this);
     }
 
     @Override
@@ -93,14 +94,14 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         /* Taken a new image */
-        if (CAMERA_REQUEST == requestCode) {
+        if (RequestCodes.TAKE_PHOTO_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 profileFragment.addBitmap((Bitmap) data.getExtras().get("data"));
             }
         }
 
-        /* Selected image from photo gallery */
-        if (GALLERY_REQUEST == requestCode) {
+        /* Selected image from photo library */
+        if (RequestCodes.CHOOSE_FROM_LIBRARY_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 try {
                     profileFragment.addBitmap(
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /* Edited profile details */
-        if (EDIT_PROFILE_REQUEST == requestCode) {
+        if (RequestCodes.EDIT_PROFILE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 currentUser = (CurrentUser) data.getSerializableExtra("current user");
                 profileFragment = ProfileFragment.newInstance(currentUser);
@@ -123,24 +124,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* onClick handler for the profile fragment */
-    public void onAddImageButtonClick(View view) {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    public void onUploadImageClick(View view) {
+        uploadPhotoDialog.displayPopup();
     }
 
     /* onClick handler for the profile fragment */
     public void onEditProfileClick(View view) {
         Intent editProfileIntent = new Intent(this, EditProfileActivity.class);
         editProfileIntent.putExtra("current user", currentUser);
-        startActivityForResult(editProfileIntent, EDIT_PROFILE_REQUEST);
-    }
-
-    /* onClick handler for the profile fragment */
-    public void onGalleryClick(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST);
+        startActivityForResult(editProfileIntent, RequestCodes.EDIT_PROFILE_REQUEST);
     }
 
     private void setFragment(Fragment fragment) {

@@ -232,24 +232,13 @@
                 />
 
             <ImageButton
-                android:id="@+id/gallery_button"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_toStartOf="@id/add_image_button"
-                android:layout_centerVertical="true"
-                android:layout_marginHorizontal="20dp"
-                android:background="@drawable/gallery"
-                android:onClick="onGalleryClick"
-                />
-
-            <ImageButton
-                android:id="@+id/add_image_button"
+                android:id="@+id/upload_image_button"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/add"
-                android:onClick="onAddImageButtonClick"
+                android:onClick="onUploadImageClick"
                 />
 
         </RelativeLayout>
