@@ -13,7 +13,8 @@ public enum UserField {
     PHONE("phone"),
     PLACES_STUDIED("placesstudied"),
     PLACES_LIVED("placeslived"),
-    HOBBIES("hobbies");
+    HOBBIES("hobbies"),
+    PERSONALITY("personality");
 
     private final String name;
 

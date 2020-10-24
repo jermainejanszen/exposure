@@ -409,6 +409,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_toEndOf="@id/study_locations_recycler_view"
                     android:layout_centerVertical="true"
+                    android:onClick="addPlaceStudiedAt"
                     android:background="@drawable/add"/>
 
                 <View
@@ -454,6 +455,7 @@
                     android:layout_height="25dp"
                     android:layout_marginStart="5dp"
                     android:layout_toEndOf="@id/areas_lived_in_recycler_view"
+                    android:onClick="addPlaceLived"
                     android:layout_centerVertical="true"
                     android:background="@drawable/add"/>
 
@@ -501,6 +503,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_toEndOf="@id/hobbies_recycler_view"
                     android:layout_centerVertical="true"
+                    android:onClick="addHobby"
                     android:background="@drawable/add"/>
 
                 <View
@@ -547,6 +550,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_toEndOf="@id/personality_types_recycler_view"
                     android:layout_centerVertical="true"
+                    android:onClick="addPersonalityTrait"
                     android:background="@drawable/add"/>
 
             </RelativeLayout>
