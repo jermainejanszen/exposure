@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:layout_marginHorizontal="18dp"
-    android:layout_marginVertical="12dp">
+    android:layout_marginTop="2dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/chat_profile_image"
@@ -16,6 +16,7 @@
         />
 
     <RelativeLayout
+        android:id="@+id/chat_texts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/chat_profile_image"
@@ -57,5 +58,12 @@
         android:textSize="12sp"
         android:textColor="@color/colorSecondary" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/chat_profile_image"
+        android:layout_alignStart="@id/chat_texts"
+        android:layout_marginTop="26dp"
+        android:background="@color/colorBorder" />
 
 </RelativeLayout>
