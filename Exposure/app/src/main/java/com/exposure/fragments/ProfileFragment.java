@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.activities.EditProfileActivity;
 import com.exposure.adapters.GridViewAdapter;
-import com.exposure.adapters.RecyclerViewAdapter;
+import com.exposure.adapters.ChipsRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class ProfileFragment extends Fragment {
     public static int GALLERY_REQUEST = 102;
 
     private List<String> studyLocations, areasLivedIn, hobbies, personalities;
-    private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
+    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private Button editProfileButton;
     private ImageButton addImageButton, galleryButton;
     private List<Bitmap> bitmaps;
@@ -77,10 +77,10 @@ public class ProfileFragment extends Fragment {
         personalities.add("Gamer");
         personalities.add("Musician");
 
-        studyLocationsAdapter = new RecyclerViewAdapter(getActivity(), studyLocations, false);
-        areasLivedInAdapter = new RecyclerViewAdapter(getActivity(), areasLivedIn, false);
-        hobbiesAdapter = new RecyclerViewAdapter(getActivity(), hobbies, false);
-        personalitiesAdapter = new RecyclerViewAdapter(getActivity(), personalities, false);
+        studyLocationsAdapter = new ChipsRecyclerViewAdapter(getActivity(), studyLocations, false);
+        areasLivedInAdapter = new ChipsRecyclerViewAdapter(getActivity(), areasLivedIn, false);
+        hobbiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), hobbies, false);
+        personalitiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), personalities, false);
 
         RecyclerView studyLocationsRecyclerView = view.findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = view.findViewById(R.id.areas_lived_in_recycler_view);

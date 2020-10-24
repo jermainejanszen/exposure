@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
-import com.exposure.adapters.RecyclerViewAdapter;
+import com.exposure.adapters.ChipsRecyclerViewAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.List;
 public class EditProfileActivity extends AppCompatActivity {
     private static int GALLERY_REQUEST = 101;
     private List<String> studyLocations, areasLivedIn, hobbies, personalities;
-    private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
+    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private ImageView profileImage;
 
     @Override
@@ -53,10 +53,10 @@ public class EditProfileActivity extends AppCompatActivity {
         personalities.add("Gamer");
         personalities.add("Musician");
 
-        studyLocationsAdapter = new RecyclerViewAdapter(this, studyLocations, true);
-        areasLivedInAdapter = new RecyclerViewAdapter(this, areasLivedIn, true);
-        hobbiesAdapter = new RecyclerViewAdapter(this, hobbies, true);
-        personalitiesAdapter = new RecyclerViewAdapter(this, personalities, true);
+        studyLocationsAdapter = new ChipsRecyclerViewAdapter(this, studyLocations, true);
+        areasLivedInAdapter = new ChipsRecyclerViewAdapter(this, areasLivedIn, true);
+        hobbiesAdapter = new ChipsRecyclerViewAdapter(this, hobbies, true);
+        personalitiesAdapter = new ChipsRecyclerViewAdapter(this, personalities, true);
 
         RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
