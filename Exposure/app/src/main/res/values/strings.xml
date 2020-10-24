@@ -28,4 +28,10 @@
     <string name="pictures">Pictures</string>
     <string name="logout">Logout</string>
     <string name="search">Search</string>
+    <string name="fifteen_plus_km">15+ KM</string>
+    <string name="nine_km">9 - 15 KM</string>
+    <string name="six_km">6 - 8 KM</string>
+    <string name="three_km">3 - 5 KM</string>
+    <string name="zero_km">0 - 2 KM</string>
+    <string name="map_you">YOU</string>
 </resources>
