@@ -1,8 +1,6 @@
 package com.exposure.adapters;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +16,11 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
+public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerViewAdapter.ViewHolder> {
     private Context context;
-    private List<ChatListItem> data;
+    private List<MapListItem> data;
 
-    public ChatsRecyclerViewAdapter(Context context, List<ChatListItem> data) {
+    public MapRecyclerViewAdapter(Context context, List<MapListItem> data) {
         this.context = context;
         this.data = data;
     }
@@ -30,7 +28,7 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chats_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.maps_list_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -38,8 +36,6 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         // holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
         holder.getName().setText(data.get(position).getName());
-        holder.getLastMessage().setText(data.get(position).getLastMessage());
-        holder.getDate().setText(data.get(position).getDate());
     }
 
     @Override
@@ -50,17 +46,11 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView profileImage;
         private final TextView name;
-        private final TextView lastMessage;
-        private final ImageButton openButton;
-        private final TextView date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            profileImage = itemView.findViewById(R.id.chat_profile_image);
-            name = itemView.findViewById(R.id.chat_name);
-            lastMessage = itemView.findViewById(R.id.chat_last_message);
-            openButton = itemView.findViewById(R.id.chat_open_button);
-            date = itemView.findViewById(R.id.chat_date);
+            profileImage = itemView.findViewById(R.id.map_profile_image);
+            name = itemView.findViewById(R.id.map_name);
         }
 
         public CircleImageView getProfileImage() {
@@ -69,18 +59,6 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
 
         public TextView getName() {
             return name;
-        }
-
-        public TextView getLastMessage() {
-            return lastMessage;
-        }
-
-        public ImageButton getOpenButton() {
-            return openButton;
-        }
-
-        public TextView getDate() {
-            return date;
         }
     }
 }
