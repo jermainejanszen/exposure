@@ -21,7 +21,6 @@
         android:layout_below="@id/map_profile_image"
         android:layout_centerHorizontal="true"
         style="@style/NameFont"
-        android:text=""
-        android:textColor="@color/Secondary800"/>
+        android:text="" />
 
 </RelativeLayout>

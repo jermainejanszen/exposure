@@ -162,7 +162,6 @@
             android:layout_margin="12dp"
             android:textColor="@android:color/black" />
 
-
     </RelativeLayout>
 
 </LinearLayout>
