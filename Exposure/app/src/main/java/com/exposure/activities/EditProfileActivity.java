@@ -100,6 +100,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         profileImage = findViewById(R.id.profile_image);
+        //new comment
     }
 
     private void uploadNewUserInformation(){
