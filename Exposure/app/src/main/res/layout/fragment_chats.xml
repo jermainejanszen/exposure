@@ -15,14 +15,21 @@
         app:boxCornerRadiusBottomEnd="32dp"
         app:boxCornerRadiusTopEnd="32dp"
         app:boxCornerRadiusBottomStart="32dp"
-        app:boxCornerRadiusTopStart="32dp">
+        app:boxCornerRadiusTopStart="32dp"
+        android:background="#00000000"
+        android:elevation="8dp"
+        app:boxBackgroundColor="@color/colorBorder"
+        app:boxStrokeColor="@color/colorBorder"
+        app:boxStrokeWidthFocused="1dp"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search"
             android:drawableStart="@drawable/ic_baseline_search_24"
-            android:drawablePadding="8dp" />
+            android:drawablePadding="8dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -30,8 +37,9 @@
         android:id="@+id/chat_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/chat_search_bar"
+        android:paddingTop="78dp"
+        android:paddingBottom="0dp"
+        android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
 
 </RelativeLayout>
