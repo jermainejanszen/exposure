@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,55 +16,31 @@ import com.exposure.R;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
     private Context context;
-    private List<String> data;
+    private List<ChatListItem> data;
     private boolean editable;
 
-    public ChatsRecyclerViewAdapter(Context context, List<String> data, boolean editable) {
+    public ChatsRecyclerViewAdapter(Context context, List<ChatListItem> data) {
         this.context = context;
         this.data = data;
-        this.editable = editable;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chips_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chats_list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.getTextView().setText(data.get(position));
-        if (editable) {
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Delete Item")
-                            .setMessage(String.format("Are you sure you want to delete the item '%s'?", data.get(position)))
-                            .setPositiveButton("Delete",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            data.remove(position);
-                                            notifyDataSetChanged();
-                                        }
-                                    })
-                            .setNegativeButton("Cancel",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            /* Do nothing */
-                                        }
-                                    })
-                            .create()
-                            .show();
-                    return true;
-                }
-            });
-        }
+        // holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
+        holder.getName().setText(data.get(position).getName());
+        holder.getLastMessage().setText(data.get(position).getLastMessage());
+        holder.getDate().setText(data.get(position).getDate());
     }
 
     @Override
@@ -72,15 +49,39 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textView;
+        private final CircleImageView profileImage;
+        private final TextView name;
+        private final TextView lastMessage;
+        private final ImageButton openButton;
+        private final TextView date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.list_item);
+            profileImage = itemView.findViewById(R.id.chat_profile_image);
+            name = itemView.findViewById(R.id.chat_name);
+            lastMessage = itemView.findViewById(R.id.chat_last_message);
+            openButton = itemView.findViewById(R.id.chat_open_button);
+            date = itemView.findViewById(R.id.chat_date);
         }
 
-        public TextView getTextView() {
-            return textView;
+        public CircleImageView getProfileImage() {
+            return profileImage;
+        }
+
+        public TextView getName() {
+            return name;
+        }
+
+        public TextView getLastMessage() {
+            return lastMessage;
+        }
+
+        public ImageButton getOpenButton() {
+            return openButton;
+        }
+
+        public TextView getDate() {
+            return date;
         }
     }
 }

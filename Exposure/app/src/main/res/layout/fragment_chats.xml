@@ -30,7 +30,8 @@
         android:id="@+id/chat_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/chat_search_bar" />
+        android:layout_below="@id/chat_search_bar"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
 </RelativeLayout>
