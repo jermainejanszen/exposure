@@ -6,29 +6,42 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.adapters.RecyclerViewAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
     private static int GALLERY_REQUEST = 101;
     private List<String> studyLocations, areasLivedIn, hobbies, personalities;
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private ImageView profileImage;
+    FirebaseFirestore db;
+    private static final String NAME = "Name";
+    private static final String EMAIL = "email";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        db = FirebaseFirestore.getInstance();
+        uploadNewUserInformation();
 
         studyLocations = new ArrayList<>();
         studyLocations.add("University of Sydney");
@@ -87,6 +100,24 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         profileImage = findViewById(R.id.profile_image);
+    }
+
+    private void uploadNewUserInformation(){
+        Map<String, Object> newUser = new HashMap<>();
+        newUser.put(NAME, "John");
+        newUser.put(EMAIL, "j@gmail.com");
+        db.collection("Users").document("User Information").set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(EditProfileActivity.this, "User information uploaded", Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(EditProfileActivity.this, "ERROR, could not uploaded user information", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
