@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.adapters.RecyclerViewAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -102,5 +103,11 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void onLogoutPress(View view) {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 }
