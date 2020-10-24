@@ -13,8 +13,8 @@ public class ChatListItem {
     public ChatListItem(String uid) {
         this.uid = uid;
         this.profileImage = null;
-        this.name = "Benji";
-        this.lastMessage = "Jermaine I'm actually retarded.";
+        this.name = "First";
+        this.lastMessage = "This was the last message that was sent.";
         this.date = "24/10/20";
     }
 
