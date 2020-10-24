@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="invisible"
-        android:progressBackgroundTint="@color/colorAccent"
+        android:progressBackgroundTint="@color/Primary100"
         />
 
     <RelativeLayout
@@ -40,7 +40,7 @@
             android:layout_below="@+id/logo"
             android:text="@string/app_name"
             android:textSize="15sp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/Primary100"
             />
 
     </RelativeLayout>
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="@string/login"
             android:textSize="30sp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/Primary400"
             android:layout_marginVertical="10dp"
             android:layout_centerHorizontal="true"
             />
@@ -112,7 +112,7 @@
             android:text="@string/login"
             android:textColor="#000000"
             android:onClick="loginUser"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@color/Primary100"
             app:cornerRadius="200dp"
             />
 
@@ -143,7 +143,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/sign_up"
             android:textColor="#000000"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/Primary400"
             android:onClick="startSignUpActivity"
             app:cornerRadius="200dp"
             />

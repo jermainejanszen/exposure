@@ -18,8 +18,8 @@
         app:boxCornerRadiusTopStart="32dp"
         android:background="#00000000"
         android:elevation="8dp"
-        app:boxBackgroundColor="@color/colorBorder"
-        app:boxStrokeColor="@color/colorBorder"
+        app:boxBackgroundColor="@color/Outline"
+        app:boxStrokeColor="@color/Outline"
         app:boxStrokeWidthFocused="1dp"
         app:boxStrokeWidth="0dp"
         app:hintEnabled="false">
