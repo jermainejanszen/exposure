@@ -14,12 +14,9 @@ import org.w3c.dom.Text;
 
 public class UploadPhotoDialog extends Dialog {
 
-
-
     public UploadPhotoDialog(Activity activity) {
         super(activity);
         setOwnerActivity(activity);
-
 
         /* Place the dialog at the bottom of the screen */
         getWindow().getAttributes().gravity = Gravity.BOTTOM;

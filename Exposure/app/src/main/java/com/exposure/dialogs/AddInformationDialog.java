@@ -2,57 +2,45 @@ package com.exposure.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.exposure.R;
-import com.exposure.constants.RequestCodes;
 import com.exposure.user.UserField;
-import com.google.firebase.firestore.auth.User;
 
 public class AddInformationDialog extends Dialog {
+    private final DialogCallback dialogCallback;
 
-    private EditText addedField;
-    private TextView type;
-    private String fieldType;
-
-    public AddInformationDialog(Activity activity) {
+    public AddInformationDialog(Activity activity, DialogCallback dialogCallback) {
         super(activity);
-        setOwnerActivity(activity);
+        this.dialogCallback = dialogCallback;
 
+        /* Just in case we need it later on */
+        setOwnerActivity(activity);
 
         /* Place the dialog at the bottom of the screen */
         getWindow().getAttributes().gravity = Gravity.CENTER_VERTICAL;
     }
 
-    public void displayPopup(String message, UserField fieldType) {
-        this.fieldType = fieldType.toString();
+    public void displayPopup(String message, final UserField fieldType) {
         setContentView(R.layout.activity_add_user_field_popup);
-        this.type = findViewById(R.id.field);
-        type.setText(message);
-        addedField = findViewById(R.id.add_field);
 
-        TextView saveText = findViewById(R.id.save);
+        final EditText addedField = findViewById(R.id.add_field);
+        final TextView saveText = findViewById(R.id.save);
+
+        TextView type = findViewById(R.id.field);
+        type.setText(message);
 
         saveText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveField();
+                dialogCallback.send(fieldType, addedField.getText().toString());
                 dismiss();
             }
         });
+
         show();
-    }
-
-    public void saveField() {
-        Intent fieldIntent = new Intent();
-        fieldIntent.putExtra("Field Type", fieldType);
-        fieldIntent.putExtra("Field Value", addedField.getText().toString());
-        getOwnerActivity().startActivityForResult(fieldIntent, RequestCodes.SAVE_FIELD_REQUEST);
-
     }
 }
