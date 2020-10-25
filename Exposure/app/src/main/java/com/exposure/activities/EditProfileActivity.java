@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,11 +23,8 @@ import com.exposure.callback.DialogCallback;
 import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
-import com.exposure.callback.OnCompleteCallback;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
@@ -51,29 +47,9 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-
         firebaseFirestore = FirebaseFirestore.getInstance();
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
-
         initialiseFields();
-    }
-
-    private void uploadUserInformationToFirestore() {
-        String userID = currentUser.getUid();
-
-        firebaseFirestore.collection("Profiles").document(userID).set(currentUser)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(EditProfileActivity.this, "Successful upload", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(EditProfileActivity.this, "Failed to upload user information" + e, Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     @Override
@@ -201,7 +177,6 @@ public class EditProfileActivity extends AppCompatActivity {
         addInformationDialog.displayPopup("What adjective best sums up your personality?", UserField.PERSONALITIES);
     }
 
-
     public void onChangeProfileImageClick(View view) {
         uploadPhotoDialog.displayPopup();
     }
@@ -300,7 +275,8 @@ public class EditProfileActivity extends AppCompatActivity {
         setResult(RESULT_OK, data);
 
         /* Logic for finishing activity inside upload user information to firestore method */
-        uploadUserInformationToFirestore();
+        UserInformationHandler.uploadUserInformationToFirestore(this, currentUser);
+        finish();
     }
 
     public void onCancelClick(View view) {

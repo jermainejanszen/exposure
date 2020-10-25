@@ -24,6 +24,12 @@ public class UserInformationHandler {
     private static FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
     private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+    /**
+     * Download user information as document snapshot from firestore
+     * @param context calling activity
+     * @param currentUser user whose information we are retrieving from firestore
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
     public static void downloadUserInformation(final Context context, final CurrentUser currentUser, final OnCompleteCallback onCompleteCallback){
         mFirestore.collection("Profiles").document(mAuth.getCurrentUser().getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -46,6 +52,11 @@ public class UserInformationHandler {
         });
     }
 
+    /**
+     * Convert document snapshot information from firestore to current user
+     * @param documentSnapshot Document snapshot containing user information from firestore
+     * @param currentUser Current user to set fields of
+     */
     private static void convertDocumentSnapshotToCurrentUser(DocumentSnapshot documentSnapshot, CurrentUser currentUser) {
         currentUser.setName((String) documentSnapshot.get(UserField.NAME.toString()));
         currentUser.setNickname((String) documentSnapshot.get(UserField.NICKNAME.toString()));
@@ -55,29 +66,46 @@ public class UserInformationHandler {
         currentUser.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
 
         List<String> preferences = (List<String>) documentSnapshot.get(UserField.PREFERENCES.toString());
-        if (preferences != null){
+        List<String> hobbies = (List<String>) documentSnapshot.get(UserField.HOBBIES.toString());
+        List<String> placesLived = (List<String>) documentSnapshot.get(UserField.PLACES_LIVED.toString());
+        List<String> placesStudied = (List<String>) documentSnapshot.get(UserField.PLACES_STUDIED.toString());
+        List<String> personalities = (List<String>) documentSnapshot.get(UserField.PERSONALITIES.toString());
+
+        if (preferences != null) {
             currentUser.setPreferences(preferences);
         }
 
-        List<String> hobbies = (List<String>) documentSnapshot.get(UserField.HOBBIES.toString());
-        if (hobbies != null){
-            //TODO: this may cause an error in the recycler view as it is referencing an old list
+        if (hobbies != null) {
             currentUser.setHobbies(hobbies);
         }
 
-        List<String> placesLived = (List<String>) documentSnapshot.get(UserField.PLACES_LIVED.toString());
-        if (placesLived != null){
+        if (placesLived != null) {
             currentUser.setPlacesLived(placesLived);
         }
 
-        List<String> placesStudied = (List<String>) documentSnapshot.get(UserField.PLACES_STUDIED.toString());
-        if (placesStudied != null){
+        if (placesStudied != null) {
             currentUser.setPlacesStudied(placesStudied);
         }
 
-        List<String> personalities = (List<String>) documentSnapshot.get(UserField.PERSONALITIES.toString());
         if (personalities != null) {
             currentUser.setPersonalities(personalities);
         }
+    }
+
+    public static void uploadUserInformationToFirestore(final Context context, CurrentUser currentUser) {
+        String userID = currentUser.getUid();
+
+        FirebaseFirestore.getInstance().collection("Profiles").document(userID).set(currentUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "Successful upload", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "Failed to upload user information" + e, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
