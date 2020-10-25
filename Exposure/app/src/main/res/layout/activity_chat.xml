@@ -80,9 +80,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/message_placeholder"
-                android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
-                android:drawablePadding="8dp"/>
+                android:hint="@string/message_placeholder" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,8 +94,8 @@
             android:paddingStart="0dp"
             android:paddingEnd="12dp"
             android:tint="@color/Secondary600"
-            app:srcCompat="@drawable/ic_baseline_favorite_24"
-            android:src="@drawable/ic_baseline_favorite_24"
+            app:srcCompat="@drawable/ic_baseline_send_24"
+            android:src="@drawable/ic_baseline_send_24"
             android:background="#00000000" />
 
     </LinearLayout>
