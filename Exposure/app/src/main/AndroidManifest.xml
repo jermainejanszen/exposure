@@ -12,6 +12,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,6 +26,7 @@
         <activity android:name=".dialogs.AddInformationDialog"
             android:theme="@style/Theme.Design.BottomSheetDialog"
             tools:ignore="Instantiatable" />
+        <activity android:name=".activities.ChatActivity"/>
     </application>
 
 </manifest>

@@ -9,4 +9,32 @@
     <color name="colorBorderSecondary">#20212121</color>
     <color name="colorBorderLight">#08212121</color>
     <color name="colorSubheading">#5B3F36</color>
+
+    <color name="Primary50">#E4F1F9</color>
+    <color name="Primary100">#BEDDF1</color>
+    <color name="Primary200">#98C7E8</color>
+    <color name="Primary300">#75B2DD</color>
+    <color name="Primary400">#5DA2D7</color>
+    <color name="Primary500">#4093D5</color>
+    <color name="Primary600">#3986C8</color>
+    <color name="Primary700">#2E75B7</color>
+    <color name="Primary800">#2464A6</color>
+    <color name="Primary900">#0E488A</color>
+
+    <color name="Secondary50">#EEEBE9</color>
+    <color name="Secondary100">#D6CCC8</color>
+    <color name="Secondary200">#BAA9A4</color>
+    <color name="Secondary300">#9F877E</color>
+    <color name="Secondary400">#8B6D62</color>
+    <color name="Secondary500">#775447</color>
+    <color name="Secondary600">#6B4B40</color>
+    <color name="Secondary700">#5B3F36</color>
+    <color name="Secondary800">#4C332D</color>
+    <color name="Secondary900">#3C2622</color>
+
+    <color name="Outline">#EDEDED</color>
+
+    <color name="White">#FFFFFF</color>
+    <color name="Black">#000000</color>
+
 </resources>

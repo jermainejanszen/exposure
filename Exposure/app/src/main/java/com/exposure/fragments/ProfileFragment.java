@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -16,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.adapters.GridViewAdapter;
-import com.exposure.adapters.RecyclerViewAdapter;
+import com.exposure.adapters.ChipsRecyclerViewAdapter;
 import com.exposure.handlers.DateHandler;
 import com.exposure.user.CurrentUser;
 
@@ -27,7 +29,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class ProfileFragment extends Fragment {
-    private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
+    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
+    private Button editProfileButton;
+    private ImageButton addImageButton, galleryButton;
     private List<Bitmap> bitmaps;
     private GridViewAdapter gridViewAdapter;
     private CurrentUser currentUser;
@@ -58,10 +62,10 @@ public class ProfileFragment extends Fragment {
 
         assert null != getActivity();
 
-        studyLocationsAdapter = new RecyclerViewAdapter(getActivity(), currentUser.getPlacesStudied(), false);
-        areasLivedInAdapter = new RecyclerViewAdapter(getActivity(), currentUser.getPlacesLived(), false);
-        hobbiesAdapter = new RecyclerViewAdapter(getActivity(), currentUser.getHobbies(), false);
-        personalitiesAdapter = new RecyclerViewAdapter(getActivity(), currentUser.getPersonalities(), false);
+        studyLocationsAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPlacesStudied(), false);
+        areasLivedInAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPlacesLived(), false);
+        hobbiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getHobbies(), false);
+        personalitiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPersonalities(), false);
 
         RecyclerView studyLocationsRecyclerView = view.findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = view.findViewById(R.id.areas_lived_in_recycler_view);

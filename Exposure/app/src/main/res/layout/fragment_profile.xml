@@ -41,7 +41,8 @@
                     android:id="@+id/display_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
+                    android:text="Display Name"
+                    android:textColor="@color/Primary400"
                     />
 
                 <TextView
@@ -74,9 +75,9 @@
                 android:text="@string/edit"
                 android:gravity="center"
                 android:paddingHorizontal="10dp"
-                android:textColor="@color/colorSecondary"
                 android:onClick="onEditProfileClick"
-                app:iconTint="@color/colorSecondary"
+                android:textColor="@color/Secondary500"
+                app:iconTint="@color/Secondary500"
                 app:icon="@drawable/edit_icon"
                 app:iconGravity="start"
                 />
@@ -209,7 +210,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorBorder"
+            android:background="@color/Outline"
             android:layout_below="@id/details_section"
             android:layout_marginVertical="20dp"
             />
@@ -227,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/pictures"
-                android:textColor="@color/colorSubheading"
+                android:textColor="@color/Secondary800"
                 android:textSize="20sp"
                 />
 
@@ -254,7 +255,7 @@
             android:verticalSpacing="1dp"
             android:horizontalSpacing="1dp"
             android:nestedScrollingEnabled="true"
-            android:scrollbarThumbVertical="@color/colorBorder"
+            android:scrollbarThumbVertical="@color/Outline"
             android:numColumns="3"
             android:stretchMode="columnWidth" />
 

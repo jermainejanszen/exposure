@@ -77,17 +77,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment = null;
-                switch (item.getItemId()) {
-                    case R.id.fragment_map:
-                        fragment = mapFragment;
-                        break;
-                    case R.id.fragment_chats:
-                        fragment = chatsFragment;
-                        break;
-                    case R.id.fragment_profile:
-                        fragment = profileFragment;
-                        break;
+                if(R.id.fragment_map == item.getItemId()) {
+                    fragment = mapFragment;
+                } else if(R.id.fragment_chats == item.getItemId()) {
+                    fragment = chatsFragment;
+                } else if(R.id.fragment_profile == item.getItemId()) {
+                    fragment = profileFragment;
                 }
+
                 setFragment(fragment);
                 return true;
             }

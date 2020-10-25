@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
-import com.exposure.adapters.RecyclerViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
 import com.exposure.dialogs.AddInformationDialog;
@@ -27,7 +26,8 @@ import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.exposure.adapters.ChipsRecyclerViewAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -36,7 +36,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
+    private List<String> studyLocations, areasLivedIn, hobbies, personalities;
+    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private ImageView profileImage;
     private EditText nameEditText, nicknameEditText, emailEditText, phoneEditText, birthdayEditText;
     private CheckBox malesCheckBox, femalesCheckBox, othersCheckBox;
@@ -78,10 +79,10 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void initialiseFields() {
-        studyLocationsAdapter = new RecyclerViewAdapter(this, currentUser.getPlacesStudied(), true);
-        areasLivedInAdapter = new RecyclerViewAdapter(this, currentUser.getPlacesLived(), true);
-        hobbiesAdapter = new RecyclerViewAdapter(this, currentUser.getHobbies(), true);
-        personalitiesAdapter = new RecyclerViewAdapter(this, currentUser.getPersonalities(), true);
+        studyLocationsAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getPlacesStudied(), true);
+        areasLivedInAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getPlacesLived(), true);
+        hobbiesAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getHobbies(), true);
+        personalitiesAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getPersonalities(), true);
 
         RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
@@ -301,6 +302,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void onCancelClick(View view) {
         setResult(RESULT_CANCELED, new Intent());
+        finish();
+    }
+
+    public void onLogoutPress(View view) {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 }
