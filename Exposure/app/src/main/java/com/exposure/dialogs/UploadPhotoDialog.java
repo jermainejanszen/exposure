@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.exposure.R;
 import com.exposure.constants.RequestCodes;
 
+/* Change this to an activity */
 public class UploadPhotoDialog extends Dialog {
 
     public UploadPhotoDialog(Activity activity) {

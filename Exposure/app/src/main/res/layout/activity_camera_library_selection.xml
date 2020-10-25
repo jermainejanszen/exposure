@@ -9,7 +9,7 @@
         android:id="@+id/top_border"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorBorderSecondary"
+        android:background="@color/Outline"
         />
 
     <TextView

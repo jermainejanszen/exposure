@@ -19,8 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
-import com.exposure.dialogs.AddInformationDialog;
-import com.exposure.callback.DialogCallback;
+import com.exposure.dialogs.AddUserFieldActivity;
 import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
@@ -44,7 +43,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private CurrentUser currentUser;
     private UploadPhotoDialog uploadPhotoDialog;
-    private AddInformationDialog addInformationDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +74,34 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         }
+
+        if (RequestCodes.SAVE_PLACE_LIVED_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                currentUser.getPlacesLived().add(data.getStringExtra("New Field"));
+                areasLivedInAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (RequestCodes.SAVE_PLACE_STUDIED_AT_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                currentUser.getPlacesStudied().add(data.getStringExtra("New Field"));
+                studyLocationsAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (RequestCodes.SAVE_HOBBY_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                currentUser.getHobbies().add(data.getStringExtra("New Field"));
+                hobbiesAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (RequestCodes.SAVE_PERSONALITY_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                currentUser.getPersonalities().add(data.getStringExtra("New Field"));
+                personalitiesAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void initialiseFields() {
@@ -95,25 +121,6 @@ public class EditProfileActivity extends AppCompatActivity {
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
 
         uploadPhotoDialog = new UploadPhotoDialog(this);
-        addInformationDialog = new AddInformationDialog(this,
-                new DialogCallback() {
-                    @Override
-                    public void send(UserField userField, String fieldValue) {
-                        if (UserField.HOBBIES == userField) {
-                            currentUser.getHobbies().add(fieldValue);
-                            hobbiesAdapter.notifyDataSetChanged();
-                        } else if (UserField.PERSONALITIES == userField) {
-                            currentUser.getPersonalities().add(fieldValue);
-                            personalitiesAdapter.notifyDataSetChanged();
-                        } else if (UserField.PLACES_LIVED == userField) {
-                            currentUser.getPlacesLived().add(fieldValue);
-                            areasLivedInAdapter.notifyDataSetChanged();
-                        } else if (UserField.PLACES_STUDIED == userField) {
-                            currentUser.getPlacesStudied().add(fieldValue);
-                            studyLocationsAdapter.notifyDataSetChanged();
-                        }
-                    }
-                });
 
         profileImage = findViewById(R.id.profile_image);
         nameEditText = findViewById(R.id.name_edit_text);
@@ -161,23 +168,27 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     public void addHobby(View view){
-        Toast.makeText(EditProfileActivity.this, "Clicked add info button", Toast.LENGTH_SHORT).show();
-        addInformationDialog.displayPopup("Add a hobby!", UserField.HOBBIES);
+        Intent intent = new Intent(this, AddUserFieldActivity.class);
+        intent.putExtra("Field Type", UserField.HOBBIES.toString());
+        startActivityForResult(intent, RequestCodes.SAVE_HOBBY_REQUEST);
     }
 
     public void addPlaceStudiedAt(View view){
-        Toast.makeText(EditProfileActivity.this, "Clicked add info button", Toast.LENGTH_SHORT).show();
-        addInformationDialog.displayPopup("Add a place you've studied at...", UserField.PLACES_STUDIED);
+        Intent intent = new Intent(this, AddUserFieldActivity.class);
+        intent.putExtra("Field Type", UserField.PLACES_STUDIED.toString());
+        startActivityForResult(intent, RequestCodes.SAVE_PLACE_STUDIED_AT_REQUEST);
     }
 
     public void addPlaceLived(View view){
-        Toast.makeText(EditProfileActivity.this, "Clicked add info button", Toast.LENGTH_SHORT).show();
-        addInformationDialog.displayPopup("Add a place you've lived!", UserField.PLACES_LIVED);
+        Intent intent = new Intent(this, AddUserFieldActivity.class);
+        intent.putExtra("Field Type", UserField.PLACES_LIVED.toString());
+        startActivityForResult(intent, RequestCodes.SAVE_PLACE_LIVED_REQUEST);
     }
 
     public void addPersonalityTrait(View view){
-        Toast.makeText(EditProfileActivity.this, "Click add info button", Toast.LENGTH_SHORT).show();
-        addInformationDialog.displayPopup("What adjective best sums up your personality?", UserField.PERSONALITIES);
+        Intent intent = new Intent(this, AddUserFieldActivity.class);
+        intent.putExtra("Field Type", UserField.PERSONALITIES.toString());
+        startActivityForResult(intent, RequestCodes.SAVE_PERSONALITY_REQUEST);
     }
 
     public void onChangeProfileImageClick(View view) {
@@ -310,4 +321,5 @@ public class EditProfileActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
+
 }
