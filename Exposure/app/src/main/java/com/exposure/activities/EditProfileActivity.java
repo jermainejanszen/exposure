@@ -23,15 +23,20 @@ import com.exposure.dialogs.AddInformationDialog;
 import com.exposure.dialogs.DialogCallback;
 import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
+import com.exposure.handlers.UserInformationHandler;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +54,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth mAuth;
     private String userID;
+    private UserInformationHandler informationHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,9 @@ public class EditProfileActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
+
+        informationHandler = new UserInformationHandler();
+        informationHandler.downloadUserInformation(this, currentUser);
 
         studyLocationsAdapter = new RecyclerViewAdapter(this, currentUser.getPlacesStudied(), true);
         areasLivedInAdapter = new RecyclerViewAdapter(this, currentUser.getPlacesLived(), true);
@@ -102,19 +111,9 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void uploadUserInformationToFirestore(){
-        userID = mAuth.getCurrentUser().getUid();
+        userID = currentUser.getUid();
 
-        Map<String, Object> user = new HashMap<>();
-        user.put(UserField.NAME.toString(), currentUser.getName());
-        user.put(UserField.EMAIL.toString(), currentUser.getEmail());
-        user.put(UserField.NICKNAME.toString(), currentUser.getNickname());
-        user.put(UserField.BIRTHDAY.toString(), currentUser.getBirthday());
-        user.put(UserField.PHONE.toString(), currentUser.getPhone());
-        user.put(UserField.PLACES_LIVED.toString(), currentUser.getPlacesLived());
-        user.put(UserField.PLACES_STUDIED.toString(), currentUser.getPlacesStudied());
-        user.put(UserField.HOBBIES.toString(), currentUser.getHobbies());
-
-        firebaseFirestore.collection("Profiles").document(userID).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+        firebaseFirestore.collection("Profiles").document(userID).set(currentUser).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(EditProfileActivity.this, "Successful upload", Toast.LENGTH_SHORT).show();
@@ -224,7 +223,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void onSaveClick(View view) {
 
-        uploadUserInformationToFirestore();
         /* Retrieve any edits from edit texts and set the current user data */
         String name = nameEditText.getText().toString();
         String nickname = nicknameEditText.getText().toString();
@@ -294,6 +292,10 @@ public class EditProfileActivity extends AppCompatActivity {
         List<String> preferences = currentUser.getPreferences();
 
         /* Set the preferences data */
+//        if (preferences == null){
+//            preferences = new ArrayList<>();
+//        }
+
         if (malesCheckBox.isChecked() && !preferences.contains("Males")) {
             preferences.add("Males");
         } else if (!malesCheckBox.isChecked()){
@@ -316,6 +318,9 @@ public class EditProfileActivity extends AppCompatActivity {
         Intent data = new Intent();
         data.putExtra("current user", currentUser);
         setResult(RESULT_OK, data);
+
+        uploadUserInformationToFirestore();
+
         finish();
     }
 

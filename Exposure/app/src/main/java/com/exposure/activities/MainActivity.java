@@ -45,13 +45,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        currentUser.setEmail("bgane@live.com.au");
-        currentUser.setName("Ben");
-        currentUser.setHobbies(new ArrayList<>(Arrays.asList("Guitar", "Piano")));
-        currentUser.setPersonalities(new ArrayList<>(Arrays.asList("Memer", "Introvert")));
-        currentUser.setPlacesLived(new ArrayList<>(Arrays.asList("Sydney", "Melbourne")));
-        currentUser.setPlacesStudied(new ArrayList<>(Arrays.asList("The University of Sydney")));
+        currentUser.setName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        currentUser.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();
