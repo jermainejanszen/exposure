@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.adapters.RecyclerViewAdapter;
-import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
 import com.exposure.user.CurrentUser;
 

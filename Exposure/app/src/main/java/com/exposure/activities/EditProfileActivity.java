@@ -23,8 +23,6 @@ import com.exposure.dialogs.AddInformationDialog;
 import com.exposure.callback.DialogCallback;
 import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
-import com.exposure.handlers.UserInformationHandler;
-import com.exposure.callback.OnCompleteCallback;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
 import com.google.android.gms.tasks.OnFailureListener;

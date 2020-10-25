@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,8 +26,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
@@ -46,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        final ProgressBar progressBar = findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+
         navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setSelectedItemId(R.id.fragment_profile);
 
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                         /* Once the user information has downloaded (either success of failure), we can
                            safely start initializing all of the fields */
                         setup();
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
     }
