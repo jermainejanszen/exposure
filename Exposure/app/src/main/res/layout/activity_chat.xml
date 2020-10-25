@@ -75,12 +75,14 @@
             app:boxStrokeColor="@color/Secondary200"
             app:boxStrokeWidthFocused="1dp"
             app:boxStrokeWidth="0dp"
-            app:hintEnabled="false">
+            app:hintEnabled="false" >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/message_placeholder" />
+                android:hint="@string/message_placeholder"
+                android:inputType="text"
+                android:imeOptions="actionSend" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
