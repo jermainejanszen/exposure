@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.exposure.R;
 import com.exposure.constants.RequestCodes;
 
-import org.w3c.dom.Text;
-
 public class UploadPhotoDialog extends Dialog {
 
     public UploadPhotoDialog(Activity activity) {

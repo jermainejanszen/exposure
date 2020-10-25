@@ -26,9 +26,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextInputLayout emailField, passwordField;
     private ProgressBar loginProgressBar;
-    private FirebaseFirestore firebaseFirestore;
-    private String userID;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

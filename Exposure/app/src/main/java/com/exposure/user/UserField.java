@@ -11,10 +11,10 @@ public enum UserField {
     BIO("bio"),
     EMAIL("email"),
     PHONE("phone"),
-    PLACES_STUDIED("placesstudied"),
-    PLACES_LIVED("placeslived"),
+    PLACES_STUDIED("placesStudied"),
+    PLACES_LIVED("placesLived"),
     HOBBIES("hobbies"),
-    PERSONALITY("personality"),
+    PERSONALITIES("personalities"),
     PREFERENCES("preferences");
 
     private final String name;

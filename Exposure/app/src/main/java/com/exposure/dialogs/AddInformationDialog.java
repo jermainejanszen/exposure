@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.exposure.R;
+import com.exposure.callback.DialogCallback;
 import com.exposure.user.UserField;
 
 public class AddInformationDialog extends Dialog {

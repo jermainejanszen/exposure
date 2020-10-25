@@ -13,11 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.exposure.R;
+import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
 import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
+import com.exposure.handlers.UserInformationHandler;
 import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,10 +46,23 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        currentUser.setName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        currentUser.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        navigationView = findViewById(R.id.bottom_navigation);
+        navigationView.setSelectedItemId(R.id.fragment_profile);
 
+        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        UserInformationHandler.downloadUserInformation(this, currentUser,
+                new OnCompleteCallback() {
+                    @Override
+                    public void update() {
+                        /* Once the user information has downloaded (either success of failure), we can
+                           safely start initializing all of the fields */
+                        setup();
+                    }
+                });
+    }
+
+    private void setup() {
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();
         profileFragment = ProfileFragment.newInstance(currentUser);
@@ -55,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         /* Set profile fragment as the default fragment */
         setFragment(profileFragment);
 
-        navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

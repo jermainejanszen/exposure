@@ -1,4 +1,4 @@
-package com.exposure.dialogs;
+package com.exposure.callback;
 
 import com.exposure.user.UserField;
 

@@ -20,28 +20,22 @@ import com.exposure.R;
 import com.exposure.adapters.RecyclerViewAdapter;
 import com.exposure.constants.RequestCodes;
 import com.exposure.dialogs.AddInformationDialog;
-import com.exposure.dialogs.DialogCallback;
+import com.exposure.callback.DialogCallback;
 import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
+import com.exposure.callback.OnCompleteCallback;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
     private RecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
@@ -52,9 +46,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private UploadPhotoDialog uploadPhotoDialog;
     private AddInformationDialog addInformationDialog;
     private FirebaseFirestore firebaseFirestore;
-    private FirebaseAuth mAuth;
-    private String userID;
-    private UserInformationHandler informationHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,69 +53,27 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
 
-        informationHandler = new UserInformationHandler();
-        informationHandler.downloadUserInformation(this, currentUser);
-
-        studyLocationsAdapter = new RecyclerViewAdapter(this, currentUser.getPlacesStudied(), true);
-        areasLivedInAdapter = new RecyclerViewAdapter(this, currentUser.getPlacesLived(), true);
-        hobbiesAdapter = new RecyclerViewAdapter(this, currentUser.getHobbies(), true);
-        personalitiesAdapter = new RecyclerViewAdapter(this, currentUser.getPersonalities(), true);
-
-        RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
-        RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
-        RecyclerView hobbiesRecyclerView = findViewById(R.id.hobbies_recycler_view);
-        RecyclerView personalityTypesRecyclerView = findViewById(R.id.personality_types_recycler_view);
-
-        studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
-        areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
-        hobbiesRecyclerView.setAdapter(hobbiesAdapter);
-        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
-
-        profileImage = findViewById(R.id.profile_image);
-
         initialiseFields();
-
-        uploadPhotoDialog = new UploadPhotoDialog(this);
-        addInformationDialog = new AddInformationDialog(this,
-                new DialogCallback() {
-                    @Override
-                    public void send(UserField userField, String fieldValue) {
-                        if (UserField.HOBBIES == userField) {
-                            currentUser.getHobbies().add(fieldValue);
-                            hobbiesAdapter.notifyDataSetChanged();
-                        } else if (UserField.PERSONALITY == userField) {
-                            currentUser.getPersonalities().add(fieldValue);
-                            personalitiesAdapter.notifyDataSetChanged();
-                        } else if (UserField.PLACES_LIVED == userField) {
-                            currentUser.getPlacesLived().add(fieldValue);
-                            areasLivedInAdapter.notifyDataSetChanged();
-                        } else if (UserField.PLACES_STUDIED == userField) {
-                            currentUser.getPlacesStudied().add(fieldValue);
-                            studyLocationsAdapter.notifyDataSetChanged();
-                        }
-                    }
-                });
-
     }
 
-    private void uploadUserInformationToFirestore(){
-        userID = currentUser.getUid();
+    private void uploadUserInformationToFirestore() {
+        String userID = currentUser.getUid();
 
-        firebaseFirestore.collection("Profiles").document(userID).set(currentUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(EditProfileActivity.this, "Successful upload", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(EditProfileActivity.this, "Failed to upload user information" + e, Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        firebaseFirestore.collection("Profiles").document(userID).set(currentUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(EditProfileActivity.this, "Successful upload", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(EditProfileActivity.this, "Failed to upload user information" + e, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -152,12 +101,48 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void initialiseFields() {
+        studyLocationsAdapter = new RecyclerViewAdapter(this, currentUser.getPlacesStudied(), true);
+        areasLivedInAdapter = new RecyclerViewAdapter(this, currentUser.getPlacesLived(), true);
+        hobbiesAdapter = new RecyclerViewAdapter(this, currentUser.getHobbies(), true);
+        personalitiesAdapter = new RecyclerViewAdapter(this, currentUser.getPersonalities(), true);
+
+        RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
+        RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
+        RecyclerView hobbiesRecyclerView = findViewById(R.id.hobbies_recycler_view);
+        RecyclerView personalityTypesRecyclerView = findViewById(R.id.personality_types_recycler_view);
+
+        studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
+        areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
+        hobbiesRecyclerView.setAdapter(hobbiesAdapter);
+        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
+
+        uploadPhotoDialog = new UploadPhotoDialog(this);
+        addInformationDialog = new AddInformationDialog(this,
+                new DialogCallback() {
+                    @Override
+                    public void send(UserField userField, String fieldValue) {
+                        if (UserField.HOBBIES == userField) {
+                            currentUser.getHobbies().add(fieldValue);
+                            hobbiesAdapter.notifyDataSetChanged();
+                        } else if (UserField.PERSONALITIES == userField) {
+                            currentUser.getPersonalities().add(fieldValue);
+                            personalitiesAdapter.notifyDataSetChanged();
+                        } else if (UserField.PLACES_LIVED == userField) {
+                            currentUser.getPlacesLived().add(fieldValue);
+                            areasLivedInAdapter.notifyDataSetChanged();
+                        } else if (UserField.PLACES_STUDIED == userField) {
+                            currentUser.getPlacesStudied().add(fieldValue);
+                            studyLocationsAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+
+        profileImage = findViewById(R.id.profile_image);
         nameEditText = findViewById(R.id.name_edit_text);
         nicknameEditText = findViewById(R.id.nickname_edit_text);
         emailEditText = findViewById(R.id.email_edit_text);
         phoneEditText = findViewById(R.id.phone_edit_text);
         birthdayEditText = findViewById(R.id.birthday_edit_text);
-
         malesCheckBox = findViewById(R.id.male_checkbox);
         femalesCheckBox = findViewById(R.id.female_checkbox);
         othersCheckBox = findViewById(R.id.other_checkbox);
@@ -213,7 +198,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void addPersonalityTrait(View view){
         Toast.makeText(EditProfileActivity.this, "Click add info button", Toast.LENGTH_SHORT).show();
-        addInformationDialog.displayPopup("What adjective best sums up your personality?", UserField.PERSONALITY);
+        addInformationDialog.displayPopup("What adjective best sums up your personality?", UserField.PERSONALITIES);
     }
 
 
@@ -291,11 +276,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
         List<String> preferences = currentUser.getPreferences();
 
-        /* Set the preferences data */
-//        if (preferences == null){
-//            preferences = new ArrayList<>();
-//        }
-
         if (malesCheckBox.isChecked() && !preferences.contains("Males")) {
             preferences.add("Males");
         } else if (!malesCheckBox.isChecked()){
@@ -319,9 +299,8 @@ public class EditProfileActivity extends AppCompatActivity {
         data.putExtra("current user", currentUser);
         setResult(RESULT_OK, data);
 
+        /* Logic for finishing activity inside upload user information to firestore method */
         uploadUserInformationToFirestore();
-
-        finish();
     }
 
     public void onCancelClick(View view) {
