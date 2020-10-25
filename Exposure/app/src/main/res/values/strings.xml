@@ -34,4 +34,5 @@
     <string name="three_km">3 - 5 KM</string>
     <string name="zero_km">0 - 2 KM</string>
     <string name="map_you">YOU</string>
+    <string name="message_placeholder">Aa</string>
 </resources>
