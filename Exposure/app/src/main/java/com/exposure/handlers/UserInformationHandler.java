@@ -1,17 +1,12 @@
 package com.exposure.handlers;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -26,30 +21,24 @@ public class UserInformationHandler {
 
     /**
      * Download user information as document snapshot from firestore
-     * @param context calling activity
-     * @param currentUser user whose information we are retrieving from firestore
-     * @param onCompleteCallback notifies the calling class that the task has been executed
+     * @param currentUser The user whose information we are retrieving from firestore
+     * @param onCompleteCallback Notifies the calling class that the task has been executed
      */
-    public static void downloadUserInformation(final Context context, final CurrentUser currentUser, final OnCompleteCallback onCompleteCallback){
+    public static void downloadUserInformation(final CurrentUser currentUser, final OnCompleteCallback onCompleteCallback) {
         mFirestore.collection("Profiles").document(mAuth.getCurrentUser().getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         convertDocumentSnapshotToCurrentUser(documentSnapshot, currentUser);
+                        onCompleteCallback.update(true);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "failed to download" + e, Toast.LENGTH_LONG).show();
-                        // Failed to download user information
+                        /* Failed to download user information */
+                        onCompleteCallback.update(false);
                     }
-                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        /* Notify the calling class that the task has been executed */
-                        onCompleteCallback.update();
-                    }
-        });
+                });
     }
 
     /**
@@ -92,20 +81,25 @@ public class UserInformationHandler {
         }
     }
 
-    public static void uploadUserInformationToFirestore(final Context context, CurrentUser currentUser) {
+    /**
+     * Uploads the data associated with current user to the firestore
+     * @param currentUser The user whose information is being uploaded to the firestore
+     * @param onCompleteCallback Notifies the calling class that the task has been executed
+     */
+    public static void uploadUserInformationToFirestore(CurrentUser currentUser, final OnCompleteCallback onCompleteCallback) {
         String userID = currentUser.getUid();
 
         FirebaseFirestore.getInstance().collection("Profiles").document(userID).set(currentUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "Successful upload", Toast.LENGTH_SHORT).show();
+                        onCompleteCallback.update(true);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, "Failed to upload user information" + e, Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        onCompleteCallback.update(false);
+                    }
+                });
     }
 }

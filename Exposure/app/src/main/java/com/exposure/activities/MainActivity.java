@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
         currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        UserInformationHandler.downloadUserInformation(this, currentUser,
+        UserInformationHandler.downloadUserInformation(currentUser,
                 new OnCompleteCallback() {
                     @Override
-                    public void update() {
+                    public void update(boolean success) {
                         /* Once the user information has downloaded (either success of failure), we can
                            safely start initializing all of the fields */
                         setup();

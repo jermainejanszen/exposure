@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.adapters.RecyclerViewAdapter;
+import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
 import com.exposure.dialogs.AddInformationDialog;
 import com.exposure.callback.DialogCallback;
@@ -38,16 +40,15 @@ public class EditProfileActivity extends AppCompatActivity {
     private ImageView profileImage;
     private EditText nameEditText, nicknameEditText, emailEditText, phoneEditText, birthdayEditText;
     private CheckBox malesCheckBox, femalesCheckBox, othersCheckBox;
+    private ProgressBar progressBar;
     private CurrentUser currentUser;
     private UploadPhotoDialog uploadPhotoDialog;
     private AddInformationDialog addInformationDialog;
-    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        firebaseFirestore = FirebaseFirestore.getInstance();
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
         initialiseFields();
     }
@@ -122,6 +123,7 @@ public class EditProfileActivity extends AppCompatActivity {
         malesCheckBox = findViewById(R.id.male_checkbox);
         femalesCheckBox = findViewById(R.id.female_checkbox);
         othersCheckBox = findViewById(R.id.other_checkbox);
+        progressBar = findViewById(R.id.progress_bar);
 
         if (null != currentUser.getName()) {
             nameEditText.setText(currentUser.getName());
@@ -274,9 +276,27 @@ public class EditProfileActivity extends AppCompatActivity {
         data.putExtra("current user", currentUser);
         setResult(RESULT_OK, data);
 
+        /* Progress bar to indicate we are performing a database operation */
+        progressBar.setVisibility(View.VISIBLE);
+
         /* Logic for finishing activity inside upload user information to firestore method */
-        UserInformationHandler.uploadUserInformationToFirestore(this, currentUser);
-        finish();
+        UserInformationHandler.uploadUserInformationToFirestore(currentUser,
+                new OnCompleteCallback() {
+                    @Override
+                    public void update(boolean success) {
+                        if (success) {
+                            /* Successfully downlaoded user data, so we can safely finish the activity */
+                            Toast.makeText(getApplicationContext(), "Successfully upload user data", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            /* Couldn't download user data, so don't finish the activity */
+                            Toast.makeText(getApplicationContext(), "Failed to upload user data", Toast.LENGTH_LONG).show();
+                        }
+
+                        /* Database operation completed, make progress bar invisibile */
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                });
     }
 
     public void onCancelClick(View view) {
