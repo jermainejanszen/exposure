@@ -11,13 +11,15 @@ public enum UserField {
     BIO("bio"),
     EMAIL("email"),
     PHONE("phone"),
-    PLACES_STUDIED("placesstudied"),
-    PLACES_LIVED("placeslived"),
-    HOBBIES("hobbies");
+    PLACES_STUDIED("placesStudied"),
+    PLACES_LIVED("placesLived"),
+    HOBBIES("hobbies"),
+    PERSONALITIES("personalities"),
+    PREFERENCES("preferences");
 
     private final String name;
 
-    private UserField(String name) {
+    UserField(String name) {
         this.name = name;
     }
 

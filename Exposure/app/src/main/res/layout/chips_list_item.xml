@@ -14,6 +14,8 @@
         android:backgroundTint="@color/Primary100"
         android:paddingVertical="7.5dp"
         android:paddingHorizontal="10dp"
+        android:maxLength="100"
+        android:ellipsize="end"
         android:layout_marginHorizontal="2.5dp"/>
 
 </RelativeLayout>
