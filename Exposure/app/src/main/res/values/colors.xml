@@ -25,4 +25,7 @@
 
     <color name="Outline">#EDEDED</color>
 
+    <color name="White">#FFFFFF</color>
+    <color name="Black">#000000</color>
+
 </resources>
