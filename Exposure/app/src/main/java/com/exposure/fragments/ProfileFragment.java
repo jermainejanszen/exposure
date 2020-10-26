@@ -3,6 +3,7 @@ package com.exposure.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -19,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.adapters.ChipsRecyclerViewAdapter;
+import com.exposure.callback.OnCompleteCallback;
 import com.exposure.handlers.DateHandler;
+import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 
 import java.util.ArrayList;
@@ -32,9 +36,11 @@ public class ProfileFragment extends Fragment {
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private Button editProfileButton;
     private ImageButton addImageButton, galleryButton;
+    private ImageView profileImage;
     private List<Bitmap> bitmaps;
     private GridViewAdapter gridViewAdapter;
     private CurrentUser currentUser;
+    private byte[] profileByteArray;
 
     public static ProfileFragment newInstance(CurrentUser currentUser) {
         ProfileFragment profileFragment = new ProfileFragment();
@@ -42,6 +48,7 @@ public class ProfileFragment extends Fragment {
         args.putSerializable("current user", currentUser);
         profileFragment.setArguments(args);
         return profileFragment;
+
     }
 
     public ProfileFragment() {
@@ -52,6 +59,7 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentUser = (CurrentUser) getArguments().getSerializable("current user");
+
     }
 
     @Override
@@ -144,6 +152,18 @@ public class ProfileFragment extends Fragment {
             TextView preferencesText = view.findViewById(R.id.preferences);
             preferencesText.setText(preferencesString);
         }
+
+        profileByteArray = new byte[1024*1024];
+        profileImage = view.findViewById(R.id.profile_image);
+
+        UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success) {
+                if (success){
+                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                }
+            }
+        });
 
         return view;
     }

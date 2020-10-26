@@ -21,6 +21,7 @@ import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
 import com.exposure.handlers.UserInformationHandler;
+import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
+
+
     }
 
     private void setup() {

@@ -21,6 +21,10 @@ public class UploadPhotoDialog extends Dialog {
         getWindow().getAttributes().gravity = Gravity.BOTTOM;
     }
 
+    /**
+     * Displays a pop up providing users with the option to add a photo to their profile by
+     * taking a photo, add a photo by uploading it from their library, or cancelling the action
+     */
     public void displayPopup() {
         setContentView(R.layout.activity_camera_library_selection);
 
@@ -54,6 +58,10 @@ public class UploadPhotoDialog extends Dialog {
         show();
     }
 
+    /**
+     * Called to retrieve image when the user wants to upload photo from their local library to
+     * their profile
+     */
     private void chooseFromLibrary() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -62,6 +70,10 @@ public class UploadPhotoDialog extends Dialog {
     }
 
     /* onClick handler for the profile fragment */
+
+    /**
+     * Called when users decides to take photo to add to their profile
+     */
     public void takePhoto() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         getOwnerActivity().startActivityForResult(cameraIntent, RequestCodes.TAKE_PHOTO_REQUEST);

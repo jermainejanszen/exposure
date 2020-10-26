@@ -2,6 +2,7 @@ package com.exposure.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -23,10 +24,12 @@ import com.exposure.dialogs.AddUserFieldActivity;
 import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
+import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
 import com.exposure.adapters.ChipsRecyclerViewAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -43,6 +46,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private CurrentUser currentUser;
     private UploadPhotoDialog uploadPhotoDialog;
+    private byte[] profileByteArray;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +55,31 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
         initialiseFields();
+        profileByteArray = new byte[1024*1024];
+        profileImage = findViewById(R.id.profile_image);
+
+        UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success) {
+                if (success){
+                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                }
+            }
+        });
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         /* Taken a new image */
         if (RequestCodes.TAKE_PHOTO_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 profileImage.setImageBitmap((Bitmap) data.getExtras().get("data"));
+                UserMediaHandler.uploadProfilePhotoToFirebase((Bitmap) data.getExtras().get("data"));
+
             }
         }
 
