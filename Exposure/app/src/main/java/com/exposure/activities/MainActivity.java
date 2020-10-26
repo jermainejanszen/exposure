@@ -19,7 +19,9 @@ import com.exposure.constants.RequestCodes;
 import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
+import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
+import com.exposure.handlers.UserMediaHandler;
 import com.exposure.popups.RetrieveImageActivity;
 import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private MapFragment mapFragment;
     private ChatsFragment chatsFragment;
     private CurrentUser currentUser;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        final ProgressBar progressBar = findViewById(R.id.progress_bar);
+        progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
         navigationView = findViewById(R.id.bottom_navigation);
@@ -62,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
+
+
     }
 
     private void setup() {
@@ -101,17 +106,39 @@ public class MainActivity extends AppCompatActivity {
 
         if (RequestCodes.RETRIEVE_IMAGE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
+                profileFragment.setProgressBarVisibility(View.VISIBLE);
                 String source = data.getStringExtra("Source");
+
+                final String id;
+                final Bitmap bitmap;
+
                 if ("Image Capture".equals(source)) {
-                    profileFragment.addBitmap((Bitmap) data.getExtras().get("data"));
+                    id = DateHandler.generateTimestamp();
+                    bitmap = (Bitmap) data.getExtras().get("data");
                 } else if ("Library".equals(source)) {
+                    id = DateHandler.generateTimestamp();
                     try {
-                        profileFragment.addBitmap(
-                                MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        return;
                     }
+                } else {
+                    return;
                 }
+
+                UserMediaHandler.uploadImageToFirebase(id, bitmap, new OnCompleteCallback() {
+                    @Override
+                    public void update(boolean success) {
+                        /* Only display image locally if it successfully uploads to firebase */
+                        if (success) {
+                            profileFragment.addBitmap(
+                                    id,
+                                    bitmap
+                            );
+                        }
+                        profileFragment.setProgressBarVisibility(View.INVISIBLE);
+                    }
+                });
             }
         }
 
@@ -119,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         if (RequestCodes.EDIT_PROFILE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 currentUser = (CurrentUser) data.getSerializableExtra("current user");
-                profileFragment = ProfileFragment.newInstance(currentUser);
+                profileFragment.updateCurrentUser(currentUser);
                 setFragment(profileFragment);
             }
         }

@@ -2,6 +2,7 @@ package com.exposure.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
+import com.exposure.handlers.UserMediaHandler;
 import com.exposure.popups.AddUserFieldActivity;
 import com.exposure.popups.RetrieveImageActivity;
 import com.exposure.user.CurrentUser;
@@ -41,6 +43,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private CheckBox malesCheckBox, femalesCheckBox, othersCheckBox;
     private ProgressBar progressBar;
     private CurrentUser currentUser;
+    private Bitmap profileBitmap;
+    private byte[] profileByteArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,18 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
         initialiseFields();
+        profileByteArray = new byte[1024*1024];
+        profileImage = findViewById(R.id.profile_image);
+
+        UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success) {
+                if (success){
+                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                }
+            }
+        });
+
     }
 
     @Override
@@ -291,16 +307,22 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void update(boolean success) {
                         if (success) {
-                            /* Successfully downlaoded user data, so we can safely finish the activity */
-                            Toast.makeText(getApplicationContext(), "Successfully upload user data", Toast.LENGTH_SHORT).show();
-                            finish();
+                            /* Uploaded user data successfully. Now, upload profile picture if one has been specified */
+                            if (null != profileBitmap) {
+                                UserMediaHandler.uploadProfilePhotoToFirebase(profileBitmap, new OnCompleteCallback() {
+                                    @Override
+                                    public void update(boolean success) {
+                                        /* Finish activity regardless of success */
+                                        finish();
+                                    }
+                                });
+                            } else {
+                                finish();
+                            }
                         } else {
                             /* Couldn't download user data, so don't finish the activity */
-                            Toast.makeText(getApplicationContext(), "Failed to upload user data", Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
-
-                        /* Database operation completed, make progress bar invisibile */
-                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
     }
@@ -315,5 +337,4 @@ public class EditProfileActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
-
 }
