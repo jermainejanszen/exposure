@@ -87,7 +87,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
-            android:id="@+id/like_button"
+            android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.05"
@@ -98,7 +98,8 @@
             android:tint="@color/Secondary600"
             app:srcCompat="@drawable/ic_baseline_send_24"
             android:src="@drawable/ic_baseline_send_24"
-            android:background="#00000000" />
+            android:background="#00000000"
+            android:onClick="onSendPressed"/>
 
     </LinearLayout>
 
@@ -107,7 +108,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/chat_input_container"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:stackFromEnd="true"
+        android:clipToPadding="false"
+        android:paddingTop="116dp"/>
 
 
 </RelativeLayout>

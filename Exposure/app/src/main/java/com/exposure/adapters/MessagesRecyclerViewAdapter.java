@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
@@ -35,7 +32,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             return new SentViewHolder(view);
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recieved_message_list_item, parent, false);
-            return new RecievedViewHolder(view);
+            return new ReceivedViewHolder(view);
         }
     }
 
@@ -45,7 +42,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         if(0 == holder.getItemViewType()) {
             ((SentViewHolder)holder).getContent().setText(this.data.get(position).getMessage());
         } else {
-            ((RecievedViewHolder)holder).getContent().setText(this.data.get(position).getMessage());
+            ((ReceivedViewHolder)holder).getContent().setText(this.data.get(position).getMessage());
         }
 
     }
@@ -73,10 +70,10 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    static class RecievedViewHolder extends RecyclerView.ViewHolder {
+    static class ReceivedViewHolder extends RecyclerView.ViewHolder {
         private final TextView content;
 
-        public RecievedViewHolder(@NonNull View itemView) {
+        public ReceivedViewHolder(@NonNull View itemView) {
             super(itemView);
             content = itemView.findViewById(R.id.message_contents);
         }
