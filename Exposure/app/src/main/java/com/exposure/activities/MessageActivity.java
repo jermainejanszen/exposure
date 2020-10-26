@@ -94,7 +94,7 @@ public class MessageActivity extends Activity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     messages = new ArrayList<>();
-                    if (document.exists()) {
+                    if (null != document && document.exists()) {
                         ArrayList<Map<String, Object>> messageArray = (ArrayList<Map<String, Object>>) document.get("messages");
                         if (null != messageArray) {
                            for(Map<String, Object> message : messageArray) {

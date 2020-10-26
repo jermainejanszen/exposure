@@ -1,6 +1,15 @@
 package com.exposure.adapters;
 
 import android.graphics.Bitmap;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ChatListItem {
 
@@ -36,5 +45,23 @@ public class ChatListItem {
 
     public String getDate() {
         return date;
+    }
+
+    // TODO : Update the adapter after the fields have been loaded
+    private void loadFields() {
+        final DocumentReference userRef = FirebaseFirestore.getInstance()
+                .collection("Profiles")
+                .document(this.uid);
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(null != document && document.exists()) {
+                        name = (String)document.get("nickname");
+                    }
+                }
+            }
+        });
     }
 }

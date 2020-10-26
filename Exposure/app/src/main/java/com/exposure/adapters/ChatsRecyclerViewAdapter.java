@@ -36,7 +36,9 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        // holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
+        if(null != data.get(position).getProfileImage()) {
+            holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
+        }
         holder.getName().setText(data.get(position).getName());
         holder.getLastMessage().setText(data.get(position).getLastMessage());
         holder.getDate().setText(data.get(position).getDate());
