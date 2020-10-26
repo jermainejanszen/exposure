@@ -51,13 +51,6 @@ public class MessageActivity extends Activity {
 
         /* Test data for recycler view */
         messages = new ArrayList<>();
-        /*for(int i = 0; i < 30; i++) {
-            boolean sender = true;
-            if(i % 2 == 0) {
-                sender = false;
-            }
-            messages.add(new MessageListItem("This is test message " + String.valueOf(i), sender));
-        }*/
         messagesAdapter = new MessagesRecyclerViewAdapter(this, messages);
 
         messageRecyclerView = findViewById(R.id.messages_recycler_view);
