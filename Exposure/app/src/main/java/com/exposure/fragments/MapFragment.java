@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.exposure.R;
-import com.exposure.adapters.ChatListItem;
-import com.exposure.adapters.ChatsRecyclerViewAdapter;
 import com.exposure.adapters.MapListItem;
 import com.exposure.adapters.MapRecyclerViewAdapter;
 

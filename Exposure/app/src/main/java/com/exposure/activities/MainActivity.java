@@ -16,13 +16,13 @@ import androidx.fragment.app.Fragment;
 import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
-import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.handlers.UserMediaHandler;
+import com.exposure.popups.RetrieveImageActivity;
 import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private MapFragment mapFragment;
     private ChatsFragment chatsFragment;
     private CurrentUser currentUser;
-    private UploadPhotoDialog uploadPhotoDialog;
     private ProgressBar progressBar;
 
     @Override
@@ -99,20 +98,34 @@ public class MainActivity extends AppCompatActivity {
         if (!currentUser.validState()) {
             onEditProfileClick(null);
         }
-
-        uploadPhotoDialog = new UploadPhotoDialog(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /* Taken a new image */
-        if (RequestCodes.TAKE_PHOTO_REQUEST == requestCode) {
+        if (RequestCodes.RETRIEVE_IMAGE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 profileFragment.setProgressBarVisibility(View.VISIBLE);
-                final String id = DateHandler.generateTimestamp();
-                final Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                String source = data.getStringExtra("Source");
+
+                final String id;
+                final Bitmap bitmap;
+
+                if ("Image Capture".equals(source)) {
+                    id = DateHandler.generateTimestamp();
+                    bitmap = (Bitmap) data.getExtras().get("data");
+                } else if ("Library".equals(source)) {
+                    id = DateHandler.generateTimestamp();
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                    } catch (IOException e) {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+
                 UserMediaHandler.uploadImageToFirebase(id, bitmap, new OnCompleteCallback() {
                     @Override
                     public void update(boolean success) {
@@ -129,32 +142,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        /* Selected image from photo library */
-        if (RequestCodes.CHOOSE_FROM_LIBRARY_REQUEST == requestCode) {
-            if (RESULT_OK == resultCode) {
-                try {
-                    profileFragment.setProgressBarVisibility(View.VISIBLE);
-                    final String id = DateHandler.generateTimestamp();
-                    final Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
-                    UserMediaHandler.uploadImageToFirebase(id, bitmap, new OnCompleteCallback() {
-                        @Override
-                        public void update(boolean success) {
-                            /* Only display image locally if it successfully uploads to firebase */
-                            if (success) {
-                                profileFragment.addBitmap(
-                                        id,
-                                        bitmap
-                                );
-                            }
-                            profileFragment.setProgressBarVisibility(View.INVISIBLE);
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                };
-            }
-        }
-
         /* Edited profile details */
         if (RequestCodes.EDIT_PROFILE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
@@ -167,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
 
     /* onClick handler for the profile fragment */
     public void onUploadImageClick(View view) {
-        uploadPhotoDialog.displayPopup();
+        Intent intent = new Intent(this, RetrieveImageActivity.class);
+        startActivityForResult(intent, RequestCodes.RETRIEVE_IMAGE_REQUEST);
     }
 
     /* onClick handler for the profile fragment */
