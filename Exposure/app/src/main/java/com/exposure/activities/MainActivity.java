@@ -16,11 +16,11 @@ import androidx.fragment.app.Fragment;
 import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
-import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
 import com.exposure.handlers.UserInformationHandler;
+import com.exposure.popups.RetrieveImageActivity;
 import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private MapFragment mapFragment;
     private ChatsFragment chatsFragment;
     private CurrentUser currentUser;
-    private UploadPhotoDialog uploadPhotoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,31 +93,25 @@ public class MainActivity extends AppCompatActivity {
         if (!currentUser.validState()) {
             onEditProfileClick(null);
         }
-
-        uploadPhotoDialog = new UploadPhotoDialog(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /* Taken a new image */
-        if (RequestCodes.TAKE_PHOTO_REQUEST == requestCode) {
+        if (RequestCodes.RETRIEVE_IMAGE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
-                profileFragment.addBitmap((Bitmap) data.getExtras().get("data"));
-            }
-        }
-
-        /* Selected image from photo library */
-        if (RequestCodes.CHOOSE_FROM_LIBRARY_REQUEST == requestCode) {
-            if (RESULT_OK == resultCode) {
-                try {
-                    profileFragment.addBitmap(
-                            MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData())
-                    );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                };
+                String source = data.getStringExtra("Source");
+                if ("Image Capture".equals(source)) {
+                    profileFragment.addBitmap((Bitmap) data.getExtras().get("data"));
+                } else if ("Library".equals(source)) {
+                    try {
+                        profileFragment.addBitmap(
+                                MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
 
@@ -134,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
 
     /* onClick handler for the profile fragment */
     public void onUploadImageClick(View view) {
-        uploadPhotoDialog.displayPopup();
+        Intent intent = new Intent(this, RetrieveImageActivity.class);
+        startActivityForResult(intent, RequestCodes.RETRIEVE_IMAGE_REQUEST);
     }
 
     /* onClick handler for the profile fragment */
