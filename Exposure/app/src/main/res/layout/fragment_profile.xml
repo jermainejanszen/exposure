@@ -38,29 +38,29 @@
                 android:layout_toEndOf="@id/profile_image">
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/display_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Display Name"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/Primary400"
                     />
 
                 <TextView
                     android:id="@+id/age"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/name"
+                    android:layout_below="@id/display_name"
                     android:textSize="12sp"
-                    android:text="Age"
+                    android:text="@string/age"
                     />
 
                 <TextView
-                    android:id="@+id/sexuality"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/preferences"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/age"
                     android:textSize="12sp"
-                    android:text="Interested in"
+                    android:text="@string/interested_in"
                     />
 
             </RelativeLayout>
@@ -75,8 +75,9 @@
                 android:text="@string/edit"
                 android:gravity="center"
                 android:paddingHorizontal="10dp"
-                android:textColor="@color/colorSecondary"
-                app:iconTint="@color/colorSecondary"
+                android:onClick="onEditProfileClick"
+                android:textColor="@color/Secondary500"
+                app:iconTint="@color/Secondary500"
                 app:icon="@drawable/edit_icon"
                 app:iconGravity="start"
                 />
@@ -94,7 +95,8 @@
                 android:id="@+id/study_locations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="5dp">
+                android:layout_marginVertical="5dp"
+                android:minHeight="30dp">
 
                 <TextView
                     android:id="@+id/study_locations_text"
@@ -122,7 +124,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/study_locations"
-                android:layout_marginVertical="5dp">
+                android:layout_marginVertical="5dp"
+                android:minHeight="30dp">
 
                 <TextView
                     android:id="@+id/areas_lived_in_text"
@@ -149,7 +152,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/areas_lived_in"
-                android:layout_marginVertical="5dp">
+                android:layout_marginVertical="5dp"
+                android:minHeight="30dp">
 
                 <TextView
                     android:id="@+id/hobbies_text"
@@ -177,7 +181,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/hobbies"
-                android:layout_marginVertical="5dp">
+                android:layout_marginVertical="5dp"
+                android:minHeight="30dp">
 
                 <TextView
                     android:id="@+id/personality_types_text"
@@ -205,7 +210,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorBorder"
+            android:background="@color/Outline"
             android:layout_below="@id/details_section"
             android:layout_marginVertical="20dp"
             />
@@ -223,27 +228,18 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/pictures"
-                android:textColor="@color/colorSubheading"
+                android:textColor="@color/Secondary800"
                 android:textSize="20sp"
                 />
 
             <ImageButton
-                android:id="@+id/gallery_button"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_toStartOf="@id/add_image_button"
-                android:layout_centerVertical="true"
-                android:layout_marginHorizontal="20dp"
-                android:background="@drawable/gallery"
-                />
-
-            <ImageButton
-                android:id="@+id/add_image_button"
+                android:id="@+id/upload_image_button"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/add"
+                android:onClick="onUploadImageClick"
                 />
 
         </RelativeLayout>
@@ -259,7 +255,7 @@
             android:verticalSpacing="1dp"
             android:horizontalSpacing="1dp"
             android:nestedScrollingEnabled="true"
-            android:scrollbarThumbVertical="@color/colorBorder"
+            android:scrollbarThumbVertical="@color/Outline"
             android:numColumns="3"
             android:stretchMode="columnWidth" />
 

@@ -15,12 +15,12 @@ import com.exposure.R;
 
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class ChipsRecyclerViewAdapter extends RecyclerView.Adapter<ChipsRecyclerViewAdapter.ViewHolder> {
     private Context context;
     private List<String> data;
     private boolean editable;
 
-    public RecyclerViewAdapter(Context context, List<String> data, boolean editable) {
+    public ChipsRecyclerViewAdapter(Context context, List<String> data, boolean editable) {
         this.context = context;
         this.data = data;
         this.editable = editable;
@@ -29,7 +29,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chips_list_item, parent, false);
         return new ViewHolder(view);
     }
 

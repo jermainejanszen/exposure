@@ -2,8 +2,11 @@ package com.exposure.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -33,7 +37,23 @@ public class LoginActivity extends AppCompatActivity {
         emailField = findViewById(R.id.email_field);
         passwordField = findViewById(R.id.password_field);
         loginProgressBar = findViewById(R.id.progress_bar);
+
+        passwordField.getEditText().setOnEditorActionListener(
+                new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (EditorInfo.IME_ACTION_DONE == actionId) {
+                            loginUser(null);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+        );
+
     }
+
 
     public void loginUser(View view) {
         String email = emailField.getEditText().getText().toString().trim();
