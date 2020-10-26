@@ -30,8 +30,6 @@ import java.util.Locale;
 
 public class ProfileFragment extends Fragment {
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
-    private Button editProfileButton;
-    private ImageButton addImageButton, galleryButton;
     private List<Bitmap> bitmaps;
     private GridViewAdapter gridViewAdapter;
     private CurrentUser currentUser;

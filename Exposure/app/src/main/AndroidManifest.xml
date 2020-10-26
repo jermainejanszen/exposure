@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.exposure">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -23,7 +22,10 @@
         <activity android:name=".activities.SignUpActivity"/>
         <activity android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.EditProfileActivity"/>
-        <activity android:name=".dialogs.AddUserFieldActivity"
+        <activity android:name=".popups.RetrieveImageActivity"
+            android:theme="@style/Theme.Design.BottomSheetDialog"
+            />
+        <activity android:name=".popups.AddUserFieldActivity"
             android:theme="@style/Theme.Design.BottomSheetDialog"
             android:windowSoftInputMode="stateVisible"/>
         <activity android:name=".activities.MessageActivity"/>

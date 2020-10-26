@@ -1,4 +1,4 @@
-package com.exposure.dialogs;
+package com.exposure.popups;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,6 +21,7 @@ public class AddUserFieldActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user_field);
+
 
         addedField = findViewById(R.id.add_field);
         addedField.requestFocus();
@@ -72,40 +73,4 @@ public class AddUserFieldActivity extends Activity {
         setResult(RESULT_OK, intent);
         finish();
     }
-
-
-    /* private final DialogCallback dialogCallback;
-
-
-
-    /*public AddInformationDialog(Activity activity, DialogCallback dialogCallback) {
-        super(activity);
-        this.dialogCallback = dialogCallback;
-
-        /* Just in case we need it later on
-        setOwnerActivity(activity);
-
-        /* Place the dialog at the bottom of the screen
-        getWindow().getAttributes().gravity = Gravity.CENTER_VERTICAL;
-    }
-
-    public void displayPopup(String message, final UserField fieldType) {
-        setContentView(R.layout.activity_add_user_field_popup);
-
-        final EditText addedField = findViewById(R.id.add_field);
-        final TextView saveText = findViewById(R.id.save);
-
-        TextView type = findViewById(R.id.field);
-        type.setText(message);
-
-        saveText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogCallback.send(fieldType, addedField.getText().toString());
-                dismiss();
-            }
-        });
-
-        show();
-    }*/
 }
