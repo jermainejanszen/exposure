@@ -122,6 +122,7 @@ public class MessageActivity extends Activity {
                                     }
                                 }
                                 messagesAdapter.notifyDataSetChanged();
+                                messageRecyclerView.scrollToPosition(messages.size() - 1);
                             } else {
                                 Log.d("MessageListener", "Data = null");
                             }
@@ -136,9 +137,7 @@ public class MessageActivity extends Activity {
         String text = messageInput.getEditText().getText().toString().trim();
         if(text.length() > 0) {
             messages.add(new MessageListItem(text, currID));
-            messagesAdapter.notifyDataSetChanged();
             messageInput.getEditText().setText("");
-            messageRecyclerView.scrollToPosition(messages.size() - 1);
 
             if(messages.size() > 400) {
                 messages = messages.subList(messages.size() - 400, messages.size());
