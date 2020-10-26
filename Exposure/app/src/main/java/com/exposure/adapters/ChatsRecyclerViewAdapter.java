@@ -44,7 +44,9 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, MessageActivity.class));
+                Intent intent = new Intent(context, MessageActivity.class);
+                intent.putExtra("UID", data.get(position).getUid());
+                context.startActivity(intent);
             }
         });
     }

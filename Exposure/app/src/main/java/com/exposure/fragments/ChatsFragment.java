@@ -39,9 +39,7 @@ public class ChatsFragment extends Fragment {
 
         /* Placeholders */
         chats = new ArrayList<>();
-        for(int i = 0; i < 30; i++) {
-            chats.add(new ChatListItem("123456"));
-        }
+        chats.add(new ChatListItem("PTIDi7lEIkb7PMOD7S4ihbPTecT2"));
         chatsAdapter = new ChatsRecyclerViewAdapter(getActivity(), chats);
 
         RecyclerView chatsRecyclerView = view.findViewById(R.id.chat_list);

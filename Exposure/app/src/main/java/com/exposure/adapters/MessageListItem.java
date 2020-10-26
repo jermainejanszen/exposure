@@ -1,13 +1,11 @@
 package com.exposure.adapters;
 
-import android.graphics.Bitmap;
-
 public class MessageListItem {
 
     private final String message;
-    private final boolean sender;
+    private final String sender;
 
-    public MessageListItem(String message, boolean sender) {
+    public MessageListItem(String message, String sender) {
         this.message = message;
         this.sender = sender;
     }
@@ -16,7 +14,7 @@ public class MessageListItem {
         return message;
     }
 
-    public boolean getSender() {
+    public String getSender() {
         return sender;
     }
 }

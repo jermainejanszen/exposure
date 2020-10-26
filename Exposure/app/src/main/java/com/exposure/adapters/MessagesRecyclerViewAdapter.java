@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -49,7 +50,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        return this.data.get(position).getSender() ? 0 : 1;
+        boolean sender = this.data.get(position).getSender().equals(FirebaseAuth.getInstance().getUid());
+        return sender ? 0 : 1;
     }
 
     @Override

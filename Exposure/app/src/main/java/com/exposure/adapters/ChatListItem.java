@@ -18,6 +18,10 @@ public class ChatListItem {
         this.date = "24/10/20";
     }
 
+    public String getUid() {
+        return uid;
+    }
+
     public Bitmap getProfileImage() {
         return profileImage;
     }
