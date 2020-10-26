@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,18 +32,23 @@ import com.exposure.user.CurrentUser;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ProfileFragment extends Fragment {
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
-    private Button editProfileButton;
-    private ImageButton addImageButton, galleryButton;
+    private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView, personalityTypesRecyclerView;
+    private TextView displayNameText, ageText, preferencesText;
     private ImageView profileImage;
-    private List<Bitmap> bitmaps;
+    private GridView gridView;
+    private Map<String, Bitmap> bitmaps;
     private GridViewAdapter gridViewAdapter;
     private CurrentUser currentUser;
+    private List<String> imagePaths;
     private byte[] profileByteArray;
+    private ProgressBar progressBar;
 
     public static ProfileFragment newInstance(CurrentUser currentUser) {
         ProfileFragment profileFragment = new ProfileFragment();
@@ -48,7 +56,6 @@ public class ProfileFragment extends Fragment {
         args.putSerializable("current user", currentUser);
         profileFragment.setArguments(args);
         return profileFragment;
-
     }
 
     public ProfileFragment() {
@@ -59,36 +66,31 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentUser = (CurrentUser) getArguments().getSerializable("current user");
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         assert null != getActivity();
 
-        studyLocationsAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPlacesStudied(), false);
-        areasLivedInAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPlacesLived(), false);
-        hobbiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getHobbies(), false);
-        personalitiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPersonalities(), false);
+        studyLocationsRecyclerView = view.findViewById(R.id.study_locations_recycler_view);
+        areasLivedInRecyclerView = view.findViewById(R.id.areas_lived_in_recycler_view);
+        hobbiesRecyclerView = view.findViewById(R.id.hobbies_recycler_view);
+        personalityTypesRecyclerView = view.findViewById(R.id.personality_types_recycler_view);
+        displayNameText = view.findViewById(R.id.display_name);
+        ageText = view.findViewById(R.id.age);
+        preferencesText = view.findViewById(R.id.preferences);
+        profileImage = view.findViewById(R.id.profile_image);
+        gridView = view.findViewById(R.id.image_grid_view);
+        progressBar = view.findViewById(R.id.progress_bar);
 
-        RecyclerView studyLocationsRecyclerView = view.findViewById(R.id.study_locations_recycler_view);
-        RecyclerView areasLivedInRecyclerView = view.findViewById(R.id.areas_lived_in_recycler_view);
-        RecyclerView hobbiesRecyclerView = view.findViewById(R.id.hobbies_recycler_view);
-        RecyclerView personalityTypesRecyclerView = view.findViewById(R.id.personality_types_recycler_view);
-
-        studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
-        areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
-        hobbiesRecyclerView.setAdapter(hobbiesAdapter);
-        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
-
-        bitmaps = new ArrayList<>();
-
-        gridViewAdapter = new GridViewAdapter(getContext(), bitmaps);
-        GridView gridView = view.findViewById(R.id.image_grid_view);
+        bitmaps = new HashMap<>();
+        imagePaths = new ArrayList<>();
+        gridViewAdapter = new GridViewAdapter(getContext(), bitmaps, imagePaths);
+        gridView.setAdapter(gridViewAdapter);
 
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -101,7 +103,9 @@ public class ProfileFragment extends Fragment {
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        bitmaps.remove(position);
+                                        UserMediaHandler.deleteImageFromFirebase(gridViewAdapter.getItem(position));
+                                        bitmaps.remove(gridViewAdapter.getItem(position));
+                                        imagePaths.remove(position);
                                         gridViewAdapter.notifyDataSetChanged();
                                     }
                                 })
@@ -119,16 +123,44 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        gridView.setAdapter(gridViewAdapter);
+        initialiseFields();
+
+        return view;
+    }
+
+    public void updateCurrentUser(CurrentUser currentUser) {
+        this.currentUser = currentUser;
+        initialiseFields();
+    }
+
+
+    private void initialiseFields() {
+        studyLocationsAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPlacesStudied(), false);
+        areasLivedInAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPlacesLived(), false);
+        hobbiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getHobbies(), false);
+        personalitiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPersonalities(), false);
+
+        studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
+        areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
+        hobbiesRecyclerView.setAdapter(hobbiesAdapter);
+        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
+
+        /* If we haven't already downloaded the user's images from firebase, do so */
+        if (null != bitmaps && null != imagePaths) {
+            UserMediaHandler.downloadImagesFromFirebase(bitmaps, imagePaths, new OnCompleteCallback() {
+                @Override
+                public void update(boolean success) {
+                    gridViewAdapter.notifyDataSetChanged();
+                }
+            });
+        }
 
         /* Set the display name to the nickname if it exists, otherwise just use the users name */
-        TextView displayNameText = view.findViewById(R.id.display_name);
         displayNameText.setText(
                 currentUser.getNickname() == null ? currentUser.getName() : currentUser.getNickname());
 
         /* Set the users age if they have entered their birthday */
         if (null != currentUser.getBirthday()) {
-            TextView ageText = view.findViewById(R.id.age);
             ageText.setText(
                     String.format(Locale.ENGLISH,
                             "Age %d",
@@ -149,12 +181,10 @@ public class ProfileFragment extends Fragment {
                 preferencesString += ", " + preferences.get(i);
             }
 
-            TextView preferencesText = view.findViewById(R.id.preferences);
             preferencesText.setText(preferencesString);
         }
 
         profileByteArray = new byte[1024*1024];
-        profileImage = view.findViewById(R.id.profile_image);
 
         UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
@@ -164,13 +194,16 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
-
-        return view;
     }
 
     /* Will need to refactor this */
-    public void addBitmap(Bitmap bitmap) {
-        bitmaps.add(0, bitmap);
+    public void addBitmap(String id, Bitmap bitmap) {
+        bitmaps.put(id, bitmap);
+        imagePaths.add(id);
         gridViewAdapter.notifyDataSetChanged();
+    }
+
+    public void setProgressBarVisibility(int visibility) {
+        progressBar.setVisibility(visibility);
     }
 }

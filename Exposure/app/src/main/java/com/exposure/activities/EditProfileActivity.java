@@ -29,7 +29,6 @@ import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
 import com.exposure.adapters.ChipsRecyclerViewAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -38,7 +37,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private List<String> studyLocations, areasLivedIn, hobbies, personalities;
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private ImageView profileImage;
     private EditText nameEditText, nicknameEditText, emailEditText, phoneEditText, birthdayEditText;
@@ -46,6 +44,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private CurrentUser currentUser;
     private UploadPhotoDialog uploadPhotoDialog;
+    private Bitmap profileBitmap;
     private byte[] profileByteArray;
 
 
@@ -73,13 +72,11 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         /* Taken a new image */
         if (RequestCodes.TAKE_PHOTO_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
-                profileImage.setImageBitmap((Bitmap) data.getExtras().get("data"));
-                UserMediaHandler.uploadProfilePhotoToFirebase((Bitmap) data.getExtras().get("data"));
-
+                profileBitmap = (Bitmap) data.getExtras().get("data");
+                profileImage.setImageBitmap(profileBitmap);
             }
         }
 
@@ -87,8 +84,8 @@ public class EditProfileActivity extends AppCompatActivity {
         if (RequestCodes.CHOOSE_FROM_LIBRARY_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 try {
-                    profileImage.setImageBitmap(
-                            MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
+                    profileBitmap =  MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                    profileImage.setImageBitmap(profileBitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -317,16 +314,22 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void update(boolean success) {
                         if (success) {
-                            /* Successfully downlaoded user data, so we can safely finish the activity */
-                            Toast.makeText(getApplicationContext(), "Successfully upload user data", Toast.LENGTH_SHORT).show();
-                            finish();
+                            /* Uploaded user data successfully. Now, upload profile picture if one has been specified */
+                            if (null != profileBitmap) {
+                                UserMediaHandler.uploadProfilePhotoToFirebase(profileBitmap, new OnCompleteCallback() {
+                                    @Override
+                                    public void update(boolean success) {
+                                        /* Finish activity regardless of success */
+                                        finish();
+                                    }
+                                });
+                            } else {
+                                finish();
+                            }
                         } else {
                             /* Couldn't download user data, so don't finish the activity */
-                            Toast.makeText(getApplicationContext(), "Failed to upload user data", Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
-
-                        /* Database operation completed, make progress bar invisibile */
-                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
     }

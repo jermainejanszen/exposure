@@ -38,4 +38,8 @@ public class DateHandler {
 
         return years;
     }
+
+    public static String generateTimestamp() {
+        return new SimpleDateFormat("dd_MM_yyyy_HH-mm-ss", Locale.ENGLISH).format(new Date());
+    }
 }

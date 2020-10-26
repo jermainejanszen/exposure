@@ -20,6 +20,7 @@ import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.fragments.ChatsFragment;
 import com.exposure.fragments.MapFragment;
 import com.exposure.fragments.ProfileFragment;
+import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ChatsFragment chatsFragment;
     private CurrentUser currentUser;
     private UploadPhotoDialog uploadPhotoDialog;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        final ProgressBar progressBar = findViewById(R.id.progress_bar);
+        progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
         navigationView = findViewById(R.id.bottom_navigation);
@@ -108,7 +110,22 @@ public class MainActivity extends AppCompatActivity {
         /* Taken a new image */
         if (RequestCodes.TAKE_PHOTO_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
-                profileFragment.addBitmap((Bitmap) data.getExtras().get("data"));
+                profileFragment.setProgressBarVisibility(View.VISIBLE);
+                final String id = DateHandler.generateTimestamp();
+                final Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                UserMediaHandler.uploadImageToFirebase(id, bitmap, new OnCompleteCallback() {
+                    @Override
+                    public void update(boolean success) {
+                        /* Only display image locally if it successfully uploads to firebase */
+                        if (success) {
+                            profileFragment.addBitmap(
+                                    id,
+                                    bitmap
+                            );
+                        }
+                        profileFragment.setProgressBarVisibility(View.INVISIBLE);
+                    }
+                });
             }
         }
 
@@ -116,9 +133,22 @@ public class MainActivity extends AppCompatActivity {
         if (RequestCodes.CHOOSE_FROM_LIBRARY_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 try {
-                    profileFragment.addBitmap(
-                            MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData())
-                    );
+                    profileFragment.setProgressBarVisibility(View.VISIBLE);
+                    final String id = DateHandler.generateTimestamp();
+                    final Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                    UserMediaHandler.uploadImageToFirebase(id, bitmap, new OnCompleteCallback() {
+                        @Override
+                        public void update(boolean success) {
+                            /* Only display image locally if it successfully uploads to firebase */
+                            if (success) {
+                                profileFragment.addBitmap(
+                                        id,
+                                        bitmap
+                                );
+                            }
+                            profileFragment.setProgressBarVisibility(View.INVISIBLE);
+                        }
+                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 };
@@ -129,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         if (RequestCodes.EDIT_PROFILE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 currentUser = (CurrentUser) data.getSerializableExtra("current user");
-                profileFragment = ProfileFragment.newInstance(currentUser);
+                profileFragment.updateCurrentUser(currentUser);
                 setFragment(profileFragment);
             }
         }
