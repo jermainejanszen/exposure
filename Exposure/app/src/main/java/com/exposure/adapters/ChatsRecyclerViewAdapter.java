@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
-import com.exposure.activities.ChatActivity;
+import com.exposure.activities.MessageActivity;
 
 import java.util.List;
 
@@ -36,7 +36,9 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        // holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
+        if(null != data.get(position).getProfileImage()) {
+            holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
+        }
         holder.getName().setText(data.get(position).getName());
         holder.getLastMessage().setText(data.get(position).getLastMessage());
         holder.getDate().setText(data.get(position).getDate());
@@ -44,7 +46,9 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, ChatActivity.class));
+                Intent intent = new Intent(context, MessageActivity.class);
+                intent.putExtra("UID", data.get(position).getUid());
+                context.startActivity(intent);
             }
         });
     }

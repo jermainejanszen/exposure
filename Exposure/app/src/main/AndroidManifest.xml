@@ -22,13 +22,13 @@
         <activity android:name=".activities.SignUpActivity"/>
         <activity android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.EditProfileActivity"/>
-        <activity android:name=".activities.ChatActivity"/>
         <activity android:name=".popups.RetrieveImageActivity"
             android:theme="@style/Theme.Design.BottomSheetDialog"
             />
         <activity android:name=".popups.AddUserFieldActivity"
             android:theme="@style/Theme.Design.BottomSheetDialog"
             android:windowSoftInputMode="stateVisible"/>
+        <activity android:name=".activities.MessageActivity"/>
     </application>
 
 </manifest>
