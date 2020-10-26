@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/message_placeholder"
                 android:inputType="text"
-                android:imeOptions="actionSend" />
+                android:imeOptions="actionSend"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

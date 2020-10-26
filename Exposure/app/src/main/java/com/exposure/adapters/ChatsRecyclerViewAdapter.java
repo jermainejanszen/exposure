@@ -1,8 +1,6 @@
 package com.exposure.adapters;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
-import com.exposure.activities.ChatActivity;
+import com.exposure.activities.MessageActivity;
 
 import java.util.List;
 
@@ -46,7 +44,7 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, ChatActivity.class));
+                context.startActivity(new Intent(context, MessageActivity.class));
             }
         });
     }
