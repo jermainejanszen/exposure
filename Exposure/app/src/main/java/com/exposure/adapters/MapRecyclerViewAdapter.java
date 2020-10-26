@@ -1,6 +1,9 @@
 package com.exposure.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
+import com.exposure.activities.ViewOtherProfileActivity;
 
 import java.util.List;
 
@@ -36,7 +40,15 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         // holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
         holder.getName().setText(data.get(position).getName());
-    }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Intent intent = new Intent(context, ViewOtherProfileActivity.class);
+                    context.startActivity(intent);
+                }
+            });
+        }
 
     @Override
     public int getItemCount() {

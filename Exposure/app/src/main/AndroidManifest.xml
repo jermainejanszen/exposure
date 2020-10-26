@@ -22,6 +22,7 @@
         <activity android:name=".activities.SignUpActivity"/>
         <activity android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.EditProfileActivity"/>
+        <activity android:name=".activities.ViewOtherProfileActivity"/>
         <activity android:name=".popups.RetrieveImageActivity"
             android:theme="@style/Theme.Design.BottomSheetDialog"
             />
