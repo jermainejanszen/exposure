@@ -19,10 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
-import com.exposure.dialogs.AddUserFieldActivity;
-import com.exposure.dialogs.UploadPhotoDialog;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
+import com.exposure.popups.AddUserFieldActivity;
+import com.exposure.popups.RetrieveImageActivity;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
 import com.exposure.adapters.ChipsRecyclerViewAdapter;
@@ -35,14 +35,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private List<String> studyLocations, areasLivedIn, hobbies, personalities;
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private ImageView profileImage;
     private EditText nameEditText, nicknameEditText, emailEditText, phoneEditText, birthdayEditText;
     private CheckBox malesCheckBox, femalesCheckBox, othersCheckBox;
     private ProgressBar progressBar;
     private CurrentUser currentUser;
-    private UploadPhotoDialog uploadPhotoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,21 +54,18 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /* Taken a new image */
-        if (RequestCodes.TAKE_PHOTO_REQUEST == requestCode) {
+        if (RequestCodes.RETRIEVE_IMAGE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
-                profileImage.setImageBitmap((Bitmap) data.getExtras().get("data"));
-            }
-        }
-
-        /* Choose image from library */
-        if (RequestCodes.CHOOSE_FROM_LIBRARY_REQUEST == requestCode) {
-            if (RESULT_OK == resultCode) {
-                try {
-                    profileImage.setImageBitmap(
-                            MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                String source = data.getStringExtra("Source");
+                if ("Image Capture".equals(source)) {
+                    profileImage.setImageBitmap((Bitmap) data.getExtras().get("data"));
+                } else if ("Library".equals(source)) {
+                    try {
+                        profileImage.setImageBitmap(
+                                MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -119,8 +114,6 @@ public class EditProfileActivity extends AppCompatActivity {
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
-
-        uploadPhotoDialog = new UploadPhotoDialog(this);
 
         profileImage = findViewById(R.id.profile_image);
         nameEditText = findViewById(R.id.name_edit_text);
@@ -192,7 +185,8 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     public void onChangeProfileImageClick(View view) {
-        uploadPhotoDialog.displayPopup();
+        Intent intent = new Intent(this, RetrieveImageActivity.class);
+        startActivityForResult(intent, RequestCodes.RETRIEVE_IMAGE_REQUEST);
     }
 
     public void onSaveClick(View view) {
