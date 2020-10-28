@@ -13,10 +13,10 @@ import com.exposure.constants.RequestCodes;
 public class SetUpThreeTruthsActivity extends AppCompatActivity {
 
     private EditText truthOneEditText, truthTwoEditText, truthThreeEditText, lieEditText;
-    String truthOne;
-    String truthTwo;
-    String truthThree;
-    String lie;
+    private String truthOne;
+    private String truthTwo;
+    private String truthThree;
+    private String lie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
