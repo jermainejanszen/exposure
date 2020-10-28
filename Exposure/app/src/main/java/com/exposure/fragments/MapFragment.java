@@ -85,6 +85,10 @@ public class MapFragment extends Fragment {
         RecyclerView zeroMapRecyclerView = view.findViewById(R.id.map_0k_recycler);
         zeroMapRecyclerView.setAdapter(zeroMapAdapter);
 
+
+
         return view;
     }
+
+
 }
