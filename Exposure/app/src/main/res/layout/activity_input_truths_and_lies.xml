@@ -84,7 +84,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="27dp"
-        android:layout_marginBottom="507dp"
+        android:layout_marginBottom="485dp"
         android:text="Input three obscure truths about yourself."
         android:textColor="@color/Secondary200"
         android:textSize="20dp"
@@ -96,8 +96,8 @@
         android:layout_height="59dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="55dp"
-        android:layout_marginBottom="221dp"
+        android:layout_marginEnd="66dp"
+        android:layout_marginBottom="189dp"
         android:text="Input one obscure lie about yourself."
         android:textColor="@color/Secondary200"
         android:textSize="20dp"
@@ -113,6 +113,7 @@
         android:layout_marginBottom="37dp"
         android:backgroundTint="@color/Primary100"
         android:text="Let's Play"
+        android:onClick="onClickPlay"
         android:textColor="@color/Secondary700"
         app:cornerRadius="200dp" />
 
@@ -172,7 +173,7 @@
         android:text="First truth about yourself" />
 
     <EditText
-        android:id="@+id/truth_3_text"
+        android:id="@+id/truth_2_text"
         android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -185,7 +186,7 @@
         android:text="Second truth about yourself" />
 
     <EditText
-        android:id="@+id/truth_4_text"
+        android:id="@+id/truth_3_text"
         android:layout_width="311dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -199,7 +200,7 @@
 
 
     <EditText
-        android:id="@+id/truth_2_text"
+        android:id="@+id/lie_text"
         android:layout_width="312dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

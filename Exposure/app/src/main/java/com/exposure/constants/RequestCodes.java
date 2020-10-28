@@ -9,4 +9,5 @@ public class RequestCodes {
     public static int SAVE_PLACE_STUDIED_AT_REQUEST = 105;
     public static int SAVE_HOBBY_REQUEST = 106;
     public static int SAVE_PERSONALITY_REQUEST = 107;
+    public static int GAME_RESULT_REQUEST = 108;
 }
