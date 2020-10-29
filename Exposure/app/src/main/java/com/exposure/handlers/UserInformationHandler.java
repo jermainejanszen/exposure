@@ -10,16 +10,15 @@ import com.exposure.user.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
+import java.util.Map;
 
 public class UserInformationHandler {
 
     private static FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     /**
      * Download user information as document snapshot from firestore
@@ -64,6 +63,8 @@ public class UserInformationHandler {
         List<String> truths = (List<String>) documentSnapshot.get(UserField.TRUTHS.toString());
         List<String> lies = (List<String>) documentSnapshot.get(UserField.LIES.toString());
 
+        Map<String, List<String>> connections = (Map<String, List<String>>) documentSnapshot.get(UserField.CONNECTIONS.toString());
+
         if (preferences != null) {
             user.setPreferences(preferences);
         }
@@ -90,6 +91,10 @@ public class UserInformationHandler {
 
         if (lies != null){
             user.setLies(lies);
+        }
+
+        if (connections != null){
+            user.setConnections(connections);
         }
     }
 

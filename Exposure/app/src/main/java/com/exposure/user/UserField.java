@@ -17,7 +17,8 @@ public enum UserField {
     PERSONALITIES("personalities"),
     PREFERENCES("preferences"),
     TRUTHS("truths"),
-    LIES("lies");
+    LIES("lies"),
+    CONNECTIONS("connections");
 
     private final String name;
 

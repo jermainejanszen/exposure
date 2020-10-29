@@ -92,7 +92,6 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
             });
 
         }
-
     }
 
     public void wonGame(){
@@ -104,6 +103,4 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
         Intent lostIntent = new Intent(this, LostGameActivity.class);
         startActivity(lostIntent);
     }
-
-
 }

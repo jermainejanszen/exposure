@@ -189,10 +189,12 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
     private boolean updateUserConnection(){
         //TODO: this is not working correctly...
-        if (currentUser.getConnections().contains(otherUser.getUid()) && otherUser.getConnections().contains(currentUser.getUid())){
+        Map<String, List<String>> currentUserConnections = currentUser.getConnections();
+        Map<String, List<String>> otherUserConnections = currentUser.getConnections();
+        if (currentUserConnections.containsKey(otherUser.getUid()) && otherUserConnections.containsKey(currentUser.getUid())){
             connectButton.setText("CONNECTED");
             return true;
-        } else if (currentUser.getConnections().contains(otherUser.getUid())){
+        } else if (currentUserConnections.containsKey(otherUser.getUid())){
             connectButton.setText("PENDING");
             return false;
         }
@@ -200,9 +202,14 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     }
 
     private void connectWithOtherUser(){
-        List<String> connections = currentUser.getConnections();
-        connections.add(otherUser.getUid());
-        currentUser.setConnections(connections);
+        Map<String, List<String>> currentUserConnections = currentUser.getConnections();
+
+        //TODO: fix this
+        List<String> exposedInfo = null;
+
+        currentUserConnections.put(otherUser.getUid(), exposedInfo);
+        currentUser.setConnections(currentUserConnections);
+
         updateUserConnection();
 
         UserInformationHandler.uploadUserInformationToFirestore(currentUser, new OnCompleteCallback() {

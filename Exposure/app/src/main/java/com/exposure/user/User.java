@@ -3,7 +3,9 @@ package com.exposure.user;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract User class to hold all of a user's details.
@@ -30,7 +32,7 @@ public abstract class User implements Serializable {
     private List<String> preferences = new ArrayList<>();
     private List<String> truths = new ArrayList<>();
     private List<String> lies = new ArrayList<>();
-    private List<String> connections = new ArrayList<>();
+    private Map<String, List<String>> connections = new HashMap<>();
 
     /* Constructor */
     public User(String uid) {
@@ -53,7 +55,7 @@ public abstract class User implements Serializable {
     public List<String> getPreferences() { return preferences; }
     public List<String> getTruths(){ return truths; }
     public List<String> getLies(){ return lies; }
-    public List<String> getConnections(){ return connections; }
+    public Map<String, List<String>> getConnections(){ return connections; }
 
 
     /* Setters */
@@ -71,7 +73,7 @@ public abstract class User implements Serializable {
     public void setPreferences(List<String> preferences) { this.preferences = preferences; }
     public void setTruths(List<String> truths) { this.truths = truths; }
     public void setLies(List<String> lies) { this.lies = lies; }
-    public void setConnections (List<String> connections) { this.connections = connections; }
+    public void setConnections (Map<String, List<String>> connections) { this.connections = connections; }
 
     public boolean validState() {
         return !(null == name || null == birthday || 0 == preferences.size()|| null == email);
