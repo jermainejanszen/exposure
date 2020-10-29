@@ -22,4 +22,8 @@ public class MapListItem {
         return name;
     }
 
+    public String getUid(){
+        return uid;
+    }
+
 }

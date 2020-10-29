@@ -1,10 +1,12 @@
 package com.exposure.handlers;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.exposure.callback.OnCompleteCallback;
-import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
+import com.exposure.user.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -21,15 +23,15 @@ public class UserInformationHandler {
 
     /**
      * Download user information as document snapshot from firestore
-     * @param currentUser The user whose information we are retrieving from firestore
+     * @param user The user whose information we are retrieving from firestore
      * @param onCompleteCallback Notifies the calling class that the task has been executed
      */
-    public static void downloadUserInformation(final CurrentUser currentUser, final OnCompleteCallback onCompleteCallback) {
-        mFirestore.collection("Profiles").document(mAuth.getCurrentUser().getUid()).get()
+    public static void downloadUserInformation(final User user, final OnCompleteCallback onCompleteCallback) {
+        mFirestore.collection("Profiles").document(user.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        convertDocumentSnapshotToCurrentUser(documentSnapshot, currentUser);
+                        convertDocumentSnapshotToCurrentUser(documentSnapshot, user);
                         onCompleteCallback.update(true);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -44,15 +46,15 @@ public class UserInformationHandler {
     /**
      * Convert document snapshot information from firestore to current user
      * @param documentSnapshot Document snapshot containing user information from firestore
-     * @param currentUser Current user to set fields of
+     * @param user Current user to set fields of
      */
-    private static void convertDocumentSnapshotToCurrentUser(DocumentSnapshot documentSnapshot, CurrentUser currentUser) {
-        currentUser.setName((String) documentSnapshot.get(UserField.NAME.toString()));
-        currentUser.setNickname((String) documentSnapshot.get(UserField.NICKNAME.toString()));
-        currentUser.setEmail((String) documentSnapshot.get(UserField.EMAIL.toString()));
+    private static void convertDocumentSnapshotToCurrentUser(DocumentSnapshot documentSnapshot, User user) {
+        user.setName((String) documentSnapshot.get(UserField.NAME.toString()));
+        user.setNickname((String) documentSnapshot.get(UserField.NICKNAME.toString()));
+        user.setEmail((String) documentSnapshot.get(UserField.EMAIL.toString()));
         Timestamp timestamp = (Timestamp) documentSnapshot.get(UserField.BIRTHDAY.toString());
-        currentUser.setBirthday(timestamp == null ? null : timestamp.toDate());
-        currentUser.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
+        user.setBirthday(timestamp == null ? null : timestamp.toDate());
+        user.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
 
         List<String> preferences = (List<String>) documentSnapshot.get(UserField.PREFERENCES.toString());
         List<String> hobbies = (List<String>) documentSnapshot.get(UserField.HOBBIES.toString());
@@ -61,35 +63,35 @@ public class UserInformationHandler {
         List<String> personalities = (List<String>) documentSnapshot.get(UserField.PERSONALITIES.toString());
 
         if (preferences != null) {
-            currentUser.setPreferences(preferences);
+            user.setPreferences(preferences);
         }
 
         if (hobbies != null) {
-            currentUser.setHobbies(hobbies);
+            user.setHobbies(hobbies);
         }
 
         if (placesLived != null) {
-            currentUser.setPlacesLived(placesLived);
+            user.setPlacesLived(placesLived);
         }
 
         if (placesStudied != null) {
-            currentUser.setPlacesStudied(placesStudied);
+            user.setPlacesStudied(placesStudied);
         }
 
         if (personalities != null) {
-            currentUser.setPersonalities(personalities);
+            user.setPersonalities(personalities);
         }
     }
 
     /**
      * Uploads the data associated with current user to the firestore
-     * @param currentUser The user whose information is being uploaded to the firestore
+     * @param user The user whose information is being uploaded to the firestore
      * @param onCompleteCallback Notifies the calling class that the task has been executed
      */
-    public static void uploadUserInformationToFirestore(CurrentUser currentUser, final OnCompleteCallback onCompleteCallback) {
-        String userID = currentUser.getUid();
+    public static void uploadUserInformationToFirestore(User user, final OnCompleteCallback onCompleteCallback) {
+        String userID = user.getUid();
 
-        FirebaseFirestore.getInstance().collection("Profiles").document(userID).set(currentUser)
+        FirebaseFirestore.getInstance().collection("Profiles").document(userID).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

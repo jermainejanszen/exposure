@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Abstract User class to hold all of a user's details.
  */
-abstract class User implements Serializable {
+public abstract class User implements Serializable {
 
     /* Server Details */
     private final String uid;

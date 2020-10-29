@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
-
-
     }
 
     private void setup() {
