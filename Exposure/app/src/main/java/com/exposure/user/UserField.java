@@ -15,7 +15,9 @@ public enum UserField {
     PLACES_LIVED("placesLived"),
     HOBBIES("hobbies"),
     PERSONALITIES("personalities"),
-    PREFERENCES("preferences");
+    PREFERENCES("preferences"),
+    TRUTHS("truths"),
+    LIES("lies");
 
     private final String name;
 

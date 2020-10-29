@@ -28,6 +28,8 @@ public abstract class User implements Serializable {
     private List<String> hobbies = new ArrayList<>();
     private List<String> personalities = new ArrayList<>();
     private List<String> preferences = new ArrayList<>();
+    private List<String> truths = new ArrayList<>();
+    private List<String> lies = new ArrayList<>();
 
     /* Constructor */
     public User(String uid) {
@@ -48,6 +50,9 @@ public abstract class User implements Serializable {
     public List<String> getHobbies() { return hobbies; }
     public List<String> getPersonalities() { return personalities; }
     public List<String> getPreferences() { return preferences; }
+    public List<String> getTruths(){ return truths; }
+    public List<String> getLies(){ return lies; }
+
 
     /* Setters */
     public void setName(String name) { this.name = name; }
@@ -62,6 +67,8 @@ public abstract class User implements Serializable {
     public void setHobbies(List<String> hobbies) { this.hobbies = hobbies; }
     public void setPersonalities(List<String> personalities) { this.personalities = personalities; }
     public void setPreferences(List<String> preferences) { this.preferences = preferences; }
+    public void setTruths(List<String> truths) { this.truths = truths; }
+    public void setLies(List<String> lies) { this.lies = lies; }
 
     public boolean validState() {
         return !(null == name || null == birthday || 0 == preferences.size()|| null == email);

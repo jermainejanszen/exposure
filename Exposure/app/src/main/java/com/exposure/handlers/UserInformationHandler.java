@@ -61,6 +61,8 @@ public class UserInformationHandler {
         List<String> placesLived = (List<String>) documentSnapshot.get(UserField.PLACES_LIVED.toString());
         List<String> placesStudied = (List<String>) documentSnapshot.get(UserField.PLACES_STUDIED.toString());
         List<String> personalities = (List<String>) documentSnapshot.get(UserField.PERSONALITIES.toString());
+        List<String> truths = (List<String>) documentSnapshot.get(UserField.TRUTHS.toString());
+        List<String> lies = (List<String>) documentSnapshot.get(UserField.LIES.toString());
 
         if (preferences != null) {
             user.setPreferences(preferences);
@@ -80,6 +82,14 @@ public class UserInformationHandler {
 
         if (personalities != null) {
             user.setPersonalities(personalities);
+        }
+
+        if (truths != null){
+            user.setTruths(truths);
+        }
+
+        if (lies != null){
+            user.setLies(lies);
         }
     }
 

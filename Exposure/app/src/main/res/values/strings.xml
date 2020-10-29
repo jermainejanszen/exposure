@@ -18,6 +18,8 @@
     <string name="lived_in">Lived in</string>
     <string name="hobbies">Hobbies</string>
     <string name="personality">Personality</string>
+    <string name="lies">Lies</string>
+    <string name="truths">Truths</string>
     <string name="change_profile_picture">Change profile picture</string>
     <string name="nickname">Nickname</string>
     <string name="birthday">Birthday</string>

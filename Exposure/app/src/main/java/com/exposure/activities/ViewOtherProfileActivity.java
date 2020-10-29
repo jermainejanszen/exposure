@@ -81,8 +81,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                         initialiseFields();
                     }
                 });
-
-
     }
 
 

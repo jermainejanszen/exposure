@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
+    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter, truthsAdapter, liesAdapter;
     private ImageView profileImage;
     private EditText nameEditText, nicknameEditText, emailEditText, phoneEditText, birthdayEditText;
     private CheckBox malesCheckBox, femalesCheckBox, othersCheckBox;
@@ -113,6 +113,20 @@ public class EditProfileActivity extends AppCompatActivity {
                 personalitiesAdapter.notifyDataSetChanged();
             }
         }
+
+        if (RequestCodes.SAVE_TRUTH_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                currentUser.getTruths().add(data.getStringExtra("New Field"));
+                truthsAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (RequestCodes.SAVE_LIE_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                currentUser.getLies().add(data.getStringExtra("New Field"));
+                liesAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void initialiseFields() {
@@ -120,16 +134,22 @@ public class EditProfileActivity extends AppCompatActivity {
         areasLivedInAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getPlacesLived(), true);
         hobbiesAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getHobbies(), true);
         personalitiesAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getPersonalities(), true);
+        truthsAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getTruths(), true);
+        liesAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getLies(), true);
 
         RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
         RecyclerView hobbiesRecyclerView = findViewById(R.id.hobbies_recycler_view);
         RecyclerView personalityTypesRecyclerView = findViewById(R.id.personality_types_recycler_view);
+        RecyclerView truthsRecyclerView = findViewById(R.id.truths_recycler_view);
+        RecyclerView liesRecyclerView = findViewById(R.id.lies_recycler_view);
 
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
+        truthsRecyclerView.setAdapter(truthsAdapter);
+        liesRecyclerView.setAdapter(liesAdapter);
 
         profileImage = findViewById(R.id.profile_image);
         nameEditText = findViewById(R.id.name_edit_text);
@@ -199,6 +219,19 @@ public class EditProfileActivity extends AppCompatActivity {
         intent.putExtra("Field Type", UserField.PERSONALITIES.toString());
         startActivityForResult(intent, RequestCodes.SAVE_PERSONALITY_REQUEST);
     }
+
+    public void addTruth(View view){
+        Intent intent = new Intent(this, AddUserFieldActivity.class);
+        intent.putExtra("Field Type", UserField.TRUTHS.toString());
+        startActivityForResult(intent, RequestCodes.SAVE_TRUTH_REQUEST);
+    }
+
+    public void addLie(View view){
+        Intent intent = new Intent(this, AddUserFieldActivity.class);
+        intent.putExtra("Field Type", UserField.LIES.toString());
+        startActivityForResult(intent, RequestCodes.SAVE_LIE_REQUEST);
+    }
+
 
     public void onChangeProfileImageClick(View view) {
         Intent intent = new Intent(this, RetrieveImageActivity.class);
