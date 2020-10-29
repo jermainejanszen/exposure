@@ -1,11 +1,17 @@
 package com.exposure.activities;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.exposure.R;
+import com.exposure.callback.OnCompleteCallback;
+import com.exposure.popups.WonGameActivity;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
 
@@ -24,6 +30,7 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
     List<String> lies;
     Map<String, String> mapTruthsLiesToView;
     Button[] inputFields = new Button[4];
+    int indexOfLie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +57,9 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
         mapTruthsLiesToView.put("Truth 1", truths.get(0));
         mapTruthsLiesToView.put("Truth 2", truths.get(1));
         mapTruthsLiesToView.put("Truth 3", truths.get(2));
-
         mapTruthsLiesToView.put("Lie", lies.get(0));
+
+        int lieIndex = -1;
 
         /** randomly assign lie and truths to view **/
         List mapKeys = new ArrayList(mapTruthsLiesToView.keySet());
@@ -61,9 +69,33 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
             for (Object key : mapKeys) {
                 // Access keys/values in a random order
                 inputFields[i].setText(mapTruthsLiesToView.get(key));
+                if (key == "Lie"){
+                    indexOfLie = i;
+                }
                 i++;
             }
         }
+
+        for (int k = 0; k < 4; k++){
+            final int finalK = k;
+            inputFields[k].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (finalK == indexOfLie){
+                        inputFields[finalK].setBackgroundColor(Color.RED);
+                        wonGame();
+                    }
+                }
+            });
+
+        }
     }
+
+    public void wonGame(){
+
+        Intent wonIntent = new Intent(this, WonGameActivity.class);
+        startActivity(wonIntent);
+    }
+
 
 }

@@ -80,6 +80,10 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         connectButton = findViewById(R.id.connect_with_user);
         gameButton = findViewById(R.id.play_game);
 
+        if (null == currentUser){
+            currentUser = new CurrentUser(FirebaseAuth.getInstance().getUid());
+        }
+
         if (currentUser.getConnections().contains(otherUser)){
             connectButton.setText("Connected");
         }

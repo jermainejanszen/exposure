@@ -24,6 +24,7 @@
         <activity android:name=".activities.EditProfileActivity"/>
         <activity android:name=".activities.ViewOtherProfileActivity"/>
         <activity android:name=".activities.ThreeTruthsOneLieActivity"/>
+        <activity android:name=".popups.WonGameActivity" />
         <activity android:name=".popups.RetrieveImageActivity"
             android:theme="@style/Theme.Design.BottomSheetDialog"
             />
