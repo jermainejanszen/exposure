@@ -204,7 +204,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                 otherRequested = true;
             }
         }
-
+        
         if (currentRequested && otherRequested){
             connectButton.setText("CONNECTED");
             return true;

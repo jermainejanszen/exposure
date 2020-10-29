@@ -36,16 +36,18 @@
 
     <TextView
         android:id="@+id/unlocked_feature"
-        android:layout_width="84dp"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="158dp"
-        android:layout_marginBottom="307dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginEnd="94dp"
+        android:layout_marginBottom="297dp"
         android:background="@color/Primary100"
         android:text="\?"
         android:textAlignment="center"
         android:textColor="@color/Secondary700"
+        android:textSize="40dp"
         app:cornerRadius="50dp" />
 
     <TextView

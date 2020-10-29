@@ -64,7 +64,7 @@ public class UserInformationHandler {
         List<String> truths = (List<String>) documentSnapshot.get(UserField.TRUTHS.toString());
         List<String> lies = (List<String>) documentSnapshot.get(UserField.LIES.toString());
 
-        List<ConnectionItem> connections = (List<ConnectionItem>) documentSnapshot.get(UserField.CONNECTIONS.toString());
+       // List<ConnectionItem> connections = (List<ConnectionItem>) documentSnapshot.get(UserField.CONNECTIONS.toString());
 
         if (preferences != null) {
             user.setPreferences(preferences);
@@ -94,9 +94,9 @@ public class UserInformationHandler {
             user.setLies(lies);
         }
 
-        if (connections != null){
-            user.setConnections(connections);
-        }
+//        if (connections != null){
+//            user.setConnections(connections);
+//        }
     }
 
     /**
