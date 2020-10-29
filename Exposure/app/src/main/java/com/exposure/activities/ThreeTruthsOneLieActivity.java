@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
+import com.exposure.popups.LostGameActivity;
 import com.exposure.popups.WonGameActivity;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
@@ -84,17 +85,24 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
                     if (finalK == indexOfLie){
                         inputFields[finalK].setBackgroundColor(Color.RED);
                         wonGame();
+                    } else {
+                        lostGame();
                     }
                 }
             });
 
         }
+
     }
 
     public void wonGame(){
-
         Intent wonIntent = new Intent(this, WonGameActivity.class);
         startActivity(wonIntent);
+    }
+
+    public void lostGame(){
+        Intent lostIntent = new Intent(this, LostGameActivity.class);
+        startActivity(lostIntent);
     }
 
 

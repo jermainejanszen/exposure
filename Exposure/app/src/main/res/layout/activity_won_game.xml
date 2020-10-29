@@ -4,18 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/continue_to_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="454dp"
-        android:layout_marginEnd="152dp"
-        android:text="@string/continue_to_next"
-        android:textColor="@color/Primary100"
-        android:onClick="onClickContinue"
-        android:textSize="26sp" />
 
     <TextView
         android:id="@+id/congratulations"
@@ -31,6 +19,7 @@
         android:textColor="@color/Primary300"
         android:textSize="40sp" />
 
+
     <TextView
         android:id="@+id/unlocked"
         android:layout_width="266dp"
@@ -44,18 +33,35 @@
         android:text="You caught the lie! You have unlocked the following information about your match:"
         android:textAlignment="center" />
 
-    <Button
+
+    <TextView
         android:id="@+id/unlocked_feature"
-        android:layout_width="wrap_content"
+        android:layout_width="84dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="158dp"
-        android:layout_marginBottom="301dp"
-        android:backgroundTint="@color/Primary100"
+        android:layout_marginBottom="307dp"
+        android:background="@color/Primary100"
         android:text="\?"
+        android:textAlignment="center"
         android:textColor="@color/Secondary700"
         app:cornerRadius="50dp" />
+
+    <TextView
+        android:id="@+id/continue_to_next"
+        android:layout_width="354dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="231dp"
+        android:onClick="onClickContinue"
+        android:text="@string/continue_to_next"
+        android:textAlignment="center"
+        android:textColor="@color/Primary100"
+        android:textSize="22sp" />
 
 
 </RelativeLayout>

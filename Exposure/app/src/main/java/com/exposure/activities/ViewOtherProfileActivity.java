@@ -84,9 +84,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
             currentUser = new CurrentUser(FirebaseAuth.getInstance().getUid());
         }
 
-        if (currentUser.getConnections().contains(otherUser)){
-            connectButton.setText("Connected");
-        }
+        updateUserConnection();
 
         bitmaps = new HashMap<>();
         imagePaths = new ArrayList<>();
@@ -191,18 +189,19 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
     private boolean updateUserConnection(){
         //TODO: this is not working correctly...
-        if (currentUser.getConnections().contains(otherUser) && otherUser.getConnections().contains(currentUser)){
+        if (currentUser.getConnections().contains(otherUser.getUid()) && otherUser.getConnections().contains(currentUser.getUid())){
             connectButton.setText("CONNECTED");
             return true;
-        } else if (currentUser.getConnections().contains(otherUser)){
+        } else if (currentUser.getConnections().contains(otherUser.getUid())){
             connectButton.setText("PENDING");
+            return false;
         }
         return false;
     }
 
     private void connectWithOtherUser(){
-        List<OtherUser> connections = currentUser.getConnections();
-        connections.add(otherUser);
+        List<String> connections = currentUser.getConnections();
+        connections.add(otherUser.getUid());
         currentUser.setConnections(connections);
         updateUserConnection();
 
