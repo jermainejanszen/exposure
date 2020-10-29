@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/message_user_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/message_user_bar_background"
+        android:elevation="6dp"
+        android:layout_margin="18dp"
+        android:padding="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/message_user_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginHorizontal="18dp"
+            android:src="@drawable/default_display_image" />
+
+        <TextView
+            android:id="@+id/message_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/NameFont"
+            android:layout_centerVertical="true"
+            android:text="First"
+            android:layout_toEndOf="@id/message_user_image" />
+
+        <ImageButton
+            android:id="@+id/message_open_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="18dp"
+            android:background="#00000000"
+            android:layout_alignParentEnd="true"
+            android:tint="@color/Secondary500"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/input_1"
+        android:layout_width="168dp"
+        android:layout_height="260dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="217dp"
+        android:layout_marginBottom="303dp"
+        android:backgroundTint="@color/Primary100"
+        android:textColor="@color/Secondary700"
+        android:text="\?"
+        app:cornerRadius="50dp" />
+
+    <Button
+        android:id="@+id/input_4"
+        android:layout_width="168dp"
+        android:layout_height="260dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="27dp"
+        android:backgroundTint="@color/Primary100"
+        android:text="\?"
+        android:textColor="@color/Secondary700"
+        app:cornerRadius="50dp" />
+
+    <Button
+        android:id="@+id/input_2"
+        android:layout_width="168dp"
+        android:layout_height="260dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="302dp"
+        android:backgroundTint="@color/Primary100"
+        android:text="\?"
+        android:textColor="@color/Secondary700"
+        app:cornerRadius="50dp" />
+
+    <Button
+        android:id="@+id/input_3"
+        android:layout_width="168dp"
+        android:layout_height="260dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="221dp"
+        android:layout_marginBottom="27dp"
+        android:backgroundTint="@color/Primary100"
+        android:text="\?"
+        android:textColor="@color/Secondary700"
+        app:cornerRadius="50dp" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="400dp"
+        android:layout_height="65dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="599dp"
+        android:elegantTextHeight="true"
+        android:text="THREE TRUTHS AND A LIE"
+        android:textAlignment="center"
+        android:textColor="@color/Secondary600"
+        android:textSize="28dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="352dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="-75dp"
+        android:layout_marginBottom="585dp"
+        android:text="Which is the lie?"
+        android:textColor="@color/Secondary200"
+        android:textSize="20dp"
+        android:textStyle="italic" />
+
+
+</RelativeLayout>
