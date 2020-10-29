@@ -26,15 +26,17 @@ import com.exposure.popups.RetrieveImageActivity;
 import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.auth.User;
 
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
+    private static CurrentUser currentUser;
     private BottomNavigationView navigationView;
     private ProfileFragment profileFragment;
     private MapFragment mapFragment;
     private ChatsFragment chatsFragment;
-    private CurrentUser currentUser;
+//    private CurrentUser currentUser;
     private ProgressBar progressBar;
 
     @Override
@@ -65,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
+    }
+
+    //TODO: not sure if this is the best way to handle this
+    public static CurrentUser getCurrentUser(){
+        return currentUser;
     }
 
     private void setup() {

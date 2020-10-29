@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class CurrentUser extends User {
 
-    private List<OtherUser> connections = new ArrayList<>();
+   // private List<OtherUser> connections = new ArrayList<>();
 
     public CurrentUser(String uid) {
         super(uid);
@@ -18,8 +18,8 @@ public class CurrentUser extends User {
     }
 
     /* Getters */
-    public List<OtherUser> getConnections() {
-        return connections;
-    }
+//    public List<OtherUser> getConnections() {
+//        return connections;
+//    }
 
 }

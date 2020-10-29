@@ -1,9 +1,11 @@
 package com.exposure.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -21,6 +23,8 @@ import com.exposure.handlers.UserInformationHandler;
 import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
@@ -46,14 +50,20 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     private byte[] profileByteArray;
     private ProgressBar progressBar;
     private OtherUser otherUser;
+    private CurrentUser currentUser;
+    private Button connectButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_other_profile);
+
+        currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
+
         //TODO: link this up
         //otherUserUid = getIntent().getStringExtra("Other User Uid");
         otherUser = new OtherUser(otherUserUid);
+        currentUser = MainActivity.getCurrentUser();
 
         studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
@@ -65,6 +75,11 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         gridView = findViewById(R.id.image_grid_view);
         progressBar = findViewById(R.id.progress_bar);
+        connectButton =findViewById(R.id.connect_with_user);
+
+        if (currentUser.getConnections().contains(otherUser)){
+            connectButton.setText("Connected");
+        }
 
         bitmaps = new HashMap<>();
         imagePaths = new ArrayList<>();
@@ -81,8 +96,20 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                         initialiseFields();
                     }
                 });
-    }
 
+        boolean connected = updateUserConnection();
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               connectWithOtherUser();
+            }
+        });
+
+        if (connected){
+            //can play game
+        }
+
+    }
 
     private void initialiseFields() {
 
@@ -147,5 +174,27 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         });
     }
 
+    private boolean updateUserConnection(){
+        if (currentUser.getConnections().contains(otherUser) && otherUser.getConnections().contains(currentUser)){
+            connectButton.setText("CONNECTED");
+            return true;
+        } else if (currentUser.getConnections().contains(otherUser)){
+            connectButton.setText("PENDING");
+        }
+        return false;
+    }
 
+    private void connectWithOtherUser(){
+        List<OtherUser> connections = currentUser.getConnections();
+        connections.add(otherUser);
+        currentUser.setConnections(connections);
+        updateUserConnection();
+
+        UserInformationHandler.uploadUserInformationToFirestore(currentUser, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success) {
+
+            }
+        });
+    }
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/fragment_profile"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/top_section"
@@ -76,10 +76,29 @@
                 android:gravity="center"
                 android:paddingHorizontal="10dp"
                 android:textColor="@color/Secondary500"
+                android:backgroundTint="@color/Primary50"
                 app:iconTint="@color/Secondary500"
                 app:icon="@drawable/ic_baseline_favorite_24"
                 app:iconGravity="start"
                 />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/play_game"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:layout_alignParentEnd="true"
+                android:gravity="center"
+                android:layout_below="@id/connect_with_user"
+                android:paddingHorizontal="10dp"
+                android:text="@string/play_game"
+                android:textColor="@color/Secondary500"
+                android:backgroundTint="@color/Primary50"
+                app:icon="@drawable/ic_play"
+                app:iconSize="35dp"
+                app:iconGravity="start"
+                app:iconTint="@color/Secondary500" />
 
         </RelativeLayout>
 
