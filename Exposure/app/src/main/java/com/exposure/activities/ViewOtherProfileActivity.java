@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.adapters.ChipsRecyclerViewAdapter;
+import com.exposure.adapters.ConnectionItem;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
@@ -83,8 +84,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         if (null == currentUser){
             currentUser = new CurrentUser(FirebaseAuth.getInstance().getUid());
         }
-
-        updateUserConnection();
 
         bitmaps = new HashMap<>();
         imagePaths = new ArrayList<>();
@@ -189,25 +188,41 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
     private boolean updateUserConnection(){
         //TODO: this is not working correctly...
-        Map<String, List<String>> currentUserConnections = currentUser.getConnections();
-        Map<String, List<String>> otherUserConnections = currentUser.getConnections();
-        if (currentUserConnections.containsKey(otherUser.getUid()) && otherUserConnections.containsKey(currentUser.getUid())){
+        List<ConnectionItem> currentUserConnections = currentUser.getConnections();
+        List<ConnectionItem> otherUserConnections = currentUser.getConnections();
+
+        Boolean currentRequested = false;
+        Boolean otherRequested = false;
+
+        for (ConnectionItem item: currentUserConnections){
+            if (item.getUid().equals(otherUser.getUid())){
+                currentRequested = true;
+            }
+        }
+        for (ConnectionItem item: otherUserConnections){
+            if (item.getUid().equals(currentUser.getUid())){
+                otherRequested = true;
+            }
+        }
+
+        if (currentRequested && otherRequested){
             connectButton.setText("CONNECTED");
             return true;
-        } else if (currentUserConnections.containsKey(otherUser.getUid())){
+        } else if (currentRequested){
             connectButton.setText("PENDING");
             return false;
+        } else {
+            return false;
         }
-        return false;
     }
 
     private void connectWithOtherUser(){
-        Map<String, List<String>> currentUserConnections = currentUser.getConnections();
+        List<ConnectionItem> currentUserConnections = currentUser.getConnections();
 
         //TODO: fix this
-        List<String> exposedInfo = null;
+        List<String> exposedInfo = new ArrayList<>();
 
-        currentUserConnections.put(otherUser.getUid(), exposedInfo);
+        currentUserConnections.add(new ConnectionItem(otherUser.getUid(), exposedInfo));
         currentUser.setConnections(currentUserConnections);
 
         updateUserConnection();

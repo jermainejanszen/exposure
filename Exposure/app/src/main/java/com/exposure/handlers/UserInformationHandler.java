@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.exposure.adapters.ConnectionItem;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.user.UserField;
 import com.exposure.user.User;
@@ -63,7 +64,7 @@ public class UserInformationHandler {
         List<String> truths = (List<String>) documentSnapshot.get(UserField.TRUTHS.toString());
         List<String> lies = (List<String>) documentSnapshot.get(UserField.LIES.toString());
 
-        Map<String, List<String>> connections = (Map<String, List<String>>) documentSnapshot.get(UserField.CONNECTIONS.toString());
+        List<ConnectionItem> connections = (List<ConnectionItem>) documentSnapshot.get(UserField.CONNECTIONS.toString());
 
         if (preferences != null) {
             user.setPreferences(preferences);
