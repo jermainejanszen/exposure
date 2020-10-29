@@ -52,6 +52,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     private OtherUser otherUser;
     private CurrentUser currentUser;
     private Button connectButton;
+    private Button gameButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,8 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         gridView = findViewById(R.id.image_grid_view);
         progressBar = findViewById(R.id.progress_bar);
-        connectButton =findViewById(R.id.connect_with_user);
+        connectButton = findViewById(R.id.connect_with_user);
+        gameButton = findViewById(R.id.play_game);
 
         if (currentUser.getConnections().contains(otherUser)){
             connectButton.setText("Connected");
@@ -98,6 +100,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                 });
 
         boolean connected = updateUserConnection();
+        
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +109,12 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         });
 
         if (connected){
-            //can play game
+            gameButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Takes you to the game
+                }
+            });
         }
 
     }
@@ -175,6 +183,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     }
 
     private boolean updateUserConnection(){
+        //TODO: this is not working correctly...
         if (currentUser.getConnections().contains(otherUser) && otherUser.getConnections().contains(currentUser)){
             connectButton.setText("CONNECTED");
             return true;
