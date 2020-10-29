@@ -11,4 +11,5 @@ public class RequestCodes {
     public static int SAVE_PERSONALITY_REQUEST = 107;
     public static int SAVE_TRUTH_REQUEST = 108;
     public static int SAVE_LIE_REQUEST = 109;
+    public static int GAME_RESULT = 110;
 }

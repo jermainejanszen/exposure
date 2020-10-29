@@ -18,6 +18,7 @@ import com.exposure.R;
 import com.exposure.adapters.ChipsRecyclerViewAdapter;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
+import com.exposure.constants.RequestCodes;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.handlers.UserMediaHandler;
@@ -99,6 +100,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                     }
                 });
 
+        //TODO: use this to determine whether we are connected and hence, can play the game
         boolean connected = updateUserConnection();
         
         connectButton.setOnClickListener(new View.OnClickListener() {
@@ -108,18 +110,19 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
             }
         });
 
-        if (connected){
-            gameButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Takes you to the game
-                }
-            });
-        }
+        gameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Takes you to the game
+                onClickPlayGame();
+            }
+        });
 
     }
 
     private void initialiseFields() {
+
+        //TODO: add conditions based on 'exposed information'
 
         studyLocationsAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getPlacesStudied(), false);
         areasLivedInAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getPlacesLived(), false);
@@ -205,5 +208,12 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void onClickPlayGame(){
+        Intent gameIntent = new Intent(this, ThreeTruthsOneLieActivity.class);
+        gameIntent.putExtra("current user", currentUser);
+        gameIntent.putExtra("other user", otherUser);
+        startActivityForResult(gameIntent, RequestCodes.GAME_RESULT);
     }
 }
