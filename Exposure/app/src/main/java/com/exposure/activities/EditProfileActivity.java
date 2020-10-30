@@ -74,11 +74,12 @@ public class EditProfileActivity extends AppCompatActivity {
             if (RESULT_OK == resultCode) {
                 String source = data.getStringExtra("Source");
                 if ("Image Capture".equals(source)) {
-                    profileImage.setImageBitmap((Bitmap) data.getExtras().get("data"));
+                    profileBitmap = (Bitmap) data.getExtras().get("data");
+                    profileImage.setImageBitmap(profileBitmap);
                 } else if ("Library".equals(source)) {
                     try {
-                        profileImage.setImageBitmap(
-                                MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
+                        profileBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                        profileImage.setImageBitmap(profileBitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
