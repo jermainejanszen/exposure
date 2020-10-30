@@ -8,6 +8,7 @@ public enum UserField {
     NAME("name"),
     NICKNAME("nickname"),
     BIRTHDAY("birthday"),
+    LOCATION("location"),
     BIO("bio"),
     EMAIL("email"),
     PHONE("phone"),

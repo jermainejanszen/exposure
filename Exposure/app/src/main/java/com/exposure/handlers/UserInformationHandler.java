@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
+import java.util.Map;
 
 public class UserInformationHandler {
 
@@ -54,11 +55,18 @@ public class UserInformationHandler {
         currentUser.setBirthday(timestamp == null ? null : timestamp.toDate());
         currentUser.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
 
+        Map<String, Double> location = (Map<String, Double>) documentSnapshot.get(UserField.LOCATION.toString());
         List<String> preferences = (List<String>) documentSnapshot.get(UserField.PREFERENCES.toString());
         List<String> hobbies = (List<String>) documentSnapshot.get(UserField.HOBBIES.toString());
         List<String> placesLived = (List<String>) documentSnapshot.get(UserField.PLACES_LIVED.toString());
         List<String> placesStudied = (List<String>) documentSnapshot.get(UserField.PLACES_STUDIED.toString());
         List<String> personalities = (List<String>) documentSnapshot.get(UserField.PERSONALITIES.toString());
+
+        if (null != location) {
+            if (null != location.get("Latitude") && null != location.get("Longitude")) {
+                currentUser.setLocation(location.get("Latitude"), location.get("Longitude"));
+            }
+        }
 
         if (preferences != null) {
             currentUser.setPreferences(preferences);

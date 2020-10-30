@@ -333,6 +333,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:text="@string/update"
+                        android:onClick="onUpdateLocationClick"
                         app:icon="@drawable/ic_baseline_location_on_24"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"/>
 

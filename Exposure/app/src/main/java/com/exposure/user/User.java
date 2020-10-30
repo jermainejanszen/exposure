@@ -3,7 +3,9 @@ package com.exposure.user;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract User class to hold all of a user's details.
@@ -17,6 +19,9 @@ abstract class User implements Serializable {
     private String name;
     private String nickname;
     private Date birthday;
+
+    /* Location Details */
+    private Map<String, Double> location = new HashMap<>();
 
     /* Contact Details */
     private String email;
@@ -41,6 +46,7 @@ abstract class User implements Serializable {
     public String getName() { return name; }
     public String getNickname() { return nickname; }
     public Date getBirthday() { return birthday; }
+    public Map<String, Double> getLocation() { return location; }
     public String getEmail() { return email; }
     public String getPhone() { return phone; }
     public List<String> getPlacesStudied() { return placesStudied; }
@@ -53,6 +59,10 @@ abstract class User implements Serializable {
     public void setName(String name) { this.name = name; }
     public void setNickname(String nickname) { this.nickname = nickname; }
     public void setBirthday(Date birthday) { this.birthday = birthday; }
+    public void setLocation(double lat, double lon) {
+        this.location.put("Latitude", lat);
+        this.location.put("Longitude", lon);
+    }
     public void setEmail(String email) { this.email = email; }
     public void setPhone(String phone) { this.phone = phone; }
     public void setPlacesStudied(List<String> placesStudied) {
@@ -64,6 +74,6 @@ abstract class User implements Serializable {
     public void setPreferences(List<String> preferences) { this.preferences = preferences; }
 
     public boolean validState() {
-        return !(null == name || null == birthday || 0 == preferences.size()|| null == email);
+        return !(null == name || null == birthday || 0 == preferences.size() || null == email);
     }
 }
