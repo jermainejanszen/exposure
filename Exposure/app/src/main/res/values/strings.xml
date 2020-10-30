@@ -49,6 +49,6 @@
     <string name="map_you">YOU</string>
     <string name="message_placeholder">Aa</string>
     <string name="connect">Connect</string>
-    <string name="play_game">Play Game</string>
+    <string name="play_game">Play</string>
     <string name="continue_to_next">Continue</string>
 </resources>

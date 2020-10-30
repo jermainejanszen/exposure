@@ -41,7 +41,7 @@
                     android:id="@+id/display_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Display Name"
+                    android:text=""
                     android:textColor="@color/Primary400"
                     />
 
@@ -56,7 +56,7 @@
 
                 <TextView
                     android:id="@+id/preferences"
-                    android:layout_width="160dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/age"
                     android:textSize="12sp"
@@ -65,42 +65,42 @@
 
             </RelativeLayout>
 
-            <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:id="@+id/connect_with_user"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="10dp"
+            <RelativeLayout
+                android:id="@+id/connect_buttons_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/top_section_details"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="@string/connect"
-                android:gravity="center"
-                android:paddingHorizontal="10dp"
-                android:textColor="@color/Secondary500"
-                android:backgroundTint="@color/Primary50"
-                app:iconTint="@color/Secondary500"
-                app:icon="@drawable/ic_baseline_favorite_24"
-                app:iconGravity="start"
-                />
+                android:layout_centerVertical="true">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/play_game"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="55dp"
-                android:layout_marginRight="10dp"
-                android:layout_alignParentEnd="true"
-                android:gravity="center"
-                android:layout_below="@id/connect_with_user"
-                android:paddingHorizontal="10dp"
-                android:text="@string/play_game"
-                android:textColor="@color/Secondary500"
-                android:backgroundTint="@color/Primary50"
-                app:icon="@drawable/ic_play"
-                app:iconSize="35dp"
-                app:iconGravity="start"
-                app:iconTint="@color/Secondary500" />
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:id="@+id/connect_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/connect"
+                    android:textColor="@color/Secondary500"
+                    app:icon="@drawable/ic_baseline_favorite_24"
+                    app:iconTint="@color/Secondary500"
+                    />
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:id="@+id/play_game"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/connect_button"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/play_game"
+                    android:textColor="@color/Secondary500"
+                    app:icon="@drawable/ic_baseline_play_arrow_24"
+                    app:iconPadding="0dp"
+                    app:iconTint="@color/Secondary500" />
+
+            </RelativeLayout>
+
+
 
         </RelativeLayout>
 
@@ -250,16 +250,6 @@
                 android:text="@string/pictures"
                 android:textColor="@color/Secondary800"
                 android:textSize="20sp"
-                />
-
-            <ImageButton
-                android:id="@+id/upload_image_button"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/add"
-                android:onClick="onUploadImageClick"
                 />
 
         </RelativeLayout>

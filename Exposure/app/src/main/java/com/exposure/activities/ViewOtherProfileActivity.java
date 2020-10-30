@@ -26,8 +26,6 @@ import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,7 +76,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         gridView = findViewById(R.id.image_grid_view);
         progressBar = findViewById(R.id.progress_bar);
-        connectButton = findViewById(R.id.connect_with_user);
+        connectButton = findViewById(R.id.connect_button);
         gameButton = findViewById(R.id.play_game);
 
         if (null == currentUser){
