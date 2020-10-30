@@ -287,10 +287,69 @@
                 />
 
             <TextView
-                android:id="@+id/contact_information_text"
+                android:id="@+id/location_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/personal_details_section"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="30dp"
+                android:text="@string/location"
+                android:textColor="@color/Secondary800"
+                android:textSize="20sp"/>
+
+            <RelativeLayout
+                android:id="@+id/location_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/location_text"
+                android:layout_marginHorizontal="30dp"
+                >
+
+                    <TextView
+                        android:id="@+id/location_subsection_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/update_location"
+                        />
+
+                    <EditText
+                        android:id="@+id/location_edit_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/location_subsection_text"
+                        android:layout_centerVertical="true"
+                        android:paddingVertical="20dp"
+                        android:textSize="14sp"
+                        android:maxLength="30"
+                        android:inputType="textEmailAddress"
+                        android:background="@android:color/transparent"
+                        android:importantForAutofill="no" />
+
+                    <Button
+                        android:id="@+id/update_location_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/update"
+                        app:icon="@drawable/ic_baseline_location_on_24"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Outline"
+                android:layout_below="@id/location_section"
+                />
+
+            <TextView
+                android:id="@+id/contact_information_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/location_section"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="30dp"
                 android:text="@string/contact_information"
