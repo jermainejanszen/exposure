@@ -54,6 +54,10 @@ public class AddUserFieldActivity extends Activity {
             message = "Hobby";
         } else if (userField.equals(UserField.PERSONALITIES.toString())) {
             message = "Personality trait";
+        } else if (userField.equals(UserField.TRUTHS.toString())) {
+            message = "Enter a truth about yourself";
+        } else if (userField.equals(UserField.LIES.toString())) {
+            message = "Enter a lie about yourself";
         }
 
         TextView type = findViewById(R.id.field);
@@ -68,9 +72,14 @@ public class AddUserFieldActivity extends Activity {
     }
 
     private void save() {
-        Intent intent = new Intent();
-        intent.putExtra("New Field", addedField.getText().toString());
-        setResult(RESULT_OK, intent);
-        finish();
+        if (addedField.getText().toString().trim().isEmpty()) {
+            setResult(RESULT_CANCELED);
+            finish();
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("New Field", addedField.getText().toString());
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 }
