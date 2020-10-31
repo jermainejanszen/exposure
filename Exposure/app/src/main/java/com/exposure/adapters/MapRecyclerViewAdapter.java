@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.activities.ViewOtherProfileActivity;
+import com.exposure.callback.OnItemPressedCallback;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,11 +23,11 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerViewAdapter.ViewHolder> implements Serializable {
-    private final Context context;
+    private final OnItemPressedCallback callback;
     private final List<MapListItem> data;
 
-    public MapRecyclerViewAdapter(Context context, List<MapListItem> data) {
-        this.context = context;
+    public MapRecyclerViewAdapter(List<MapListItem> data, OnItemPressedCallback callback) {
+        this.callback = callback;
         this.data = data;
     }
 
@@ -38,7 +39,7 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         if(null != data.get(position).getProfileImage()) {
             holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
         }
@@ -47,9 +48,7 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Intent intent = new Intent(context, ViewOtherProfileActivity.class);
-                    intent.putExtra("Uid", data.get(position).getUid());
-                    context.startActivity(intent);
+                    callback.onPress(data.get(position).getUid());
                 }
             });
         }
@@ -57,6 +56,16 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public List<MapListItem> getData() {
+        return this.data;
+    }
+
+    public void syncData() {
+        for (MapListItem item : data) {
+            item.loadFields();
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -43,7 +43,7 @@ public class MapListItem implements Serializable {
         return uid;
     }
 
-    private void loadFields() {
+    protected void loadFields() {
         final int imageSize = 1024 * 1024;
         final byte[] bytes = new byte[imageSize];
 

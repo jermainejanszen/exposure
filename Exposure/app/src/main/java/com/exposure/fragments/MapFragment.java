@@ -1,5 +1,6 @@
 package com.exposure.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,14 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.exposure.R;
+import com.exposure.activities.ViewOtherProfileActivity;
 import com.exposure.adapters.MapListItem;
 import com.exposure.adapters.MapRecyclerViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
+import com.exposure.callback.OnItemPressedCallback;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements Serializable {
 
     private List<MapListItem> fifteenKM;
     private List<MapListItem> nineKM;
@@ -71,32 +75,45 @@ public class MapFragment extends Fragment {
             }
         };
 
-        if (null != savedInstanceState) {
-            fifteenMapAdapter = (MapRecyclerViewAdapter) savedInstanceState.getSerializable("15");
-            nineMapAdapter = (MapRecyclerViewAdapter) savedInstanceState.getSerializable("9");
-            sixMapAdapter = (MapRecyclerViewAdapter) savedInstanceState.getSerializable("6");
-            threeMapAdapter = (MapRecyclerViewAdapter) savedInstanceState.getSerializable("3");
-            zeroMapAdapter = (MapRecyclerViewAdapter) savedInstanceState.getSerializable("0");
-        }
+        OnItemPressedCallback callback = new OnItemPressedCallback() {
+            @Override
+            public void onPress(String uid) {
+                onMapItemPressed(uid);
+            }
+        };
 
         if (null == fifteenMapAdapter) {
-            fifteenMapAdapter = new MapRecyclerViewAdapter(getActivity(), fifteenKM);
+            fifteenMapAdapter = new MapRecyclerViewAdapter(fifteenKM, callback);
+            fifteenKM.add(new MapListItem("uqWWk2SuhbenapK0ANzeT0kMebY2", notifyCallback));
+        } else {
+            fifteenMapAdapter.syncData();
         }
 
         if (null == nineMapAdapter) {
-            nineMapAdapter = new MapRecyclerViewAdapter(getActivity(), nineKM);
+            nineMapAdapter = new MapRecyclerViewAdapter(nineKM, callback);
+            nineKM.add(new MapListItem("lGSXDdEAlFaogmrWTHgVuxJHMmi1", notifyCallback));
+        } else {
+            nineMapAdapter.syncData();
         }
 
         if (null == sixMapAdapter) {
-            sixMapAdapter = new MapRecyclerViewAdapter(getActivity(), sixKM);
+            sixMapAdapter = new MapRecyclerViewAdapter(sixKM, callback);
+            sixKM.add(new MapListItem("PTIDi7lEIkb7PMOD7S4ihbPTecT2", notifyCallback));
+        } else {
+            sixMapAdapter.syncData();
         }
 
         if (null == threeMapAdapter) {
-            threeMapAdapter = new MapRecyclerViewAdapter(getActivity(), threeKM);
+            threeMapAdapter = new MapRecyclerViewAdapter(threeKM, callback);
+            threeKM.add(new MapListItem("LSBexRMVWrhjjS1bxOiRbsQ5D503", notifyCallback));
+        } else {
+            threeMapAdapter.syncData();
         }
 
         if (null == zeroMapAdapter) {
-            zeroMapAdapter = new MapRecyclerViewAdapter(getActivity(), zeroKM);
+            zeroMapAdapter = new MapRecyclerViewAdapter(zeroKM, callback);
+        } else {
+            zeroMapAdapter.syncData();
         }
 
         RecyclerView fifteenMapRecyclerView = view.findViewById(R.id.map_15k_recycler);
@@ -111,22 +128,13 @@ public class MapFragment extends Fragment {
         threeMapRecyclerView.setAdapter(threeMapAdapter);
         zeroMapRecyclerView.setAdapter(zeroMapAdapter);
 
-        fifteenKM.add(new MapListItem("uqWWk2SuhbenapK0ANzeT0kMebY2", notifyCallback));
-        nineKM.add(new MapListItem("lGSXDdEAlFaogmrWTHgVuxJHMmi1", notifyCallback));
-        sixKM.add(new MapListItem("PTIDi7lEIkb7PMOD7S4ihbPTecT2", notifyCallback));
-        threeKM.add(new MapListItem("LSBexRMVWrhjjS1bxOiRbsQ5D503", notifyCallback));
 
         return view;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable("15", fifteenMapAdapter);
-        outState.putSerializable("9", fifteenMapAdapter);
-        outState.putSerializable("6", fifteenMapAdapter);
-        outState.putSerializable("3", fifteenMapAdapter);
-        outState.putSerializable("0", fifteenMapAdapter);
-
-        super.onSaveInstanceState(outState);
+    public void onMapItemPressed(String uid) {
+        Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
+        intent.putExtra("Uid", uid);
+        getContext().startActivity(intent);
     }
 }
