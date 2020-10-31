@@ -53,6 +53,7 @@ public class ChatsFragment extends Fragment {
         for(ConnectionItem connection : MainActivity.getCurrentUser().getConnections()) {
             chats.add(new ChatListItem(connection.getUid()));
         }
+        Log.d("ChatsFragment", "------------------------" + MainActivity.getCurrentUser().getConnections());
         chatsAdapter = new ChatsRecyclerViewAdapter(getActivity(), chats);
         chatsRecyclerView.setAdapter(chatsAdapter);
         chatsAdapter.notifyDataSetChanged();

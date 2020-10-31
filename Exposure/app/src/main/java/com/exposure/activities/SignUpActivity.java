@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -40,7 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void signUpUser(View view) {
-        String fullName = fullNameField.getEditText().getText().toString().trim();
+        final String fullName = fullNameField.getEditText().getText().toString().trim();
         String email = emailField.getEditText().getText().toString().trim();
         String password = passwordField.getEditText().getText().toString().trim();
 
@@ -62,7 +63,18 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             Toast.makeText(getApplicationContext(), "Successful sign up.", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+                            final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(fullName)
+                                    .build();
+
+                            mAuth.getCurrentUser().updateProfile(profileUpdates)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                        }
+                                    });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

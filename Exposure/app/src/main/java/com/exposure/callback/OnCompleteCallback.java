@@ -1,5 +1,5 @@
 package com.exposure.callback;
 
 public interface OnCompleteCallback {
-    void update(boolean success);
+    void update(boolean success, String message);
 }

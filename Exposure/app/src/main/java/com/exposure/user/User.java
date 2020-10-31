@@ -79,6 +79,7 @@ public abstract class User implements Serializable {
     public void setLies(List<String> lies) { this.lies = lies; }
 
     public boolean validState() {
-        return !(null == name || null == birthday || 0 == preferences.size() || null == email);
+        return !(null == name || null == birthday || 0 == preferences.size() || null == email ||
+                location.size() != 2 || truths.size() < 3 || lies.size() < 1);
     }
 }

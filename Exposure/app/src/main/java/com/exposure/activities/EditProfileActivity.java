@@ -8,9 +8,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.CheckBox;
@@ -23,7 +25,9 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -47,6 +51,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 
 public class EditProfileActivity extends AppCompatActivity {
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter, truthsAdapter, liesAdapter;
@@ -60,6 +66,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private LocationManager lm;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+                @RequiresApi(api = Build.VERSION_CODES.R)
                 @Override
                 public void onActivityResult(Boolean result) {
                     if (result) {
@@ -81,9 +88,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
         UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
-            public void update(boolean success) {
+            public void update(boolean success, String message) {
                 if (success) {
-                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                    profileBitmap = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
+                    profileImage.setImageBitmap(profileBitmap);
                 }
             }
         });
@@ -263,6 +271,7 @@ public class EditProfileActivity extends AppCompatActivity {
         startActivityForResult(intent, RequestCodes.RETRIEVE_IMAGE_REQUEST);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public void onUpdateLocationClick(View view) {
         progressBar.setVisibility(View.VISIBLE);
 
@@ -271,7 +280,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 PackageManager.PERMISSION_GRANTED) {
             // You can use the API that requires the permission.
             setUserLocation();
-            progressBar.setVisibility(View.INVISIBLE);
         } else {
             // You can directly ask for the permission.
             // The registered ActivityResultCallback gets the result of this request.
@@ -280,6 +288,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     private void setUserLocation() {
         Criteria criteria = new Criteria();
         criteria.setPowerRequirement(Criteria.POWER_LOW);
@@ -298,17 +307,25 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, true));
-
-        if(null != location) {
-            if(0 != location.getLatitude() && 0 != location.getLongitude()) {
-                currentUser.setLocation(location.getLatitude(), location.getLongitude());
-                Toast.makeText(this, "Successfully updated location.", Toast.LENGTH_SHORT).show();
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                if (0 != location.getLatitude() && 0 != location.getLongitude()) {
+                    currentUser.setLocation(location.getLatitude(), location.getLongitude());
+                    Toast.makeText(getApplicationContext(), "Successfully updated location.", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
             }
-        }
+        });
     }
 
     public void onSaveClick(View view) {
+
+        /* The user must upload a profile picture */
+        if (null == profileBitmap) {
+            Toast.makeText(this, "You must upload a profile picture", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         /* Retrieve any edits from edit texts and set the current user data */
         String name = nameEditText.getText().toString();
@@ -322,10 +339,14 @@ public class EditProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "Name required", Toast.LENGTH_LONG).show();
             nameEditText.requestFocus();
             return;
-        } else if (email.isEmpty()) {
+        } else if (nickname.isEmpty()) {
             /* Need to check if this email is valid in firebase */
             Toast.makeText(this, "Email required", Toast.LENGTH_LONG).show();
             emailEditText.requestFocus();
+            return;
+        } else if (email.isEmpty()) {
+            Toast.makeText(this, "Nickname required", Toast.LENGTH_LONG).show();
+            nicknameEditText.requestFocus();
             return;
         } else if (birthday.contains("-")) {
             Toast.makeText(this, "Birthday must be of the format dd/MM/yyyy", Toast.LENGTH_LONG).show();
@@ -362,6 +383,21 @@ public class EditProfileActivity extends AppCompatActivity {
         /* If the user hasn't selected a preference, create error message */
         if (!malesCheckBox.isChecked() && !femalesCheckBox.isChecked() && !othersCheckBox.isChecked()) {
             Toast.makeText(this, "You must select at least one preference", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (currentUser.getLocation().size() != 2) {
+            Toast.makeText(this, "You must update your current location", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (currentUser.getTruths().size() < 3) {
+            Toast.makeText(this, "You must enter at least three truths about yourself", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (currentUser.getLies().size() < 1) {
+            Toast.makeText(this, "You must enter at least one lie about yourself", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -408,13 +444,13 @@ public class EditProfileActivity extends AppCompatActivity {
         UserInformationHandler.uploadUserInformationToFirestore(currentUser,
                 new OnCompleteCallback() {
                     @Override
-                    public void update(boolean success) {
+                    public void update(boolean success, String message) {
                         if (success) {
                             /* Uploaded user data successfully. Now, upload profile picture if one has been specified */
                             if (null != profileBitmap) {
                                 UserMediaHandler.uploadProfilePhotoToFirebase(profileBitmap, new OnCompleteCallback() {
                                     @Override
-                                    public void update(boolean success) {
+                                    public void update(boolean success, String message) {
                                         /* Finish activity regardless of success */
                                         finish();
                                     }
@@ -424,6 +460,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             }
                         } else {
                             /* Couldn't download user data, so don't finish the activity */
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
