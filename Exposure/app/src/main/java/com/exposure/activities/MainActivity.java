@@ -87,12 +87,13 @@ public class MainActivity extends AppCompatActivity {
                                                 });
                                             } else {
                                                 /* Failed to download current user connections */
+                                                finish();
                                             }
                                         }
                                     });
                         } else {
                             /* Failed to download user information */
-
+                            finish();
                         }
                     }
                 });

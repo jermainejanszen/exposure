@@ -92,6 +92,11 @@ public class UserMediaHandler {
                         final List<StorageReference> imageRefs = listResult.getItems();
                         final int size = 1024 * 1024;
 
+                        if (listResult.getItems().size() == 0) {
+                            onCompleteCallback.update(true, "finished");
+                            return;
+                        }
+
                         for (int i = 0; i < listResult.getItems().size(); i++) {
                             final StorageReference imageRef = listResult.getItems().get(i);
                             final int currentImage = i;

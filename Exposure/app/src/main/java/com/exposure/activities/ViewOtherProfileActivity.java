@@ -171,7 +171,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void onConnectPressed(View view){
+    public void onConnectPressed(View view) {
         progressBar.setVisibility(View.VISIBLE);
         List<ConnectionItem> currentUserConnections = currentUser.getConnections();
         currentUserConnections.add(new ConnectionItem(otherUser.getUid(), new ArrayList<String>()));
@@ -183,7 +183,11 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                     UserInformationHandler.addOtherUserConnection(otherUser.getUid(), currentUser.getUid(), new OnCompleteCallback() {
                         @Override
                         public void update(boolean success, String message) {
-                            progressBar.setVisibility(View.INVISIBLE);
+                            if (success) {
+                                connectButton.setVisibility(View.INVISIBLE);
+                                playButton.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.INVISIBLE);
+                            }
                         }
                     });
                 } else {
@@ -193,7 +197,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void onPlayPressed(View view){
+    public void onPlayPressed(View view) {
         Intent gameIntent = new Intent(this, ThreeTruthsOneLieActivity.class);
         gameIntent.putExtra("current user", currentUser);
         gameIntent.putExtra("other user", otherUser);
