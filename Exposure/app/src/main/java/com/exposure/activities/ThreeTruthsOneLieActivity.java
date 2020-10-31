@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
+import com.exposure.constants.ResultCodes;
 import com.exposure.popups.LostGameActivity;
 import com.exposure.popups.WonGameActivity;
 import com.exposure.user.CurrentUser;
@@ -47,7 +48,11 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
         mapTruthsLiesToView = new HashMap<>();
 
         otherUser = (OtherUser) getIntent().getSerializableExtra("other user");
-        currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
+        currentUser = MainActivity.getCurrentUser();
+        if (null == currentUser) {
+            finish();
+        }
+
         truths = otherUser.getTruths();
         lies = otherUser.getLies();
 
@@ -59,8 +64,6 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
         mapTruthsLiesToView.put("Truth 2", truths.get(1));
         mapTruthsLiesToView.put("Truth 3", truths.get(2));
         mapTruthsLiesToView.put("Lie", lies.get(0));
-
-        int lieIndex = -1;
 
         /** randomly assign lie and truths to view **/
         List mapKeys = new ArrayList(mapTruthsLiesToView.keySet());
@@ -83,24 +86,22 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (finalK == indexOfLie){
-                        inputFields[finalK].setBackgroundColor(Color.RED);
                         wonGame();
                     } else {
                         lostGame();
                     }
                 }
             });
-
         }
     }
 
-    public void wonGame(){
-        Intent wonIntent = new Intent(this, WonGameActivity.class);
-        startActivity(wonIntent);
+    public void wonGame() {
+        setResult(ResultCodes.WON_GAME);
+        finish();
     }
 
-    public void lostGame(){
-        Intent lostIntent = new Intent(this, LostGameActivity.class);
-        startActivity(lostIntent);
+    public void lostGame() {
+        setResult(ResultCodes.LOST_GAME);
+        finish();
     }
 }

@@ -4,66 +4,67 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <TextView
-        android:id="@+id/congratulations"
-        android:layout_width="354dp"
+    <RelativeLayout
+        android:id="@+id/win_dialog_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="29dp"
-        android:layout_marginBottom="450dp"
-        android:text="Congratulations!"
-        android:textAlignment="center"
-        android:textColor="@color/Primary300"
-        android:textSize="40sp" />
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="36dp">
+
+        <TextView
+            android:id="@+id/congratulations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="18dp"
+            android:text="Congratulations!"
+            android:textAlignment="center"
+            android:textColor="@color/Primary300"
+            android:textSize="40sp" />
 
 
-    <TextView
-        android:id="@+id/unlocked"
-        android:layout_width="266dp"
-        android:layout_height="62dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="73dp"
-        android:layout_marginBottom="366dp"
-        android:text="You caught the lie! You have unlocked the following information about your match:"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/unlocked"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="8dp"
+            android:layout_below="@id/congratulations"
+            android:text="You caught the lie! You have unlocked the following information about your match:"
+            android:textAlignment="center" />
 
 
-    <TextView
-        android:id="@+id/unlocked_feature"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="200dp"
-        android:layout_marginEnd="94dp"
-        android:layout_marginBottom="297dp"
-        android:background="@color/Primary100"
-        android:text="\?"
-        android:textAlignment="center"
-        android:textColor="@color/Secondary700"
-        android:textSize="40dp"
-        app:cornerRadius="50dp" />
+        <TextView
+            android:id="@+id/unlocked_feature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/unlocked"
+            android:layout_marginVertical="18dp"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="26dp"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/Primary100"
+            android:text="ITEM GOES HERE"
+            android:textAlignment="center"
+            android:textColor="@color/Secondary900"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/continue_to_next"
-        android:layout_width="354dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="23dp"
-        android:layout_marginBottom="231dp"
-        android:onClick="onClickContinue"
-        android:text="@string/continue_to_next"
-        android:textAlignment="center"
-        android:textColor="@color/Primary100"
-        android:textSize="22sp" />
+        <TextView
+            android:id="@+id/continue_to_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/unlocked_feature"
+            android:onClick="onClickContinue"
+            android:text="@string/continue_to_next"
+            android:textAlignment="center"
+            android:textColor="@color/Primary100"
+            android:textSize="22sp" />
+
+    </RelativeLayout>
+
+
 
 
 </RelativeLayout>

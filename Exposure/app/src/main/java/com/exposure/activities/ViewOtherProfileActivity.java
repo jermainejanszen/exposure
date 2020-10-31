@@ -12,11 +12,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.adapters.ChipsRecyclerViewAdapter;
+import com.exposure.constants.ResultCodes;
+import com.exposure.popups.LostGameActivity;
+import com.exposure.popups.WonGameActivity;
 import com.exposure.user.ConnectionItem;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
@@ -90,11 +94,25 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                     public void update(boolean success, String message) {
                         /* Once the user information has downloaded (either success of failure), we can
                            safely start initializing all of the fields */
-                        // progressBar.setVisibility(View.INVISIBLE);
                         initialiseFields();
                     }
                 });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (RequestCodes.GAME_RESULT == requestCode) {
+            if (ResultCodes.WON_GAME == resultCode) {
+                Intent intent = new Intent(this, WonGameActivity.class);
+                startActivity(intent);
+            } else if (ResultCodes.LOST_GAME == resultCode) {
+                Intent intent = new Intent(this, LostGameActivity.class);
+                startActivity(intent);
+            }
+        }
     }
 
     private void initialiseFields() {

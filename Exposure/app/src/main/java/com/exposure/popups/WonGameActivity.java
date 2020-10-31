@@ -18,8 +18,7 @@ public class WonGameActivity extends Activity {
         setContentView(R.layout.activity_won_game);
     }
 
-    public void onClickContinue(View view){
-        Intent continueIntent = new Intent(this, ViewOtherProfileActivity.class);
-       startActivity(continueIntent);
+    public void onClickContinue(View view) {
+        finish();
     }
 }

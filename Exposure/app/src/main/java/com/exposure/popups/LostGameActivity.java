@@ -18,8 +18,7 @@ public class LostGameActivity extends Activity {
         setContentView(R.layout.activity_lost_game);
     }
 
-    public void onClickContinue(View view){
-        Intent continueIntent = new Intent(this, ViewOtherProfileActivity.class);
-        startActivity(continueIntent);
+    public void onClickContinue(View view) {
+        finish();
     }
 }
