@@ -55,7 +55,7 @@ public class UserInformationHandler {
                         for (Map<String, Object> connection : docConnections) {
                             connections.add(new ConnectionItem((String) connection.get("uid"), (List<String>) connection.get("exposedInfo")));
                         }
-                        Log.d("DOWNLOAD", String.valueOf(connections.size()));
+                        user.setConnections(connections);
                         onCompleteCallback.update(true);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -65,6 +65,37 @@ public class UserInformationHandler {
                         onCompleteCallback.update(false);
                     }
                 });
+    }
+
+    public static void addOtherUserConnection(final String userUid, final String uidToAdd, final OnCompleteCallback onCompleteCallback) {
+        final CurrentUser otherUser = new CurrentUser(userUid);
+        downloadUserInformation(otherUser, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success) {
+                if (success) {
+                    downloadCurrentUserConnections(otherUser, new OnCompleteCallback() {
+                        @Override
+                        public void update(boolean success) {
+                            if (success) {
+                                List<ConnectionItem> connections = otherUser.getConnections();
+                                connections.add(new ConnectionItem(uidToAdd, new ArrayList<String>()));
+                                otherUser.setConnections(connections);
+                                uploadUserInformationToFirestore(otherUser, new OnCompleteCallback() {
+                                    @Override
+                                    public void update(boolean success) {
+                                        onCompleteCallback.update(success);
+                                    }
+                                });
+                            } else {
+                                onCompleteCallback.update(false);
+                            }
+                        }
+                    });
+                } else {
+                    onCompleteCallback.update(false);
+                }
+            }
+        });
     }
 
     /**
