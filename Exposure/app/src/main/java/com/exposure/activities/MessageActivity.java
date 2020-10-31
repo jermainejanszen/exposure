@@ -17,6 +17,7 @@ import com.exposure.R;
 import com.exposure.adapters.MessageListItem;
 import com.exposure.adapters.MessagesRecyclerViewAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Timestamp;
@@ -101,6 +102,10 @@ public class MessageActivity extends Activity {
                                messages.add(new MessageListItem((String)message.get("message"), (String)message.get("sender")));
                            }
                         }
+                    } else {
+                        HashMap<String, Object> doc = new HashMap<>();
+                        doc.put("messages", messages);
+                        docRefMessages.set(doc);
                     }
                     messagesAdapter = new MessagesRecyclerViewAdapter(getApplicationContext(), messages);
                     messageRecyclerView.setAdapter(messagesAdapter);
