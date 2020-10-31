@@ -27,7 +27,12 @@ public class CurrentUser extends User {
     }
 
     public boolean isConnected(String otherUid) {
-        return true;
+        for (ConnectionItem connection : this.connections) {
+            if (connection.getUid().equals(otherUid)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
