@@ -85,7 +85,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
         bitmaps = new HashMap<>();
         imagePaths = new ArrayList<>();
-        gridViewAdapter = new GridViewAdapter(this, bitmaps, imagePaths);
+        gridViewAdapter = new GridViewAdapter(getApplicationContext(), bitmaps, imagePaths);
         gridView.setAdapter(gridViewAdapter);
 
         UserInformationHandler.downloadUserInformation(otherUser,
@@ -136,14 +136,12 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
 
         /* If we haven't already downloaded the user's images from firebase, do so */
-        if (null != bitmaps && null != imagePaths) {
-            UserMediaHandler.downloadImagesFromFirebase(bitmaps, imagePaths, new OnCompleteCallback() {
+        UserMediaHandler.downloadImagesFromFirebase(otherUser.getUid(), bitmaps, imagePaths, new OnCompleteCallback() {
                 @Override
                 public void update(boolean success, String message) {
                     gridViewAdapter.notifyDataSetChanged();
                 }
             });
-        }
 
         /* Set the display name to the nickname if it exists, otherwise just use the users name */
         displayNameText.setText(
@@ -176,7 +174,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
         profileByteArray = new byte[1024*1024];
 
-        UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+        UserMediaHandler.downloadProfilePhotoFromFirebase(otherUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success){

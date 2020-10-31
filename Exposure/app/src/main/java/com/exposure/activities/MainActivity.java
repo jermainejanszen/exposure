@@ -72,13 +72,13 @@ public class MainActivity extends AppCompatActivity {
                     public void update(boolean success, String message) {
                         /* Once the user information has downloaded (either success of failure), we can
                            safely start initializing all of the fields */
-                        if(success) {
+                        if (success) {
                             UserInformationHandler.downloadCurrentUserConnections(currentUser,
                                     new OnCompleteCallback() {
                                         @Override
                                         public void update(boolean success, String message) {
-                                            if(success) {
-                                                UserMediaHandler.downloadImagesFromFirebase(bitmaps, imagePaths, new OnCompleteCallback() {
+                                            if (success) {
+                                                UserMediaHandler.downloadImagesFromFirebase(currentUser.getUid(), bitmaps, imagePaths, new OnCompleteCallback() {
                                                     @Override
                                                     public void update(boolean success, String message) {
                                                         setup();

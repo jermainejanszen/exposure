@@ -78,8 +78,8 @@ public class UserMediaHandler {
         });
     }
 
-    public static void downloadImagesFromFirebase(final Map<String, Bitmap> bitmaps, final List<String> imagePaths, final OnCompleteCallback onCompleteCallback) {
-        String path = mAuth.getCurrentUser().getUid() + "/Images/";
+    public static void downloadImagesFromFirebase(final String uid, final Map<String, Bitmap> bitmaps, final List<String> imagePaths, final OnCompleteCallback onCompleteCallback) {
+        String path = uid + "/Images/";
 
         Log.d("UserMedia", path);
 
@@ -142,8 +142,8 @@ public class UserMediaHandler {
                 });
     }
 
-    public static void downloadProfilePhotoFromFirebase(final byte[] profilePicture, final long photoSize, final OnCompleteCallback onCompleteCallback){
-        final StorageReference mProfilePics = mStorage.child("Profile Photos" + "/" + FirebaseAuth.getInstance().getUid());
+    public static void downloadProfilePhotoFromFirebase(String uid, final byte[] profilePicture, final long photoSize, final OnCompleteCallback onCompleteCallback){
+        final StorageReference mProfilePics = mStorage.child("Profile Photos" + "/" + uid);
 
         mProfilePics.getBytes(photoSize).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override

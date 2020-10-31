@@ -86,7 +86,7 @@ public class EditProfileActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+        UserMediaHandler.downloadProfilePhotoFromFirebase(currentUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success) {

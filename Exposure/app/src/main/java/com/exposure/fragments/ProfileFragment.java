@@ -175,7 +175,7 @@ public class ProfileFragment extends Fragment {
 
         profileByteArray = new byte[1024*1024];
 
-        UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+        UserMediaHandler.downloadProfilePhotoFromFirebase(currentUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success){
