@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
     private MapFragment mapFragment;
     private ChatsFragment chatsFragment;
-//    private CurrentUser currentUser;
     private ProgressBar progressBar;
 
     @Override
@@ -64,11 +64,22 @@ public class MainActivity extends AppCompatActivity {
                     public void update(boolean success, String message) {
                         /* Once the user information has downloaded (either success of failure), we can
                            safely start initializing all of the fields */
-                        if (success) {
-                            setup();
-                            progressBar.setVisibility(View.INVISIBLE);
+                        if(success) {
+                            UserInformationHandler.downloadCurrentUserConnections(currentUser,
+                                    new OnCompleteCallback() {
+                                        @Override
+                                        public void update(boolean success, String message) {
+                                            if(success) {
+                                                setup();
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                            } else {
+                                                /* Failed to download current user connections */
+                                            }
+                                        }
+                                    });
                         } else {
-                            Toast.makeText(getApplicationContext(), "Failed to downloader user's data", Toast.LENGTH_SHORT).show();
+                            /* Failed to download user information */
+
                         }
                     }
                 });

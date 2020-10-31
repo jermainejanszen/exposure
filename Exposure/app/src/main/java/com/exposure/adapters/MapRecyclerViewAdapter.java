@@ -38,14 +38,16 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        // holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
+        if(null != data.get(position).getProfileImage()) {
+            holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
+        }
         holder.getName().setText(data.get(position).getName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     Intent intent = new Intent(context, ViewOtherProfileActivity.class);
-                    intent.putExtra("Other User Uid", data.get(position).getUid());
+                    intent.putExtra("Uid", data.get(position).getUid());
                     context.startActivity(intent);
                 }
             });

@@ -1,7 +1,7 @@
 package com.exposure.user;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Used to store information about other users that the current user
@@ -9,16 +9,13 @@ import java.util.Map;
  */
 public class OtherUser extends User {
 
-    private final Map<UserField, Boolean> exposedInfo = new HashMap<UserField, Boolean>();
+    private final List<String> exposedInfo = new ArrayList<>();
 
     /* Constructor */
     public OtherUser(String uid) {
         super(uid);
 
-        for(UserField field : UserField.values()) {
-            // TODO: Load exposed info from Firebase
-            this.exposedInfo.put(field, false);
-        }
+        // TODO: Load exposed info from Firebase
     }
 
     /**
@@ -27,27 +24,31 @@ public class OtherUser extends User {
      * @return True if the detail is exposed, otherwise false.
      */
     public boolean checkDetailExposed(UserField field) {
-        if(null == this.exposedInfo.get(field)) {
-            return false;
-        } else {
-            return this.exposedInfo.get(field);
-        }
+        return this.exposedInfo.contains(field.toString());
     }
 
     /**
      * Exposes the given field.
      * @param field Field to expose.
      */
-    public void exposeDetail(UserField field) {
-        this.exposedInfo.put(field, true);
+    public ConnectionItem exposeDetail(UserField field) {
+        if(!checkDetailExposed(field)) {
+            this.exposedInfo.add(field.toString());
+        }
+        return this.toConnectionItem();
     }
 
     /**
      * Hides the given field.
      * @param field Field to hide.
      */
-    public void hideDetail(UserField field) {
-        this.exposedInfo.put(field, false);
+    public ConnectionItem hideDetail(UserField field) {
+        this.exposedInfo.remove(field.toString());
+        return this.toConnectionItem();
+    }
+
+    public ConnectionItem toConnectionItem() {
+        return new ConnectionItem(this.getUid(), exposedInfo);
     }
 
 }

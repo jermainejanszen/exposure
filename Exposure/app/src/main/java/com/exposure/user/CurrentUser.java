@@ -9,17 +9,20 @@ import java.util.List;
  */
 public class CurrentUser extends User {
 
-   // private List<OtherUser> connections = new ArrayList<>();
+   private List<ConnectionItem> connections = new ArrayList<>();
 
     public CurrentUser(String uid) {
         super(uid);
-
-        // TODO: Load connections from Firebase
     }
 
     /* Getters */
-//    public List<OtherUser> getConnections() {
-//        return connections;
-//    }
+    public List<ConnectionItem> getConnections() {
+        return connections;
+    }
+
+    /* Setters */
+    public void setConnections(List<ConnectionItem> connections) {
+        this.connections = connections;
+    }
 
 }

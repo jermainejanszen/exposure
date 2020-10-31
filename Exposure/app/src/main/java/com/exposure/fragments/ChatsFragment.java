@@ -1,6 +1,7 @@
 package com.exposure.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
+import com.exposure.activities.MainActivity;
 import com.exposure.adapters.ChatListItem;
 import com.exposure.adapters.ChatsRecyclerViewAdapter;
 import com.exposure.user.ConnectionItem;
@@ -27,7 +29,6 @@ public class ChatsFragment extends Fragment {
 
     private List<ChatListItem> chats;
     private ChatsRecyclerViewAdapter chatsAdapter;
-    private FirebaseFirestore db;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -48,31 +49,14 @@ public class ChatsFragment extends Fragment {
 
         final RecyclerView chatsRecyclerView = view.findViewById(R.id.chat_list);
 
-        String currID = FirebaseAuth.getInstance().getUid();
-        db = FirebaseFirestore.getInstance();
-        final DocumentReference profileRef = db.collection("Profiles").document(currID);
-        profileRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    chats = new ArrayList<>();
-                    if(null != document && document.exists()) {
-                        List<ConnectionItem> connections = (List<ConnectionItem>) document.get("connections");
-                        if(null != connections) {
-                            for(ConnectionItem connection : connections) {
-                                chats.add(new ChatListItem(connection.getUid()));
-                            }
-                        }
-                    }
-
-                    chatsAdapter = new ChatsRecyclerViewAdapter(getActivity(), chats);
-                    chatsRecyclerView.setAdapter(chatsAdapter);
-                    chatsAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-
+        chats = new ArrayList<>();
+        for(ConnectionItem connection : MainActivity.getCurrentUser().getConnections()) {
+            chats.add(new ChatListItem(connection.getUid()));
+        }
+        Log.d("ChatsFragment", "------------------------" + MainActivity.getCurrentUser().getConnections());
+        chatsAdapter = new ChatsRecyclerViewAdapter(getActivity(), chats);
+        chatsRecyclerView.setAdapter(chatsAdapter);
+        chatsAdapter.notifyDataSetChanged();
 
         return view;
     }

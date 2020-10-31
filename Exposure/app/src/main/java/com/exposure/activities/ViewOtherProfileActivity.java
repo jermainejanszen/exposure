@@ -32,13 +32,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class ViewOtherProfileActivity extends AppCompatActivity {
-
-    private String otherUserUid = "A7Q6DbHMoLZrffITQ7Gou2eJXCB2";
 
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView, personalityTypesRecyclerView;
@@ -60,12 +60,12 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_other_profile);
 
-        currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
-
-        //TODO: link this up
-        //otherUserUid = getIntent().getStringExtra("Other User Uid");
-        otherUser = new OtherUser(otherUserUid);
         currentUser = MainActivity.getCurrentUser();
+        if(null == currentUser) {
+            finish();
+        }
+
+        otherUser = new OtherUser(getIntent().getStringExtra("Uid"));
 
         studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
@@ -76,13 +76,11 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         preferencesText = findViewById(R.id.preferences);
         profileImage = findViewById(R.id.profile_image);
         gridView = findViewById(R.id.image_grid_view);
-        progressBar = findViewById(R.id.progress_bar);
+        progressBar = findViewById(R.id.other_profile_progress_bar);
         connectButton = findViewById(R.id.connect_button);
         gameButton = findViewById(R.id.play_game);
 
-        if (null == currentUser){
-            currentUser = new CurrentUser(FirebaseAuth.getInstance().getUid());
-        }
+        progressBar.setVisibility(View.VISIBLE);
 
         bitmaps = new HashMap<>();
         imagePaths = new ArrayList<>();
@@ -164,13 +162,13 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         if (!preferences.isEmpty()) {
             Collections.sort(preferences);
 
-            String preferencesString = "Interested in " + preferences.get(0);
+            StringBuilder preferencesString = new StringBuilder("Interested in " + preferences.get(0));
 
             for (int i = 1; i < preferences.size(); i++) {
-                preferencesString += ", " + preferences.get(i);
+                preferencesString.append(", ").append(preferences.get(i));
             }
 
-            preferencesText.setText(preferencesString);
+            preferencesText.setText(preferencesString.toString());
         }
 
         profileByteArray = new byte[1024*1024];
@@ -183,6 +181,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

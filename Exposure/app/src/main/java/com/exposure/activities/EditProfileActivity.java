@@ -321,6 +321,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void onSaveClick(View view) {
 
+        /* The user must upload a profile picture */
+        if (null == profileBitmap) {
+            Toast.makeText(this, "You must upload a profile picture", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         /* Retrieve any edits from edit texts and set the current user data */
         String name = nameEditText.getText().toString();
         String nickname = nicknameEditText.getText().toString();
@@ -333,10 +339,14 @@ public class EditProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "Name required", Toast.LENGTH_LONG).show();
             nameEditText.requestFocus();
             return;
-        } else if (email.isEmpty()) {
+        } else if (nickname.isEmpty()) {
             /* Need to check if this email is valid in firebase */
             Toast.makeText(this, "Email required", Toast.LENGTH_LONG).show();
             emailEditText.requestFocus();
+            return;
+        } else if (email.isEmpty()) {
+            Toast.makeText(this, "Nickname required", Toast.LENGTH_LONG).show();
+            nicknameEditText.requestFocus();
             return;
         } else if (birthday.contains("-")) {
             Toast.makeText(this, "Birthday must be of the format dd/MM/yyyy", Toast.LENGTH_LONG).show();
@@ -376,19 +386,18 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        /* The user must upload a profile picture */
-        if (null == profileBitmap) {
-            Toast.makeText(this, "You must upload a profile picture", Toast.LENGTH_LONG).show();
+        if (currentUser.getLocation().size() != 2) {
+            Toast.makeText(this, "You must update your current location", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (currentUser.getTruths().size() < 4) {
-            Toast.makeText(this, "You must enter at least four truths about yourself", Toast.LENGTH_LONG).show();
+        if (currentUser.getTruths().size() < 3) {
+            Toast.makeText(this, "You must enter at least three truths about yourself", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (currentUser.getLies().size() < 4) {
-            Toast.makeText(this, "You must enter at least four lies about yourself", Toast.LENGTH_LONG).show();
+        if (currentUser.getLies().size() < 1) {
+            Toast.makeText(this, "You must enter at least one lie about yourself", Toast.LENGTH_LONG).show();
             return;
         }
 
