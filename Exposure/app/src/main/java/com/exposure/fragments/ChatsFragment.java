@@ -78,7 +78,7 @@ public class ChatsFragment extends Fragment {
         }
 
         for (ConnectionItem connection : MainActivity.getCurrentUser().getConnections()) {
-            if (!chats.contains(connection.getUid())) {
+            if (!containsUid(connection.getUid())) {
                 chats.add(new ChatListItem(connection.getUid(), notifyCallback));
             }
         }
@@ -93,5 +93,14 @@ public class ChatsFragment extends Fragment {
         Intent intent = new Intent(getContext(), MessageActivity.class);
         intent.putExtra("UID", uid);
         getContext().startActivity(intent);
+    }
+
+    private boolean containsUid(String uid) {
+        for (ChatListItem chat : chats) {
+            if (0 == chat.getUid().compareTo(uid)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

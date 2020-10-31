@@ -84,18 +84,4 @@ public class ChatListItem {
             }
         });
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o instanceof String) return o.equals(uid);
-        if (o == null || getClass() != o.getClass()) return false;
-        ChatListItem that = (ChatListItem) o;
-        return uid.equals(that.uid);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uid);
-    }
 }
