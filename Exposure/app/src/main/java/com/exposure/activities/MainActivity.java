@@ -31,9 +31,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.auth.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static CurrentUser currentUser;
+    private static Map<String, Bitmap> bitmaps;
+    private static List<String> imagePaths;
     private BottomNavigationView navigationView;
     private ProfileFragment profileFragment;
     private MapFragment mapFragment;
@@ -57,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setSelectedItemId(R.id.fragment_profile);
 
         currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        bitmaps = new HashMap<>();
+        imagePaths = new ArrayList<>();
 
         UserInformationHandler.downloadUserInformation(currentUser,
                 new OnCompleteCallback() {
@@ -70,8 +78,13 @@ public class MainActivity extends AppCompatActivity {
                                         @Override
                                         public void update(boolean success, String message) {
                                             if(success) {
-                                                setup();
-                                                progressBar.setVisibility(View.INVISIBLE);
+                                                UserMediaHandler.downloadImagesFromFirebase(bitmaps, imagePaths, new OnCompleteCallback() {
+                                                    @Override
+                                                    public void update(boolean success, String message) {
+                                                        setup();
+                                                        progressBar.setVisibility(View.INVISIBLE);
+                                                    }
+                                                });
                                             } else {
                                                 /* Failed to download current user connections */
                                             }
@@ -88,6 +101,14 @@ public class MainActivity extends AppCompatActivity {
     //TODO: not sure if this is the best way to handle this
     public static CurrentUser getCurrentUser(){
         return currentUser;
+    }
+
+    public static List<String> getImagePaths() {
+        return imagePaths;
+    }
+
+    public static Map<String, Bitmap> getBitmaps() {
+        return bitmaps;
     }
 
     private void setup() {

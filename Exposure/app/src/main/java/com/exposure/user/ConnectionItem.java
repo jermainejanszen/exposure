@@ -1,8 +1,9 @@
 package com.exposure.user;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ConnectionItem {
+public class ConnectionItem implements Serializable {
 
     private final String uid;
     private final List<String> exposedInfo;

@@ -92,7 +92,9 @@ public class UserMediaHandler {
                         final List<StorageReference> imageRefs = listResult.getItems();
                         final int size = 1024 * 1024;
 
-                        for (final StorageReference imageRef: listResult.getItems()) {
+                        for (int i = 0; i < listResult.getItems().size(); i++) {
+                            final StorageReference imageRef = listResult.getItems().get(i);
+                            final int currentImage = i;
                             imageRef.getBytes(size)
                                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                         @Override
@@ -100,7 +102,9 @@ public class UserMediaHandler {
                                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                             bitmaps.put(imageRef.getName(), bitmap);
                                             imagePaths.add(imageRef.getName());
-                                            onCompleteCallback.update(true, "success");
+                                            if (currentImage == listResult.getItems().size() - 1) {
+                                                onCompleteCallback.update(true, "finished");
+                                            }
                                         }
                                     });
                         }

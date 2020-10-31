@@ -1,5 +1,6 @@
 package com.exposure.user;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,10 @@ public class CurrentUser extends User {
     /* Setters */
     public void setConnections(List<ConnectionItem> connections) {
         this.connections = connections;
+    }
+
+    public boolean isConnected(String otherUid) {
+        return true;
     }
 
 }

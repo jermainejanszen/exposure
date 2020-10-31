@@ -26,17 +26,14 @@ import com.exposure.handlers.UserInformationHandler;
 import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 public class ViewOtherProfileActivity extends AppCompatActivity {
 
@@ -53,7 +50,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     private OtherUser otherUser;
     private CurrentUser currentUser;
     private Button connectButton;
-    private Button gameButton;
+    private Button playButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +75,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         gridView = findViewById(R.id.image_grid_view);
         progressBar = findViewById(R.id.other_profile_progress_bar);
         connectButton = findViewById(R.id.connect_button);
-        gameButton = findViewById(R.id.play_game);
+        playButton = findViewById(R.id.play_button);
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -98,27 +95,15 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                     }
                 });
 
-        //TODO: use this to determine whether we are connected and hence, can play the game
-        boolean connected = updateUserConnection();
-        
-        connectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               connectWithOtherUser();
-            }
-        });
-
-        gameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Takes you to the game
-                onClickPlayGame();
-            }
-        });
-
     }
 
     private void initialiseFields() {
+
+        if (currentUser.isConnected(otherUser.getUid())) {
+            playButton.setVisibility(View.VISIBLE);
+        } else {
+            connectButton.setVisibility(View.VISIBLE);
+        }
 
         //TODO: add conditions based on 'exposed information'
 
@@ -186,56 +171,29 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         });
     }
 
-    private boolean updateUserConnection(){
-        //TODO: this is not working correctly...
+    public void onConnectPressed(View view){
+        progressBar.setVisibility(View.VISIBLE);
         List<ConnectionItem> currentUserConnections = currentUser.getConnections();
-        List<ConnectionItem> otherUserConnections = currentUser.getConnections();
-
-        Boolean currentRequested = false;
-        Boolean otherRequested = false;
-
-        for (ConnectionItem item: currentUserConnections){
-            if (item.getUid().equals(otherUser.getUid())){
-                currentRequested = true;
-            }
-        }
-        for (ConnectionItem item: otherUserConnections){
-            if (item.getUid().equals(currentUser.getUid())){
-                otherRequested = true;
-            }
-        }
-        
-        if (currentRequested && otherRequested){
-            connectButton.setText("CONNECTED");
-            return true;
-        } else if (currentRequested){
-            connectButton.setText("PENDING");
-            return false;
-        } else {
-            return false;
-        }
-    }
-
-    private void connectWithOtherUser(){
-        List<ConnectionItem> currentUserConnections = currentUser.getConnections();
-
-        //TODO: fix this
-        List<String> exposedInfo = new ArrayList<>();
-
-        currentUserConnections.add(new ConnectionItem(otherUser.getUid(), exposedInfo));
+        currentUserConnections.add(new ConnectionItem(otherUser.getUid(), new ArrayList<String>()));
         currentUser.setConnections(currentUserConnections);
 
-        updateUserConnection();
-
         UserInformationHandler.uploadUserInformationToFirestore(currentUser, new OnCompleteCallback() {
-            @Override
             public void update(boolean success, String message) {
-
+                if (success) {
+                    UserInformationHandler.addOtherUserConnection(otherUser.getUid(), currentUser.getUid(), new OnCompleteCallback() {
+                        @Override
+                        public void update(boolean success, String message) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                } else {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
 
-    private void onClickPlayGame(){
+    public void onPlayPressed(View view){
         Intent gameIntent = new Intent(this, ThreeTruthsOneLieActivity.class);
         gameIntent.putExtra("current user", currentUser);
         gameIntent.putExtra("other user", otherUser);
