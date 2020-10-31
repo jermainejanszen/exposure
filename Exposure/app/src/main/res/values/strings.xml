@@ -18,6 +18,8 @@
     <string name="lived_in">Lived in</string>
     <string name="hobbies">Hobbies</string>
     <string name="personality">Personality</string>
+    <string name="lies">Lies</string>
+    <string name="truths">Truths</string>
     <string name="change_profile_picture">Change profile picture</string>
     <string name="nickname">Nickname</string>
     <string name="birthday">Birthday</string>
@@ -40,11 +42,17 @@
     <string name="logout">Logout</string>
     <string name="search">Search</string>
     <string name="fifteen_plus_km">15+ KM</string>
-    <string name="nine_km">9 - 15 KM</string>
-    <string name="six_km">6 - 8 KM</string>
-    <string name="three_km">3 - 5 KM</string>
-    <string name="zero_km">0 - 2 KM</string>
+    <string name="nine_km">9 – 15 KM</string>
+    <string name="six_km">6 – 8 KM</string>
+    <string name="three_km">3 – 5 KM</string>
+    <string name="zero_km">0 – 2 KM</string>
     <string name="map_you">YOU</string>
     <string name="message_placeholder">Aa</string>
     <string name="connect">Connect</string>
+    <string name="play_game">Play</string>
+    <string name="continue_to_next">Continue</string>
+    <string name="location">Location</string>
+    <string name="update">Update</string>
+    <string name="update_location">Update Location</string>
+    <string name="game_3t1l_title">3 Truths and 1 Lie</string>
 </resources>

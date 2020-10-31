@@ -45,12 +45,12 @@ public class UserMediaHandler {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.d("Upload", "Success!");
-                onCompleteCallback.update(true);
+                onCompleteCallback.update(true, "success");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                onCompleteCallback.update(false);
+                onCompleteCallback.update(false, e.getMessage());
             }
         });
     }
@@ -68,18 +68,18 @@ public class UserMediaHandler {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                onCompleteCallback.update(false);
+                onCompleteCallback.update(false, e.getMessage());
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                onCompleteCallback.update(true);
+                onCompleteCallback.update(true, "success");
             }
         });
     }
 
-    public static void downloadImagesFromFirebase(final Map<String, Bitmap> bitmaps, final List<String> imagePaths, final OnCompleteCallback onCompleteCallback) {
-        String path = mAuth.getCurrentUser().getUid() + "/Images/";
+    public static void downloadImagesFromFirebase(final String uid, final Map<String, Bitmap> bitmaps, final List<String> imagePaths, final OnCompleteCallback onCompleteCallback) {
+        String path = uid + "/Images/";
 
         Log.d("UserMedia", path);
 
@@ -92,7 +92,14 @@ public class UserMediaHandler {
                         final List<StorageReference> imageRefs = listResult.getItems();
                         final int size = 1024 * 1024;
 
-                        for (final StorageReference imageRef: listResult.getItems()) {
+                        if (listResult.getItems().size() == 0) {
+                            onCompleteCallback.update(true, "finished");
+                            return;
+                        }
+
+                        for (int i = 0; i < listResult.getItems().size(); i++) {
+                            final StorageReference imageRef = listResult.getItems().get(i);
+                            final int currentImage = i;
                             imageRef.getBytes(size)
                                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                         @Override
@@ -100,7 +107,9 @@ public class UserMediaHandler {
                                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                             bitmaps.put(imageRef.getName(), bitmap);
                                             imagePaths.add(imageRef.getName());
-                                            onCompleteCallback.update(true);
+                                            if (currentImage == listResult.getItems().size() - 1) {
+                                                onCompleteCallback.update(true, "finished");
+                                            }
                                         }
                                     });
                         }
@@ -108,7 +117,7 @@ public class UserMediaHandler {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        onCompleteCallback.update(false);
+                        onCompleteCallback.update(false, e.getMessage());
                     }
                 });
     }
@@ -133,19 +142,19 @@ public class UserMediaHandler {
                 });
     }
 
-    public static void downloadProfilePhotoFromFirebase(final byte[] profilePicture, final long photoSize, final OnCompleteCallback onCompleteCallback){
-        final StorageReference mProfilePics = mStorage.child("Profile Photos" + "/" + FirebaseAuth.getInstance().getUid());
+    public static void downloadProfilePhotoFromFirebase(String uid, final byte[] profilePicture, final long photoSize, final OnCompleteCallback onCompleteCallback){
+        final StorageReference mProfilePics = mStorage.child("Profile Photos" + "/" + uid);
 
         mProfilePics.getBytes(photoSize).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 System.arraycopy(bytes, 0, profilePicture, 0, bytes.length);
-                onCompleteCallback.update(true);
+                onCompleteCallback.update(true, "success");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                onCompleteCallback.update(false);
+                onCompleteCallback.update(false, e.getMessage());
                 //failed
             }
         });

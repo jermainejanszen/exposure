@@ -1,5 +1,6 @@
 package com.exposure.user;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,17 +10,35 @@ import java.util.List;
  */
 public class CurrentUser extends User {
 
-    private List<OtherUser> connections = new ArrayList<>();
+   private List<ConnectionItem> connections = new ArrayList<>();
 
     public CurrentUser(String uid) {
         super(uid);
-
-        // TODO: Load connections from Firebase
     }
 
     /* Getters */
-    public List<OtherUser> getConnections() {
+    public List<ConnectionItem> getConnections() {
         return connections;
+    }
+
+    /* Setters */
+    public void setConnections(List<ConnectionItem> connections) {
+        this.connections = connections;
+    }
+
+    public void addConnection(String uid) {
+        if (!isConnected(uid)) {
+            this.connections.add(new ConnectionItem(uid, new ArrayList<String>()));
+        }
+    }
+
+    public boolean isConnected(String otherUid) {
+        for (ConnectionItem connection : this.connections) {
+            if (connection.getUid().equals(otherUid)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

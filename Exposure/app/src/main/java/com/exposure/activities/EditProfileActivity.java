@@ -1,9 +1,18 @@
 package com.exposure.activities;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.CheckBox;
@@ -13,8 +22,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
@@ -35,9 +51,11 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
+    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter, truthsAdapter, liesAdapter;
     private ImageView profileImage;
     private EditText nameEditText, nicknameEditText, emailEditText, phoneEditText, birthdayEditText;
     private CheckBox malesCheckBox, femalesCheckBox, othersCheckBox;
@@ -45,6 +63,18 @@ public class EditProfileActivity extends AppCompatActivity {
     private CurrentUser currentUser;
     private Bitmap profileBitmap;
     private byte[] profileByteArray;
+    private LocationManager lm;
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+                @RequiresApi(api = Build.VERSION_CODES.R)
+                @Override
+                public void onActivityResult(Boolean result) {
+                    if (result) {
+                        setUserLocation();
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +82,16 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
         initialiseFields();
-        profileByteArray = new byte[1024*1024];
+        profileByteArray = new byte[1024 * 1024];
         profileImage = findViewById(R.id.profile_image);
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+        UserMediaHandler.downloadProfilePhotoFromFirebase(currentUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
-            public void update(boolean success) {
-                if (success){
-                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+            public void update(boolean success, String message) {
+                if (success) {
+                    profileBitmap = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
+                    profileImage.setImageBitmap(profileBitmap);
                 }
             }
         });
@@ -74,11 +106,12 @@ public class EditProfileActivity extends AppCompatActivity {
             if (RESULT_OK == resultCode) {
                 String source = data.getStringExtra("Source");
                 if ("Image Capture".equals(source)) {
-                    profileImage.setImageBitmap((Bitmap) data.getExtras().get("data"));
+                    profileBitmap = (Bitmap) data.getExtras().get("data");
+                    profileImage.setImageBitmap(profileBitmap);
                 } else if ("Library".equals(source)) {
                     try {
-                        profileImage.setImageBitmap(
-                                MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
+                        profileBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                        profileImage.setImageBitmap(profileBitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -113,6 +146,20 @@ public class EditProfileActivity extends AppCompatActivity {
                 personalitiesAdapter.notifyDataSetChanged();
             }
         }
+
+        if (RequestCodes.SAVE_TRUTH_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                currentUser.getTruths().add(data.getStringExtra("New Field"));
+                truthsAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (RequestCodes.SAVE_LIE_REQUEST == requestCode) {
+            if (RESULT_OK == resultCode) {
+                currentUser.getLies().add(data.getStringExtra("New Field"));
+                liesAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void initialiseFields() {
@@ -120,16 +167,22 @@ public class EditProfileActivity extends AppCompatActivity {
         areasLivedInAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getPlacesLived(), true);
         hobbiesAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getHobbies(), true);
         personalitiesAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getPersonalities(), true);
+        truthsAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getTruths(), true);
+        liesAdapter = new ChipsRecyclerViewAdapter(this, currentUser.getLies(), true);
 
         RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
         RecyclerView hobbiesRecyclerView = findViewById(R.id.hobbies_recycler_view);
         RecyclerView personalityTypesRecyclerView = findViewById(R.id.personality_types_recycler_view);
+        RecyclerView truthsRecyclerView = findViewById(R.id.truths_recycler_view);
+        RecyclerView liesRecyclerView = findViewById(R.id.lies_recycler_view);
 
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
+        truthsRecyclerView.setAdapter(truthsAdapter);
+        liesRecyclerView.setAdapter(liesAdapter);
 
         profileImage = findViewById(R.id.profile_image);
         nameEditText = findViewById(R.id.name_edit_text);
@@ -176,36 +229,103 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void addHobby(View view){
+    public void addHobby(View view) {
         Intent intent = new Intent(this, AddUserFieldActivity.class);
         intent.putExtra("Field Type", UserField.HOBBIES.toString());
         startActivityForResult(intent, RequestCodes.SAVE_HOBBY_REQUEST);
     }
 
-    public void addPlaceStudiedAt(View view){
+    public void addPlaceStudiedAt(View view) {
         Intent intent = new Intent(this, AddUserFieldActivity.class);
         intent.putExtra("Field Type", UserField.PLACES_STUDIED.toString());
         startActivityForResult(intent, RequestCodes.SAVE_PLACE_STUDIED_AT_REQUEST);
     }
 
-    public void addPlaceLived(View view){
+    public void addPlaceLived(View view) {
         Intent intent = new Intent(this, AddUserFieldActivity.class);
         intent.putExtra("Field Type", UserField.PLACES_LIVED.toString());
         startActivityForResult(intent, RequestCodes.SAVE_PLACE_LIVED_REQUEST);
     }
 
-    public void addPersonalityTrait(View view){
+    public void addPersonalityTrait(View view) {
         Intent intent = new Intent(this, AddUserFieldActivity.class);
         intent.putExtra("Field Type", UserField.PERSONALITIES.toString());
         startActivityForResult(intent, RequestCodes.SAVE_PERSONALITY_REQUEST);
     }
+
+    public void addTruth(View view){
+        Intent intent = new Intent(this, AddUserFieldActivity.class);
+        intent.putExtra("Field Type", UserField.TRUTHS.toString());
+        startActivityForResult(intent, RequestCodes.SAVE_TRUTH_REQUEST);
+    }
+
+    public void addLie(View view){
+        Intent intent = new Intent(this, AddUserFieldActivity.class);
+        intent.putExtra("Field Type", UserField.LIES.toString());
+        startActivityForResult(intent, RequestCodes.SAVE_LIE_REQUEST);
+    }
+
 
     public void onChangeProfileImageClick(View view) {
         Intent intent = new Intent(this, RetrieveImageActivity.class);
         startActivityForResult(intent, RequestCodes.RETRIEVE_IMAGE_REQUEST);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    public void onUpdateLocationClick(View view) {
+        progressBar.setVisibility(View.VISIBLE);
+
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+            // You can use the API that requires the permission.
+            setUserLocation();
+        } else {
+            // You can directly ask for the permission.
+            // The registered ActivityResultCallback gets the result of this request.
+            requestPermissionLauncher.launch(
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void setUserLocation() {
+        Criteria criteria = new Criteria();
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                if (0 != location.getLatitude() && 0 != location.getLongitude()) {
+                    currentUser.setLocation(location.getLatitude(), location.getLongitude());
+                    Toast.makeText(getApplicationContext(), "Successfully updated location.", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
     public void onSaveClick(View view) {
+
+        /* The user must upload a profile picture */
+        if (null == profileBitmap) {
+            Toast.makeText(this, "You must upload a profile picture", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         /* Retrieve any edits from edit texts and set the current user data */
         String name = nameEditText.getText().toString();
@@ -219,10 +339,14 @@ public class EditProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "Name required", Toast.LENGTH_LONG).show();
             nameEditText.requestFocus();
             return;
-        } else if (email.isEmpty()) {
+        } else if (nickname.isEmpty()) {
             /* Need to check if this email is valid in firebase */
             Toast.makeText(this, "Email required", Toast.LENGTH_LONG).show();
             emailEditText.requestFocus();
+            return;
+        } else if (email.isEmpty()) {
+            Toast.makeText(this, "Nickname required", Toast.LENGTH_LONG).show();
+            nicknameEditText.requestFocus();
             return;
         } else if (birthday.contains("-")) {
             Toast.makeText(this, "Birthday must be of the format dd/MM/yyyy", Toast.LENGTH_LONG).show();
@@ -259,6 +383,21 @@ public class EditProfileActivity extends AppCompatActivity {
         /* If the user hasn't selected a preference, create error message */
         if (!malesCheckBox.isChecked() && !femalesCheckBox.isChecked() && !othersCheckBox.isChecked()) {
             Toast.makeText(this, "You must select at least one preference", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (currentUser.getLocation().size() != 2) {
+            Toast.makeText(this, "You must update your current location", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (currentUser.getTruths().size() < 3) {
+            Toast.makeText(this, "You must enter at least three truths about yourself", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (currentUser.getLies().size() < 1) {
+            Toast.makeText(this, "You must enter at least one lie about yourself", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -305,13 +444,13 @@ public class EditProfileActivity extends AppCompatActivity {
         UserInformationHandler.uploadUserInformationToFirestore(currentUser,
                 new OnCompleteCallback() {
                     @Override
-                    public void update(boolean success) {
+                    public void update(boolean success, String message) {
                         if (success) {
                             /* Uploaded user data successfully. Now, upload profile picture if one has been specified */
                             if (null != profileBitmap) {
                                 UserMediaHandler.uploadProfilePhotoToFirebase(profileBitmap, new OnCompleteCallback() {
                                     @Override
-                                    public void update(boolean success) {
+                                    public void update(boolean success, String message) {
                                         /* Finish activity regardless of success */
                                         finish();
                                     }
@@ -321,6 +460,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             }
                         } else {
                             /* Couldn't download user data, so don't finish the activity */
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.INVISIBLE);
                         }
                     }

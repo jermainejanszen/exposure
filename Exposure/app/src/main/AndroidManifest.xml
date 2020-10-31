@@ -3,6 +3,8 @@
     package="com.exposure">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +25,9 @@
         <activity android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.EditProfileActivity"/>
         <activity android:name=".activities.ViewOtherProfileActivity"/>
+        <activity android:name=".activities.ThreeTruthsOneLieActivity"/>
+        <activity android:name=".popups.WonGameActivity" />
+        <activity android:name=".popups.LostGameActivity" />
         <activity android:name=".popups.RetrieveImageActivity"
             android:theme="@style/Theme.Design.BottomSheetDialog"
             />

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
+import com.exposure.activities.MainActivity;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.adapters.ChipsRecyclerViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
@@ -62,6 +65,8 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentUser = (CurrentUser) getArguments().getSerializable("current user");
+        bitmaps = MainActivity.getBitmaps();
+        imagePaths = MainActivity.getImagePaths();
     }
 
     @Override
@@ -83,8 +88,6 @@ public class ProfileFragment extends Fragment {
         gridView = view.findViewById(R.id.image_grid_view);
         progressBar = view.findViewById(R.id.progress_bar);
 
-        bitmaps = new HashMap<>();
-        imagePaths = new ArrayList<>();
         gridViewAdapter = new GridViewAdapter(getContext(), bitmaps, imagePaths);
         gridView.setAdapter(gridViewAdapter);
 
@@ -141,16 +144,6 @@ public class ProfileFragment extends Fragment {
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
 
-        /* If we haven't already downloaded the user's images from firebase, do so */
-        if (null != bitmaps && null != imagePaths) {
-            UserMediaHandler.downloadImagesFromFirebase(bitmaps, imagePaths, new OnCompleteCallback() {
-                @Override
-                public void update(boolean success) {
-                    gridViewAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-
         /* Set the display name to the nickname if it exists, otherwise just use the users name */
         displayNameText.setText(
                 currentUser.getNickname() == null ? currentUser.getName() : currentUser.getNickname());
@@ -182,11 +175,13 @@ public class ProfileFragment extends Fragment {
 
         profileByteArray = new byte[1024*1024];
 
-        UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+        UserMediaHandler.downloadProfilePhotoFromFirebase(currentUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
-            public void update(boolean success) {
+            public void update(boolean success, String message) {
                 if (success){
                     profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                } else {
+                    Toast.makeText(getContext(), "Failed to download profile image", Toast.LENGTH_SHORT).show();
                 }
             }
         });

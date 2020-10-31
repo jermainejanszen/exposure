@@ -8,6 +8,7 @@ public enum UserField {
     NAME("name"),
     NICKNAME("nickname"),
     BIRTHDAY("birthday"),
+    LOCATION("location"),
     BIO("bio"),
     EMAIL("email"),
     PHONE("phone"),
@@ -15,7 +16,10 @@ public enum UserField {
     PLACES_LIVED("placesLived"),
     HOBBIES("hobbies"),
     PERSONALITIES("personalities"),
-    PREFERENCES("preferences");
+    PREFERENCES("preferences"),
+    TRUTHS("truths"),
+    LIES("lies"),
+    CONNECTIONS("connections");
 
     private final String name;
 
