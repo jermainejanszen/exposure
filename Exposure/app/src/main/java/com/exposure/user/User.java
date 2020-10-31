@@ -35,13 +35,10 @@ public abstract class User implements Serializable {
     private List<String> preferences = new ArrayList<>();
     private List<String> truths = new ArrayList<>();
     private List<String> lies = new ArrayList<>();
-    // private List<ConnectionItem> connections = new ArrayList<>();
 
     /* Constructor */
     public User(String uid) {
         this.uid = uid;
-
-        // TODO: Load fields from Firebase
     }
 
     /* Getters */
@@ -59,7 +56,6 @@ public abstract class User implements Serializable {
     public List<String> getPreferences() { return preferences; }
     public List<String> getTruths(){ return truths; }
     public List<String> getLies(){ return lies; }
-    // public List<ConnectionItem> getConnections(){ return connections; }
 
 
     /* Setters */
@@ -81,7 +77,6 @@ public abstract class User implements Serializable {
     public void setPreferences(List<String> preferences) { this.preferences = preferences; }
     public void setTruths(List<String> truths) { this.truths = truths; }
     public void setLies(List<String> lies) { this.lies = lies; }
-    // public void setConnections (List<ConnectionItem> connections) { this.connections = connections; }
 
     public boolean validState() {
         return !(null == name || null == birthday || 0 == preferences.size() || null == email);

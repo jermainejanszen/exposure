@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                                                 progressBar.setVisibility(View.INVISIBLE);
                                             } else {
                                                 /* Failed to download current user connections */
-                                                Log.d("CONNECTIONS", "FAILED TO DOWNLOAD CONNECTIONS");
                                             }
                                         }
                                     });
