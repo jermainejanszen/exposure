@@ -38,7 +38,9 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        // holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
+        if(null != data.get(position).getProfileImage()) {
+            holder.getProfileImage().setImageBitmap(data.get(position).getProfileImage());
+        }
         holder.getName().setText(data.get(position).getName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

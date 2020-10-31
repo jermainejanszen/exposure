@@ -39,8 +39,6 @@ import java.util.Set;
 
 public class ViewOtherProfileActivity extends AppCompatActivity {
 
-    private String otherUserUid = "PTIDi7lEIkb7PMOD7S4ihbPTecT2";
-
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView, personalityTypesRecyclerView;
     private TextView displayNameText, ageText, preferencesText;
@@ -63,9 +61,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
 
-        //TODO: link this up
-        //otherUserUid = getIntent().getStringExtra("Uid");
-        otherUser = new OtherUser(otherUserUid);
+        otherUser = new OtherUser(getIntent().getStringExtra("Uid"));
         currentUser = MainActivity.getCurrentUser();
 
         studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);

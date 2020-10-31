@@ -53,21 +53,12 @@ public class MapFragment extends Fragment {
         sixKM = new ArrayList<>();
         threeKM = new ArrayList<>();
         zeroKM = new ArrayList<>();
-        for(int i = 0; i < 4; i++) {
-            fifteenKM.add(new MapListItem("123456"));
-        }
-        for(int i = 0; i < 2; i++) {
-            nineKM.add(new MapListItem("123456"));
-        }
-        for(int i = 0; i < 3; i++) {
-            sixKM.add(new MapListItem("123456"));
-        }
-        for(int i = 0; i < 6; i++) {
-            threeKM.add(new MapListItem("123456"));
-        }
-        for(int i = 0; i < 2; i++) {
-            zeroKM.add(new MapListItem("123456"));
-        }
+
+        fifteenKM.add(new MapListItem("uqWWk2SuhbenapK0ANzeT0kMebY2"));
+        nineKM.add(new MapListItem("lGSXDdEAlFaogmrWTHgVuxJHMmi1"));
+        sixKM.add(new MapListItem("PTIDi7lEIkb7PMOD7S4ihbPTecT2"));
+        threeKM.add(new MapListItem("LSBexRMVWrhjjS1bxOiRbsQ5D503"));
+
         fifteenMapAdapter = new MapRecyclerViewAdapter(getActivity(), fifteenKM);
         nineMapAdapter = new MapRecyclerViewAdapter(getActivity(), nineKM);
         sixMapAdapter = new MapRecyclerViewAdapter(getActivity(), sixKM);
