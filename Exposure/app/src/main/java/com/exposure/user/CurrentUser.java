@@ -26,6 +26,12 @@ public class CurrentUser extends User {
         this.connections = connections;
     }
 
+    public void addConnection(String uid) {
+        if (!isConnected(uid)) {
+            this.connections.add(new ConnectionItem(uid, new ArrayList<String>()));
+        }
+    }
+
     public boolean isConnected(String otherUid) {
         for (ConnectionItem connection : this.connections) {
             if (connection.getUid().equals(otherUid)) {

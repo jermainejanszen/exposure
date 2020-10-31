@@ -88,9 +88,7 @@ public class UserInformationHandler {
                         @Override
                         public void update(boolean success, String message) {
                             if (success) {
-                                List<ConnectionItem> connections = otherUser.getConnections();
-                                connections.add(new ConnectionItem(uidToAdd, new ArrayList<String>()));
-                                otherUser.setConnections(connections);
+                                otherUser.addConnection(uidToAdd);
                                 uploadUserInformationToFirestore(otherUser, new OnCompleteCallback() {
                                     @Override
                                     public void update(boolean success, String message) {

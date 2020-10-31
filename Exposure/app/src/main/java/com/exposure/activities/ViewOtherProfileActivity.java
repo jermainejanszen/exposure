@@ -173,9 +173,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
     public void onConnectPressed(View view) {
         progressBar.setVisibility(View.VISIBLE);
-        List<ConnectionItem> currentUserConnections = currentUser.getConnections();
-        currentUserConnections.add(new ConnectionItem(otherUser.getUid(), new ArrayList<String>()));
-        currentUser.setConnections(currentUserConnections);
+        currentUser.addConnection(otherUser.getUid());
 
         UserInformationHandler.uploadUserInformationToFirestore(currentUser, new OnCompleteCallback() {
             public void update(boolean success, String message) {
