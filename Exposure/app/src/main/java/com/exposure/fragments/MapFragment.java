@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.exposure.R;
 import com.exposure.adapters.MapListItem;
 import com.exposure.adapters.MapRecyclerViewAdapter;
+import com.exposure.callback.OnCompleteCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +55,23 @@ public class MapFragment extends Fragment {
         threeKM = new ArrayList<>();
         zeroKM = new ArrayList<>();
 
-        fifteenKM.add(new MapListItem("uqWWk2SuhbenapK0ANzeT0kMebY2"));
-        nineKM.add(new MapListItem("lGSXDdEAlFaogmrWTHgVuxJHMmi1"));
-        sixKM.add(new MapListItem("PTIDi7lEIkb7PMOD7S4ihbPTecT2"));
-        threeKM.add(new MapListItem("LSBexRMVWrhjjS1bxOiRbsQ5D503"));
+        OnCompleteCallback notifyCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    fifteenMapAdapter.notifyDataSetChanged();
+                    nineMapAdapter.notifyDataSetChanged();
+                    sixMapAdapter.notifyDataSetChanged();
+                    threeMapAdapter.notifyDataSetChanged();
+                    zeroMapAdapter.notifyDataSetChanged();
+                }
+            }
+        };
+
+        fifteenKM.add(new MapListItem("uqWWk2SuhbenapK0ANzeT0kMebY2", notifyCallback));
+        nineKM.add(new MapListItem("lGSXDdEAlFaogmrWTHgVuxJHMmi1", notifyCallback));
+        sixKM.add(new MapListItem("PTIDi7lEIkb7PMOD7S4ihbPTecT2", notifyCallback));
+        threeKM.add(new MapListItem("LSBexRMVWrhjjS1bxOiRbsQ5D503", notifyCallback));
 
         fifteenMapAdapter = new MapRecyclerViewAdapter(getActivity(), fifteenKM);
         nineMapAdapter = new MapRecyclerViewAdapter(getActivity(), nineKM);
