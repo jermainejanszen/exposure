@@ -39,7 +39,7 @@ import java.util.Set;
 
 public class ViewOtherProfileActivity extends AppCompatActivity {
 
-    private String otherUserUid = "A7Q6DbHMoLZrffITQ7Gou2eJXCB2";
+    private String otherUserUid = "PTIDi7lEIkb7PMOD7S4ihbPTecT2";
 
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
     private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView, personalityTypesRecyclerView;
@@ -64,7 +64,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
 
         //TODO: link this up
-        //otherUserUid = getIntent().getStringExtra("Other User Uid");
+        //otherUserUid = getIntent().getStringExtra("Uid");
         otherUser = new OtherUser(otherUserUid);
         currentUser = MainActivity.getCurrentUser();
 

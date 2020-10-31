@@ -45,7 +45,7 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
             @Override
             public void onClick(View v) {
                     Intent intent = new Intent(context, ViewOtherProfileActivity.class);
-                    intent.putExtra("Other User Uid", data.get(position).getUid());
+                    intent.putExtra("Uid", data.get(position).getUid());
                     context.startActivity(intent);
                 }
             });

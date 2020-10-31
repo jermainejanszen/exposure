@@ -1,8 +1,12 @@
 package com.exposure.handlers;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.exposure.callback.OnCompleteCallback;
+import com.exposure.user.ConnectionItem;
+import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
 import com.exposure.user.User;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -11,6 +15,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +33,29 @@ public class UserInformationHandler {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        convertDocumentSnapshotToCurrentUser(documentSnapshot, user);
+                        convertDocumentSnapshotToUser(documentSnapshot, user);
+                        onCompleteCallback.update(true);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        /* Failed to download user information */
+                        onCompleteCallback.update(false);
+                    }
+                });
+    }
+
+    public static void downloadCurrentUserConnections(final CurrentUser user, final OnCompleteCallback onCompleteCallback) {
+        mFirestore.collection("Profiles").document(user.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        List<Map<String, Object>> docConnections = (List<Map<String, Object>>) documentSnapshot.get(UserField.CONNECTIONS.toString());
+                        List<ConnectionItem> connections = new ArrayList<>();
+                        for (Map<String, Object> connection : docConnections) {
+                            connections.add(new ConnectionItem((String) connection.get("uid"), (List<String>) connection.get("exposedInfo")));
+                        }
+                        Log.d("DOWNLOAD", String.valueOf(connections.size()));
                         onCompleteCallback.update(true);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -45,7 +72,7 @@ public class UserInformationHandler {
      * @param documentSnapshot Document snapshot containing user information from firestore
      * @param user Current user to set fields of
      */
-    private static void convertDocumentSnapshotToCurrentUser(DocumentSnapshot documentSnapshot, User user) {
+    private static void convertDocumentSnapshotToUser(DocumentSnapshot documentSnapshot, User user) {
         user.setName((String) documentSnapshot.get(UserField.NAME.toString()));
         user.setNickname((String) documentSnapshot.get(UserField.NICKNAME.toString()));
         user.setEmail((String) documentSnapshot.get(UserField.EMAIL.toString()));
@@ -61,8 +88,6 @@ public class UserInformationHandler {
         List<String> personalities = (List<String>) documentSnapshot.get(UserField.PERSONALITIES.toString());
         List<String> truths = (List<String>) documentSnapshot.get(UserField.TRUTHS.toString());
         List<String> lies = (List<String>) documentSnapshot.get(UserField.LIES.toString());
-
-       // List<ConnectionItem> connections = (List<ConnectionItem>) documentSnapshot.get(UserField.CONNECTIONS.toString());
 
         if (null != location) {
             if (null != location.get("Latitude") && null != location.get("Longitude")) {
@@ -98,9 +123,6 @@ public class UserInformationHandler {
             user.setLies(lies);
         }
 
-//        if (connections != null){
-//            user.setConnections(connections);
-//        }
     }
 
     /**

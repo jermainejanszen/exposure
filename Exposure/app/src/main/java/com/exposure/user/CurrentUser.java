@@ -13,8 +13,6 @@ public class CurrentUser extends User {
 
     public CurrentUser(String uid) {
         super(uid);
-
-        // TODO: Load connections from Firebase
     }
 
     /* Getters */
