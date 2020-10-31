@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapFragment extends Fragment implements Serializable {
+public class MapFragment extends Fragment {
 
     private List<MapListItem> fifteenKM;
     private List<MapListItem> nineKM;
@@ -132,7 +132,7 @@ public class MapFragment extends Fragment implements Serializable {
         return view;
     }
 
-    public void onMapItemPressed(String uid) {
+    private void onMapItemPressed(String uid) {
         Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
         intent.putExtra("Uid", uid);
         getContext().startActivity(intent);

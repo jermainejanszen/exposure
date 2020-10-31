@@ -15,7 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
 
-public class MapListItem implements Serializable {
+public class MapListItem {
 
     private final String uid;
     private Bitmap profileImage;

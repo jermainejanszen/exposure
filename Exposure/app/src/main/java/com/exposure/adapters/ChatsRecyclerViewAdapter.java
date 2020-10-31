@@ -13,17 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.activities.MessageActivity;
+import com.exposure.callback.OnItemPressedCallback;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
-    private Context context;
+    private OnItemPressedCallback callback;
     private List<ChatListItem> data;
 
-    public ChatsRecyclerViewAdapter(Context context, List<ChatListItem> data) {
-        this.context = context;
+    public ChatsRecyclerViewAdapter(List<ChatListItem> data, OnItemPressedCallback callback) {
+        this.callback = callback;
         this.data = data;
     }
 
@@ -46,9 +47,7 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, MessageActivity.class);
-                intent.putExtra("UID", data.get(position).getUid());
-                context.startActivity(intent);
+                callback.onPress(data.get(position).getUid());
             }
         });
     }
@@ -56,6 +55,10 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public List<ChatListItem> getData() {
+        return this.data;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
