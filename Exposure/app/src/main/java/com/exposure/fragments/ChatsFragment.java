@@ -18,6 +18,7 @@ import com.exposure.adapters.ChatListItem;
 import com.exposure.adapters.ChatsRecyclerViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.callback.OnItemPressedCallback;
+import com.exposure.handlers.UserInformationHandler;
 import com.exposure.user.ConnectionItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -55,7 +56,7 @@ public class ChatsFragment extends Fragment {
 
         chats = new ArrayList<>();
 
-        OnCompleteCallback notifyCallback = new OnCompleteCallback() {
+        final OnCompleteCallback notifyCallback = new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success) {
@@ -78,14 +79,19 @@ public class ChatsFragment extends Fragment {
             chatsAdapter.syncData();
         }
 
-        for (ConnectionItem connection : MainActivity.getCurrentUser().getConnections()) {
-            if (!containsUid(connection.getUid())) {
-                chats.add(new ChatListItem(connection.getUid(), notifyCallback));
-            }
-        }
-
         chatsRecyclerView.setAdapter(chatsAdapter);
         chatsAdapter.notifyDataSetChanged();
+
+        UserInformationHandler.downloadCurrentUserConnections(MainActivity.getCurrentUser(), new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                for (ConnectionItem connection : MainActivity.getCurrentUser().getConnections()) {
+                    if (!containsUid(connection.getUid())) {
+                        chats.add(new ChatListItem(connection.getUid(), notifyCallback));
+                    }
+                }
+            }
+        });
 
         return view;
     }
