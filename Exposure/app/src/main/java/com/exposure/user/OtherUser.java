@@ -1,7 +1,8 @@
 package com.exposure.user;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Used to store information about other users that the current user
@@ -9,16 +10,13 @@ import java.util.Map;
  */
 public class OtherUser extends User {
 
-    private final Map<UserField, Boolean> exposedInfo = new HashMap<UserField, Boolean>();
+    private final Set<String> exposedInfo = new HashSet<>();
 
     /* Constructor */
     public OtherUser(String uid) {
         super(uid);
 
-        for(UserField field : UserField.values()) {
-            // TODO: Load exposed info from Firebase
-            this.exposedInfo.put(field, false);
-        }
+        // TODO: Load exposed info from Firebase
     }
 
     /**
@@ -27,11 +25,7 @@ public class OtherUser extends User {
      * @return True if the detail is exposed, otherwise false.
      */
     public boolean checkDetailExposed(UserField field) {
-        if(null == this.exposedInfo.get(field)) {
-            return false;
-        } else {
-            return this.exposedInfo.get(field);
-        }
+        return this.exposedInfo.contains(field.toString());
     }
 
     /**
@@ -39,7 +33,7 @@ public class OtherUser extends User {
      * @param field Field to expose.
      */
     public void exposeDetail(UserField field) {
-        this.exposedInfo.put(field, true);
+        this.exposedInfo.add(field.toString());
     }
 
     /**
@@ -47,7 +41,11 @@ public class OtherUser extends User {
      * @param field Field to hide.
      */
     public void hideDetail(UserField field) {
-        this.exposedInfo.put(field, false);
+        this.exposedInfo.remove(field.toString());
+    }
+
+    public ConnectionItem toConnectionItem() {
+        return new ConnectionItem(this.getUid(), exposedInfo);
     }
 
 }

@@ -1,18 +1,19 @@
 package com.exposure.user;
 
 import java.util.List;
+import java.util.Set;
 
 public class ConnectionItem {
 
     private String uid;
-    private List<String> exposedInfo;
+    private Set<String> exposedInfo;
 
-    public ConnectionItem(String uid, List<String> exposedInfo){
+    public ConnectionItem(String uid, Set<String> exposedInfo){
         this.uid = uid;
         this.exposedInfo = exposedInfo;
     }
 
-    public void setExposedInfo(List<String> exposedInfo){
+    public void setExposedInfo(Set<String> exposedInfo){
         this.exposedInfo = exposedInfo;
     }
 
@@ -20,7 +21,7 @@ public class ConnectionItem {
         this.exposedInfo.add(exposedField);
     }
 
-    public List<String> getExposedInfo(){
+    public Set<String> getExposedInfo(){
         return exposedInfo;
     }
 

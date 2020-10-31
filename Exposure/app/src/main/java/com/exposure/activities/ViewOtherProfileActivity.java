@@ -31,9 +31,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class ViewOtherProfileActivity extends AppCompatActivity {
 
@@ -218,7 +220,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         List<ConnectionItem> currentUserConnections = currentUser.getConnections();
 
         //TODO: fix this
-        List<String> exposedInfo = new ArrayList<>();
+        Set<String> exposedInfo = new HashSet<>();
 
         currentUserConnections.add(new ConnectionItem(otherUser.getUid(), exposedInfo));
         currentUser.setConnections(currentUserConnections);
