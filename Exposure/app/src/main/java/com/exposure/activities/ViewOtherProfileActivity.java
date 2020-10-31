@@ -10,7 +10,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,7 +49,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     private OtherUser otherUser;
     private CurrentUser currentUser;
     private Button connectButton;
-    private Button gameButton;
+    private Button playButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +74,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         gridView = findViewById(R.id.image_grid_view);
         progressBar = findViewById(R.id.other_profile_progress_bar);
         connectButton = findViewById(R.id.connect_button);
-        gameButton = findViewById(R.id.play_button);
+        playButton = findViewById(R.id.play_button);
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -98,6 +97,12 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     }
 
     private void initialiseFields() {
+
+        if (currentUser.isConnected(otherUser.getUid())) {
+            playButton.setVisibility(View.VISIBLE);
+        } else {
+            connectButton.setVisibility(View.VISIBLE);
+        }
 
         //TODO: add conditions based on 'exposed information'
 

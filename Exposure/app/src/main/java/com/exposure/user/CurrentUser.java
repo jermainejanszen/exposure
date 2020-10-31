@@ -26,4 +26,8 @@ public class CurrentUser extends User {
         this.connections = connections;
     }
 
+    public boolean isConnected(String otherUid) {
+        return true;
+    }
+
 }
