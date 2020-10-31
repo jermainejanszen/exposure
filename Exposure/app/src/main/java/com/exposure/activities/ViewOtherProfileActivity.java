@@ -220,7 +220,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         List<ConnectionItem> currentUserConnections = currentUser.getConnections();
 
         //TODO: fix this
-        Set<String> exposedInfo = new HashSet<>();
+        List<String> exposedInfo = new ArrayList<>();
 
         currentUserConnections.add(new ConnectionItem(otherUser.getUid(), exposedInfo));
         currentUser.setConnections(currentUserConnections);

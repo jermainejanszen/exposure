@@ -1,8 +1,7 @@
 package com.exposure.user;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Used to store information about other users that the current user
@@ -10,7 +9,7 @@ import java.util.Set;
  */
 public class OtherUser extends User {
 
-    private final Set<String> exposedInfo = new HashSet<>();
+    private final List<String> exposedInfo = new ArrayList<>();
 
     /* Constructor */
     public OtherUser(String uid) {
@@ -32,16 +31,20 @@ public class OtherUser extends User {
      * Exposes the given field.
      * @param field Field to expose.
      */
-    public void exposeDetail(UserField field) {
-        this.exposedInfo.add(field.toString());
+    public ConnectionItem exposeDetail(UserField field) {
+        if(!checkDetailExposed(field)) {
+            this.exposedInfo.add(field.toString());
+        }
+        return this.toConnectionItem();
     }
 
     /**
      * Hides the given field.
      * @param field Field to hide.
      */
-    public void hideDetail(UserField field) {
+    public ConnectionItem hideDetail(UserField field) {
         this.exposedInfo.remove(field.toString());
+        return this.toConnectionItem();
     }
 
     public ConnectionItem toConnectionItem() {
