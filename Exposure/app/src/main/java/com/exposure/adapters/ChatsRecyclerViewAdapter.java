@@ -61,6 +61,12 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         return this.data;
     }
 
+    public void syncData() {
+        for (ChatListItem item : data) {
+            item.loadFields();
+        }
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView profileImage;
         private final TextView name;

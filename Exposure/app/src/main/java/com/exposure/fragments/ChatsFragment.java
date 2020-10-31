@@ -75,6 +75,7 @@ public class ChatsFragment extends Fragment {
             chatsAdapter = new ChatsRecyclerViewAdapter(chats, pressedCallback);
         } else {
             chats = chatsAdapter.getData();
+            chatsAdapter.syncData();
         }
 
         for (ConnectionItem connection : MainActivity.getCurrentUser().getConnections()) {
