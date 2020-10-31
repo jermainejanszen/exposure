@@ -13,13 +13,15 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class MapListItem {
+import java.io.Serializable;
 
-    private String uid;
+public class MapListItem implements Serializable {
+
+    private final String uid;
     private Bitmap profileImage;
     private String name;
 
-    private OnCompleteCallback completeCallback;
+    private final OnCompleteCallback completeCallback;
 
     public MapListItem(String uid, OnCompleteCallback completeCallback) {
         this.uid = uid;
