@@ -8,9 +8,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.CheckBox;
@@ -23,7 +25,9 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -47,6 +51,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 
 public class EditProfileActivity extends AppCompatActivity {
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter, truthsAdapter, liesAdapter;
@@ -60,6 +66,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private LocationManager lm;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+                @RequiresApi(api = Build.VERSION_CODES.R)
                 @Override
                 public void onActivityResult(Boolean result) {
                     if (result) {
@@ -85,8 +92,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (success) {
                     profileBitmap = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
                     profileImage.setImageBitmap(profileBitmap);
-                } else {
-                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -266,6 +271,7 @@ public class EditProfileActivity extends AppCompatActivity {
         startActivityForResult(intent, RequestCodes.RETRIEVE_IMAGE_REQUEST);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public void onUpdateLocationClick(View view) {
         progressBar.setVisibility(View.VISIBLE);
 
@@ -274,7 +280,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 PackageManager.PERMISSION_GRANTED) {
             // You can use the API that requires the permission.
             setUserLocation();
-            progressBar.setVisibility(View.INVISIBLE);
         } else {
             // You can directly ask for the permission.
             // The registered ActivityResultCallback gets the result of this request.
@@ -283,6 +288,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     private void setUserLocation() {
         Criteria criteria = new Criteria();
         criteria.setPowerRequirement(Criteria.POWER_LOW);
@@ -301,14 +307,16 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, true));
-
-        if(null != location) {
-            if(0 != location.getLatitude() && 0 != location.getLongitude()) {
-                currentUser.setLocation(location.getLatitude(), location.getLongitude());
-                Toast.makeText(this, "Successfully updated location.", Toast.LENGTH_SHORT).show();
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                if (0 != location.getLatitude() && 0 != location.getLongitude()) {
+                    currentUser.setLocation(location.getLatitude(), location.getLongitude());
+                    Toast.makeText(getApplicationContext(), "Successfully updated location.", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
             }
-        }
+        });
     }
 
     public void onSaveClick(View view) {
