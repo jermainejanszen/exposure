@@ -10,6 +10,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -91,7 +92,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         UserInformationHandler.downloadUserInformation(otherUser,
                 new OnCompleteCallback() {
                     @Override
-                    public void update(boolean success) {
+                    public void update(boolean success, String message) {
                         /* Once the user information has downloaded (either success of failure), we can
                            safely start initializing all of the fields */
                         // progressBar.setVisibility(View.INVISIBLE);
@@ -137,7 +138,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         if (null != bitmaps && null != imagePaths) {
             UserMediaHandler.downloadImagesFromFirebase(bitmaps, imagePaths, new OnCompleteCallback() {
                 @Override
-                public void update(boolean success) {
+                public void update(boolean success, String message) {
                     gridViewAdapter.notifyDataSetChanged();
                 }
             });
@@ -176,9 +177,11 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
         UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
-            public void update(boolean success) {
+            public void update(boolean success, String message) {
                 if (success){
                     profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                } else {
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -227,7 +230,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
         UserInformationHandler.uploadUserInformationToFirestore(currentUser, new OnCompleteCallback() {
             @Override
-            public void update(boolean success) {
+            public void update(boolean success, String message) {
 
             }
         });

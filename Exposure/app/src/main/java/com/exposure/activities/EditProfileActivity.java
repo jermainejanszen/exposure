@@ -81,9 +81,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
         UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
-            public void update(boolean success) {
+            public void update(boolean success, String message) {
                 if (success) {
-                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                    profileBitmap = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
+                    profileImage.setImageBitmap(profileBitmap);
+                } else {
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -365,6 +368,22 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
+        /* The user must upload a profile picture */
+        if (null == profileBitmap) {
+            Toast.makeText(this, "You must upload a profile picture", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (currentUser.getTruths().size() < 4) {
+            Toast.makeText(this, "You must enter at least four truths about yourself", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (currentUser.getLies().size() < 4) {
+            Toast.makeText(this, "You must enter at least four lies about yourself", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         /* Error checking has been performed so we can now manipulate the data */
         currentUser.setName(name);
         currentUser.setEmail(email);
@@ -408,13 +427,13 @@ public class EditProfileActivity extends AppCompatActivity {
         UserInformationHandler.uploadUserInformationToFirestore(currentUser,
                 new OnCompleteCallback() {
                     @Override
-                    public void update(boolean success) {
+                    public void update(boolean success, String message) {
                         if (success) {
                             /* Uploaded user data successfully. Now, upload profile picture if one has been specified */
                             if (null != profileBitmap) {
                                 UserMediaHandler.uploadProfilePhotoToFirebase(profileBitmap, new OnCompleteCallback() {
                                     @Override
-                                    public void update(boolean success) {
+                                    public void update(boolean success, String message) {
                                         /* Finish activity regardless of success */
                                         finish();
                                     }
@@ -424,6 +443,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             }
                         } else {
                             /* Couldn't download user data, so don't finish the activity */
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.INVISIBLE);
                         }
                     }

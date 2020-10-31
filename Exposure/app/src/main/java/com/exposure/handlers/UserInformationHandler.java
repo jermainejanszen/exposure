@@ -39,13 +39,13 @@ public class UserInformationHandler {
                         user.setName(mAuth.getCurrentUser().getDisplayName());
                         user.setEmail(mAuth.getCurrentUser().getEmail());
 
-                        onCompleteCallback.update(true);
+                        onCompleteCallback.update(true, "Success");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         /* Failed to download user information */
-                        onCompleteCallback.update(false);
+                        onCompleteCallback.update(false, e.getMessage());
                     }
                 });
     }
@@ -136,26 +136,26 @@ public class UserInformationHandler {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        onCompleteCallback.update(true);
+                                                        onCompleteCallback.update(true, "success");
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        onCompleteCallback.update(false);
+                                                        onCompleteCallback.update(false, e.getMessage());
                                                     }
                                         });
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        onCompleteCallback.update(false);
+                                        onCompleteCallback.update(false, e.getMessage());
                                     }
                                 });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        onCompleteCallback.update(false);
+                        onCompleteCallback.update(false, e.getMessage());
                     }
                 });
     }

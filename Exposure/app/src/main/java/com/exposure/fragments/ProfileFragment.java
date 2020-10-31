@@ -13,6 +13,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -145,7 +146,7 @@ public class ProfileFragment extends Fragment {
         if (null != bitmaps && null != imagePaths) {
             UserMediaHandler.downloadImagesFromFirebase(bitmaps, imagePaths, new OnCompleteCallback() {
                 @Override
-                public void update(boolean success) {
+                public void update(boolean success, String message) {
                     gridViewAdapter.notifyDataSetChanged();
                 }
             });
@@ -184,9 +185,11 @@ public class ProfileFragment extends Fragment {
 
         UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
-            public void update(boolean success) {
+            public void update(boolean success, String message) {
                 if (success){
                     profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                } else {
+                    Toast.makeText(getContext(), "Failed to download profile image", Toast.LENGTH_SHORT).show();
                 }
             }
         });

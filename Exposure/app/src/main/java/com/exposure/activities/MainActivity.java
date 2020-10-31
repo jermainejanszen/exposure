@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,11 +61,15 @@ public class MainActivity extends AppCompatActivity {
         UserInformationHandler.downloadUserInformation(currentUser,
                 new OnCompleteCallback() {
                     @Override
-                    public void update(boolean success) {
+                    public void update(boolean success, String message) {
                         /* Once the user information has downloaded (either success of failure), we can
                            safely start initializing all of the fields */
-                        setup();
-                        progressBar.setVisibility(View.INVISIBLE);
+                        if (success) {
+                            setup();
+                            progressBar.setVisibility(View.INVISIBLE);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to downloader user's data", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -133,13 +138,15 @@ public class MainActivity extends AppCompatActivity {
 
                 UserMediaHandler.uploadImageToFirebase(id, bitmap, new OnCompleteCallback() {
                     @Override
-                    public void update(boolean success) {
+                    public void update(boolean success, String message) {
                         /* Only display image locally if it successfully uploads to firebase */
                         if (success) {
                             profileFragment.addBitmap(
                                     id,
                                     bitmap
                             );
+                        } else {
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         }
                         profileFragment.setProgressBarVisibility(View.INVISIBLE);
                     }
