@@ -1,10 +1,7 @@
 package com.exposure.handlers;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
-import com.exposure.adapters.ConnectionItem;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.user.UserField;
 import com.exposure.user.User;
@@ -56,6 +53,7 @@ public class UserInformationHandler {
         user.setBirthday(timestamp == null ? null : timestamp.toDate());
         user.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
 
+        Map<String, Double> location = (Map<String, Double>) documentSnapshot.get(UserField.LOCATION.toString());
         List<String> preferences = (List<String>) documentSnapshot.get(UserField.PREFERENCES.toString());
         List<String> hobbies = (List<String>) documentSnapshot.get(UserField.HOBBIES.toString());
         List<String> placesLived = (List<String>) documentSnapshot.get(UserField.PLACES_LIVED.toString());
@@ -65,6 +63,12 @@ public class UserInformationHandler {
         List<String> lies = (List<String>) documentSnapshot.get(UserField.LIES.toString());
 
        // List<ConnectionItem> connections = (List<ConnectionItem>) documentSnapshot.get(UserField.CONNECTIONS.toString());
+
+        if (null != location) {
+            if (null != location.get("Latitude") && null != location.get("Longitude")) {
+                user.setLocation(location.get("Latitude"), location.get("Longitude"));
+            }
+        }
 
         if (preferences != null) {
             user.setPreferences(preferences);

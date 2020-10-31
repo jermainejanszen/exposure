@@ -1,8 +1,15 @@
 package com.exposure.activities;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -13,8 +20,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
@@ -45,6 +57,17 @@ public class EditProfileActivity extends AppCompatActivity {
     private CurrentUser currentUser;
     private Bitmap profileBitmap;
     private byte[] profileByteArray;
+    private LocationManager lm;
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+                @Override
+                public void onActivityResult(Boolean result) {
+                    if (result) {
+                        setUserLocation();
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +75,14 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
         initialiseFields();
-        profileByteArray = new byte[1024*1024];
+        profileByteArray = new byte[1024 * 1024];
         profileImage = findViewById(R.id.profile_image);
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         UserMediaHandler.downloadProfilePhotoFromFirebase(profileByteArray, profileByteArray.length, new OnCompleteCallback() {
             @Override
             public void update(boolean success) {
-                if (success){
+                if (success) {
                     profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
                 }
             }
@@ -197,25 +221,25 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void addHobby(View view){
+    public void addHobby(View view) {
         Intent intent = new Intent(this, AddUserFieldActivity.class);
         intent.putExtra("Field Type", UserField.HOBBIES.toString());
         startActivityForResult(intent, RequestCodes.SAVE_HOBBY_REQUEST);
     }
 
-    public void addPlaceStudiedAt(View view){
+    public void addPlaceStudiedAt(View view) {
         Intent intent = new Intent(this, AddUserFieldActivity.class);
         intent.putExtra("Field Type", UserField.PLACES_STUDIED.toString());
         startActivityForResult(intent, RequestCodes.SAVE_PLACE_STUDIED_AT_REQUEST);
     }
 
-    public void addPlaceLived(View view){
+    public void addPlaceLived(View view) {
         Intent intent = new Intent(this, AddUserFieldActivity.class);
         intent.putExtra("Field Type", UserField.PLACES_LIVED.toString());
         startActivityForResult(intent, RequestCodes.SAVE_PLACE_LIVED_REQUEST);
     }
 
-    public void addPersonalityTrait(View view){
+    public void addPersonalityTrait(View view) {
         Intent intent = new Intent(this, AddUserFieldActivity.class);
         intent.putExtra("Field Type", UserField.PERSONALITIES.toString());
         startActivityForResult(intent, RequestCodes.SAVE_PERSONALITY_REQUEST);
@@ -237,6 +261,51 @@ public class EditProfileActivity extends AppCompatActivity {
     public void onChangeProfileImageClick(View view) {
         Intent intent = new Intent(this, RetrieveImageActivity.class);
         startActivityForResult(intent, RequestCodes.RETRIEVE_IMAGE_REQUEST);
+    }
+
+    public void onUpdateLocationClick(View view) {
+        progressBar.setVisibility(View.VISIBLE);
+
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+            // You can use the API that requires the permission.
+            setUserLocation();
+            progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            // You can directly ask for the permission.
+            // The registered ActivityResultCallback gets the result of this request.
+            requestPermissionLauncher.launch(
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+    }
+
+    private void setUserLocation() {
+        Criteria criteria = new Criteria();
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, true));
+
+        if(null != location) {
+            if(0 != location.getLatitude() && 0 != location.getLongitude()) {
+                currentUser.setLocation(location.getLatitude(), location.getLongitude());
+                Toast.makeText(this, "Successfully updated location.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void onSaveClick(View view) {

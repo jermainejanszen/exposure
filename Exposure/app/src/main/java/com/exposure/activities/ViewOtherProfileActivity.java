@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.adapters.ChipsRecyclerViewAdapter;
-import com.exposure.adapters.ConnectionItem;
+import com.exposure.user.ConnectionItem;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;

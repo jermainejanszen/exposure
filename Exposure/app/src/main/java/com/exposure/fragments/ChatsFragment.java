@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.adapters.ChatListItem;
 import com.exposure.adapters.ChatsRecyclerViewAdapter;
-import com.exposure.adapters.ConnectionItem;
+import com.exposure.user.ConnectionItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ChatsFragment extends Fragment {
 

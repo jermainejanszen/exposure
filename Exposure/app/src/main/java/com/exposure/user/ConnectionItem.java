@@ -1,4 +1,4 @@
-package com.exposure.adapters;
+package com.exposure.user;
 
 import java.util.List;
 
