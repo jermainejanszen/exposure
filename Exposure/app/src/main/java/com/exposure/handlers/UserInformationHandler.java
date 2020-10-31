@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.exposure.callback.OnCompleteCallback;
+import com.exposure.containers.LastMessageContainer;
 import com.exposure.user.ConnectionItem;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -103,6 +105,42 @@ public class UserInformationHandler {
                 } else {
                     onCompleteCallback.update(false, message);
                 }
+            }
+        });
+    }
+
+    public static void loadLastChatMessageAndTime(final String uid1,
+                                                  final String uid2,
+                                                  final LastMessageContainer messageContainer,
+                                                  final OnCompleteCallback onCompleteCallback) {
+
+        String docRefID;
+        if (uid1.compareTo(uid2) >= 0) {
+            docRefID = uid1.concat(uid2);
+        } else {
+            docRefID = uid2.concat(uid1);
+        }
+
+        final DocumentReference docRefMessages = mFirestore.collection("chats").document(docRefID);
+        docRefMessages.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists() && documentSnapshot.contains("messages")) {
+                    List<Object> messages = (ArrayList<Object>) documentSnapshot.get("messages");
+                    if (messages.size() > 0) {
+                        Map<String, Object> lastMessage = (Map<String, Object>) messages.get(messages.size() - 1);
+                        messageContainer.setMessage((String) lastMessage.get("message"));
+                        messageContainer.setTime((Long) lastMessage.get("time"));
+                        onCompleteCallback.update(true, "success");
+                    }
+                } else {
+                    onCompleteCallback.update(true, "no chat");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                onCompleteCallback.update(false, e.getMessage());
             }
         });
     }
