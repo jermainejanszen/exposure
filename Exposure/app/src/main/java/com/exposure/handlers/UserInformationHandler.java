@@ -5,9 +5,13 @@ import androidx.annotation.NonNull;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.user.UserField;
 import com.exposure.user.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -17,6 +21,7 @@ import java.util.Map;
 public class UserInformationHandler {
 
     private static FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     /**
      * Download user information as document snapshot from firestore
@@ -29,6 +34,11 @@ public class UserInformationHandler {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         convertDocumentSnapshotToCurrentUser(documentSnapshot, user);
+
+                        /* Temporary */
+                        user.setName(mAuth.getCurrentUser().getDisplayName());
+                        user.setEmail(mAuth.getCurrentUser().getEmail());
+
                         onCompleteCallback.update(true);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -108,14 +118,39 @@ public class UserInformationHandler {
      * @param user The user whose information is being uploaded to the firestore
      * @param onCompleteCallback Notifies the calling class that the task has been executed
      */
-    public static void uploadUserInformationToFirestore(User user, final OnCompleteCallback onCompleteCallback) {
-        String userID = user.getUid();
+    public static void uploadUserInformationToFirestore(final User user, final OnCompleteCallback onCompleteCallback) {
 
-        FirebaseFirestore.getInstance().collection("Profiles").document(userID).set(user)
+        final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(user.getName())
+                .build();
+
+        mAuth.getCurrentUser().updateEmail(user.getEmail())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        onCompleteCallback.update(true);
+                        mAuth.getCurrentUser().updateProfile(profileUpdates)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mFirestore.collection("Profiles").document(user.getUid()).set(user)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        onCompleteCallback.update(true);
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        onCompleteCallback.update(false);
+                                                    }
+                                        });
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        onCompleteCallback.update(false);
+                                    }
+                                });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
