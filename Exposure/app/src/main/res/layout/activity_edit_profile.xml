@@ -634,6 +634,14 @@
                     android:onClick="addPersonalityTrait"
                     android:background="@drawable/add"/>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/personality_types_recycler_view"
+                    android:layout_alignStart="@id/personality_types_recycler_view"
+                    android:background="@color/Outline"
+                    />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -672,6 +680,14 @@
                     android:layout_centerVertical="true"
                     android:onClick="addTruth"
                     android:background="@drawable/add"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/truths_recycler_view"
+                    android:layout_alignStart="@id/truths_recycler_view"
+                    android:background="@color/Outline"
+                    />
 
             </RelativeLayout>
 
