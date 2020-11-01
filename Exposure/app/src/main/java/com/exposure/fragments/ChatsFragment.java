@@ -75,7 +75,7 @@ public class ChatsFragment extends Fragment {
         final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
-                // Do nothing
+                chatsAdapter.notifyDataSetChanged();
             }
         };
 
@@ -94,8 +94,8 @@ public class ChatsFragment extends Fragment {
                             return (int) (o2.getTime() - o1.getTime());
                         }
                     });
-                    chatsAdapter.notifyDataSetChanged();
                 }
+                chatsAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.INVISIBLE);
                 chatsRecyclerView.setVisibility(View.VISIBLE);
             }

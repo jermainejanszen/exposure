@@ -142,6 +142,7 @@ public class MessageActivity extends Activity {
                                 }
                                 messagesAdapter.notifyDataSetChanged();
                                 messageRecyclerView.scrollToPosition(messages.size() - 1);
+                                ChatsFragment.syncChatsAdapter();
                             } else {
                                 Log.d("MessageListener", "Data = null");
                             }
