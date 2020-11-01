@@ -231,6 +231,7 @@ public class MapFragment extends Fragment {
             @Override
             public void update(boolean success, String message) {
                 if (success) {
+                    boolean newConnections = false;
                     for (int i = 0; i < allUsers.size(); i++) {
                         CurrentUser otherUser = allUsers.get(i);
                         if (otherUser.getUid().equals(currentUser.getUid()) ||
@@ -239,6 +240,8 @@ public class MapFragment extends Fragment {
                         }
                         OnCompleteCallback notifyCallback =
                                 (i == allUsers.size() - 1) ? finishedCallback : intermediateCallback;
+
+                        newConnections = true;
 
                         int distance = DistanceHandler.distanceInKM(currentUser, otherUser);
                         if (distance <= 2) {
@@ -253,6 +256,11 @@ public class MapFragment extends Fragment {
                             fifteenKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
                         }
                     }
+                    if (!newConnections) {
+                        finishedCallback.update(true, "finished");
+                    }
+                } else {
+                    finishedCallback.update(false, "failed to download user data");
                 }
             }
         });
