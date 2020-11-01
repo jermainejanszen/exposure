@@ -46,10 +46,6 @@ public class UserInformationHandler {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         convertDocumentSnapshotToUser(documentSnapshot, user);
 
-                        /* Temporary */
-                        user.setName(mAuth.getCurrentUser().getDisplayName());
-                        user.setEmail(mAuth.getCurrentUser().getEmail());
-
                         onCompleteCallback.update(true, "Success");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -159,12 +155,13 @@ public class UserInformationHandler {
      * @param user Current user to set fields of
      */
     private static void convertDocumentSnapshotToUser(DocumentSnapshot documentSnapshot, User user) {
-        user.setName((String) documentSnapshot.get(UserField.NAME.toString()));
         user.setNickname((String) documentSnapshot.get(UserField.NICKNAME.toString()));
-        user.setEmail((String) documentSnapshot.get(UserField.EMAIL.toString()));
         Timestamp timestamp = (Timestamp) documentSnapshot.get(UserField.BIRTHDAY.toString());
         user.setBirthday(timestamp == null ? null : timestamp.toDate());
         user.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
+
+        user.setName(mAuth.getCurrentUser().getDisplayName());
+        user.setEmail(mAuth.getCurrentUser().getEmail());
 
         Map<String, Double> location = (Map<String, Double>) documentSnapshot.get(UserField.LOCATION.toString());
         List<String> preferences = (List<String>) documentSnapshot.get(UserField.PREFERENCES.toString());

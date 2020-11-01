@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.exposure.R;
 import com.exposure.activities.MainActivity;
@@ -51,6 +52,7 @@ public class MapFragment extends Fragment {
     private MapRecyclerViewAdapter zeroMapAdapter;
 
     private View view;
+    private RelativeLayout loadingCover;
 
     public MapFragment() {
         // Required empty public constructor
@@ -66,6 +68,9 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        loadingCover = view.findViewById(R.id.map_loading_cover);
+        loadingCover.setVisibility(View.VISIBLE);
 
         assert null != getActivity();
 
@@ -88,6 +93,7 @@ public class MapFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (RequestCodes.VIEW_PROFILE_REQUEST == requestCode) {
+            loadingCover.setVisibility(View.VISIBLE);
             allUsers.clear();
             UserInformationHandler.downloadUsers(allUsers, new OnCompleteCallback() {
                 @Override
@@ -191,7 +197,21 @@ public class MapFragment extends Fragment {
     }
 
     private void mapUsersToRegions() {
-        final OnCompleteCallback notifyCallback = new OnCompleteCallback() {
+        final OnCompleteCallback finishedCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    fifteenMapAdapter.notifyDataSetChanged();
+                    nineMapAdapter.notifyDataSetChanged();
+                    sixMapAdapter.notifyDataSetChanged();
+                    threeMapAdapter.notifyDataSetChanged();
+                    zeroMapAdapter.notifyDataSetChanged();
+                }
+                loadingCover.setVisibility(View.INVISIBLE);
+            }
+        };
+
+        final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success) {
@@ -211,11 +231,15 @@ public class MapFragment extends Fragment {
             @Override
             public void update(boolean success, String message) {
                 if (success) {
-                    for (CurrentUser otherUser : allUsers) {
+                    for (int i = 0; i < allUsers.size(); i++) {
+                        CurrentUser otherUser = allUsers.get(i);
                         if (otherUser.getUid().equals(currentUser.getUid()) ||
                                 currentUser.isConnected(otherUser.getUid())) {
                             continue;
                         }
+                        OnCompleteCallback notifyCallback =
+                                (i == allUsers.size() - 1) ? finishedCallback : intermediateCallback;
+
                         int distance = DistanceHandler.distanceInKM(currentUser, otherUser);
                         if (distance <= 2) {
                             zeroKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
