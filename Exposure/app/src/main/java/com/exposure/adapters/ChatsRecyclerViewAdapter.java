@@ -25,10 +25,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
     private OnItemPressedCallback callback;
     private List<ChatListItem> data;
+    private OnCompleteCallback intermediateCallback, finishedCallback;
 
-    public ChatsRecyclerViewAdapter(List<ChatListItem> data, OnItemPressedCallback callback) {
+    public ChatsRecyclerViewAdapter(List<ChatListItem> data, OnItemPressedCallback callback,
+                                    OnCompleteCallback intermediateCallback,
+                                    OnCompleteCallback finishedCallback) {
         this.callback = callback;
         this.data = data;
+        this.intermediateCallback = intermediateCallback;
+        this.finishedCallback = finishedCallback;
     }
 
     @NonNull
@@ -65,28 +70,6 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
     }
 
     public void syncData() {
-        final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                notifyDataSetChanged();
-            }
-        };
-
-        final OnCompleteCallback finishedCallback = new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    Collections.sort(data, new Comparator<ChatListItem>() {
-                        @Override
-                        public int compare(ChatListItem o1, ChatListItem o2) {
-                            return (int) (o2.getTime() - o1.getTime());
-                        }
-                    });
-                    notifyDataSetChanged();
-                }
-            }
-        };
-
         for (int i = 0; i < data.size(); i++) {
             ChatListItem item = data.get(i);
             if (i == data.size() - 1) {

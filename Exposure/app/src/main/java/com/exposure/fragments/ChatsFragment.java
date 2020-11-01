@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +38,8 @@ public class ChatsFragment extends Fragment {
 
     private List<ChatListItem> chats;
     private ChatsRecyclerViewAdapter chatsAdapter;
+    private ProgressBar progressBar;
+    private RecyclerView chatsRecyclerView;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -55,7 +58,10 @@ public class ChatsFragment extends Fragment {
 
         assert null != getActivity();
 
-        final RecyclerView chatsRecyclerView = view.findViewById(R.id.chat_list);
+        chatsRecyclerView = view.findViewById(R.id.chat_list);
+        progressBar = view.findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+        chatsRecyclerView.setVisibility(View.INVISIBLE);
 
         chats = new ArrayList<>();
 
@@ -66,8 +72,33 @@ public class ChatsFragment extends Fragment {
             }
         };
 
+        final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                chatsAdapter.notifyDataSetChanged();
+            }
+        };
+
+        final OnCompleteCallback finishedCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    Collections.sort(chats, new Comparator<ChatListItem>() {
+                        @Override
+                        public int compare(ChatListItem o1, ChatListItem o2) {
+                            return (int) (o2.getTime() - o1.getTime());
+                        }
+                    });
+                    chatsAdapter.notifyDataSetChanged();
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+                chatsRecyclerView.setVisibility(View.VISIBLE);
+            }
+        };
+
         if (null == chatsAdapter) {
-            chatsAdapter = new ChatsRecyclerViewAdapter(chats, pressedCallback);
+            chatsAdapter = new ChatsRecyclerViewAdapter(chats, pressedCallback,
+                                intermediateCallback, finishedCallback);
         } else {
             chats = chatsAdapter.getData();
             chatsAdapter.syncData();
@@ -93,6 +124,8 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        progressBar.setVisibility(View.VISIBLE);
+        chatsRecyclerView.setVisibility(View.INVISIBLE);
         chatsAdapter.syncData();
     }
 
