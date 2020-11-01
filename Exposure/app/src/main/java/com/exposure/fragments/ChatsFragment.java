@@ -154,4 +154,8 @@ public class ChatsFragment extends Fragment {
     public static void syncChatsAdapter() {
         chatsAdapter.syncData();
     }
+
+    public void clearChats() {
+        chatsAdapter = null;
+    }
 }

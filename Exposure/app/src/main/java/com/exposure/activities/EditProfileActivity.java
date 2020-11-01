@@ -474,7 +474,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void onLogoutPress(View view) {
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 }

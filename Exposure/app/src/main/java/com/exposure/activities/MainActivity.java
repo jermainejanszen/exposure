@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
         if (null == FirebaseAuth.getInstance().getCurrentUser()) {
             startActivity(new Intent(this, SignUpActivity.class));
             finish();
@@ -62,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setSelectedItemId(R.id.fragment_profile);
 
-        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
         bitmaps = new HashMap<>();
         imagePaths = new ArrayList<>();
 
@@ -110,6 +111,16 @@ public class MainActivity extends AppCompatActivity {
 
     public static Map<String, Bitmap> getBitmaps() {
         return bitmaps;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (null == FirebaseAuth.getInstance().getCurrentUser()) {
+            startActivity(new Intent(this, LoginActivity.class));
+            chatsFragment.clearChats();
+            finish();
+        }
     }
 
     private void setup() {
