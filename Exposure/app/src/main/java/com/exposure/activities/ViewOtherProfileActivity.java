@@ -268,11 +268,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
             currentUser.addConnection(otherUser.toConnectionItem());
             updatedField = UserField.NAME;
             exposed = "Full Name";
-        } else if (!otherUser.checkDetailExposed(UserField.PROFILE_IMAGE)) {
-            otherUser.exposeDetail(UserField.PROFILE_IMAGE);
-            currentUser.addConnection(otherUser.toConnectionItem());
-            updatedField = UserField.PROFILE_IMAGE;
-            exposed = "Profile Picture";
         } else if (!otherUser.checkDetailExposed(UserField.PLACES_LIVED)) {
             otherUser.exposeDetail(UserField.PLACES_LIVED);
             currentUser.addConnection(otherUser.toConnectionItem());
@@ -316,9 +311,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
     private void hideInfo(UserField field) {
         switch (field) {
-            case PROFILE_IMAGE:
-                profileImage.setImageDrawable(getDrawable(R.drawable.unexposed_image));
-                break;
             case NAME:
                 displayNameText.setText(otherUser.getNickname());
                 break;
@@ -339,13 +331,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
     private void showInfo(UserField field) {
         switch (field) {
-            case PROFILE_IMAGE:
-                if(null != profileByteArray) {
-                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
-                } else {
-                    profileImage.setImageDrawable(getDrawable(R.drawable.default_display_image));
-                }
-                break;
             case NAME:
                 displayNameText.setText(otherUser.getName());
                 break;

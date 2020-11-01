@@ -18,6 +18,7 @@ public class OtherUser extends User {
         exposedInfo.add(UserField.NICKNAME.toString());
         exposedInfo.add(UserField.BIRTHDAY.toString());
         exposedInfo.add(UserField.PREFERENCES.toString());
+        exposedInfo.add(UserField.PROFILE_IMAGE.toString());
     }
 
     public OtherUser(ConnectionItem connectionItem) {

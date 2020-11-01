@@ -341,12 +341,12 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         } else if (nickname.isEmpty()) {
             /* Need to check if this email is valid in firebase */
-            Toast.makeText(this, "Email required", Toast.LENGTH_LONG).show();
-            emailEditText.requestFocus();
-            return;
-        } else if (email.isEmpty()) {
             Toast.makeText(this, "Nickname required", Toast.LENGTH_LONG).show();
             nicknameEditText.requestFocus();
+            return;
+        } else if (email.isEmpty()) {
+            Toast.makeText(this, "Email required", Toast.LENGTH_LONG).show();
+            emailEditText.requestFocus();
             return;
         } else if (birthday.contains("-")) {
             Toast.makeText(this, "Birthday must be of the format dd/MM/yyyy", Toast.LENGTH_LONG).show();
@@ -474,7 +474,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void onLogoutPress(View view) {
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 }
