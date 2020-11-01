@@ -14,14 +14,21 @@ import androidx.annotation.Nullable;
 import com.exposure.R;
 import com.exposure.user.UserField;
 
+/**
+ * Allows user to enter a new entry for a particular user field
+ */
 public class AddUserFieldActivity extends Activity {
     private EditText addedField;
 
+    /**
+     * On creating the activity, the view is set and a listener is set to wait for the user to
+     * enter the new field information
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user_field);
-
 
         addedField = findViewById(R.id.add_field);
         addedField.requestFocus();
@@ -71,6 +78,10 @@ public class AddUserFieldActivity extends Activity {
         });
     }
 
+    /**
+     * Allows user to save their entered field information, or cancel it if they have not
+     * entered any information
+     */
     private void save() {
         if (addedField.getText().toString().trim().isEmpty()) {
             setResult(RESULT_CANCELED);
