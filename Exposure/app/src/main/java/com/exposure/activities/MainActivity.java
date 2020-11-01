@@ -51,12 +51,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
         if (null == FirebaseAuth.getInstance().getCurrentUser()) {
             startActivity(new Intent(this, SignUpActivity.class));
             finish();
         }
+
+        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
