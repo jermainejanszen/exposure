@@ -128,7 +128,7 @@ public class ChatsFragment extends Fragment {
     }
 
     private void onChatItemPressed(String uid, String name, Bitmap profileImage) {
-        Intent intent = new Intent(getContext(), MessageActivity.class);
+        Intent intent = new Intent(getActivity(), MessageActivity.class);
         intent.putExtra("UID", uid);
         intent.putExtra("Name", name);
 
