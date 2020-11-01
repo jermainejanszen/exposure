@@ -88,6 +88,11 @@ public class ChatsFragment extends Fragment {
                     Collections.sort(chats, new Comparator<ChatListItem>() {
                         @Override
                         public int compare(ChatListItem o1, ChatListItem o2) {
+                            if (0 == o1.getTime()) {
+                                return 1;
+                            } else if (0 == o2.getTime()) {
+                                return -1;
+                            }
                             return (int) (o2.getTime() - o1.getTime());
                         }
                     });

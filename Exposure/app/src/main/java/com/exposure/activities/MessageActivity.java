@@ -1,6 +1,7 @@
 package com.exposure.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
@@ -163,6 +164,12 @@ public class MessageActivity extends Activity {
 
             ChatsFragment.syncChatsAdapter();
         }
+    }
+
+    public void onUserBarPressed(View view) {
+        Intent intent = new Intent(this, ViewOtherProfileActivity.class);
+        intent.putExtra("Uid", getIntent().getStringExtra("UID"));
+        startActivity(intent);
     }
 
 }
