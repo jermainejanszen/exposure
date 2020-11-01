@@ -23,10 +23,18 @@ public enum UserField {
 
     private final String name;
 
+    /**
+     * Creates new user field
+     * @param name name of new user field
+     */
     UserField(String name) {
         this.name = name;
     }
 
+    /**
+     * Converts the enum to a string
+     * @return enum in string format 
+     */
     @Override
     public String toString() {
         return this.name;

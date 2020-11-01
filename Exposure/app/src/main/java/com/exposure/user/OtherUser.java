@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Used to store information about other users that the current user
- * may have a connection with.
+ * Used to store information about other users that the current user may have a connection with
  */
 public class OtherUser extends User {
 
     private final List<String> exposedInfo = new ArrayList<>();
 
-    /* Constructor */
+    /**
+     * Constructor for the other user
+     * @param uid
+     */
     public OtherUser(String uid) {
         super(uid);
 
@@ -47,6 +49,10 @@ public class OtherUser extends User {
         return this.toConnectionItem();
     }
 
+    /**
+     * Creates new connection item for this other user
+     * @return the connection item
+     */
     public ConnectionItem toConnectionItem() {
         return new ConnectionItem(this.getUid(), exposedInfo);
     }
