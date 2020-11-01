@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.activities.MessageActivity;
+import com.exposure.callback.OnCompleteCallback;
 import com.exposure.callback.OnItemPressedCallback;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -62,8 +65,35 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
     }
 
     public void syncData() {
-        for (ChatListItem item : data) {
-            item.loadFields();
+        final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                notifyDataSetChanged();
+            }
+        };
+
+        final OnCompleteCallback finishedCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    Collections.sort(data, new Comparator<ChatListItem>() {
+                        @Override
+                        public int compare(ChatListItem o1, ChatListItem o2) {
+                            return (int) (o2.getTime() - o1.getTime());
+                        }
+                    });
+                    notifyDataSetChanged();
+                }
+            }
+        };
+
+        for (int i = 0; i < data.size(); i++) {
+            ChatListItem item = data.get(i);
+            if (i == data.size() - 1) {
+                item.loadFields(finishedCallback);
+            } else {
+                item.loadFields(intermediateCallback);
+            }
         }
     }
 

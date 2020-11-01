@@ -32,17 +32,14 @@ public class ChatListItem {
     private String name;
     private String lastMessage;
     private String date;
+    private long time;
 
-    private final OnCompleteCallback completeCallback;
-
-    public ChatListItem(String uid, OnCompleteCallback completeCallback) {
+    public ChatListItem(String uid) {
         this.uid = uid;
-        this.completeCallback = completeCallback;
         this.profileImage = null;
         this.name = "";
-        this.lastMessage = "Send your first message.";
         this.date = "";
-        loadFields();
+        this.lastMessage = "Send your first message.";
     }
 
     public String getUid() {
@@ -61,11 +58,15 @@ public class ChatListItem {
         return lastMessage;
     }
 
+    public long getTime() {
+        return time;
+    }
+
     public String getDate() {
         return date;
     }
 
-    protected void loadFields() {
+    protected void loadFields(final OnCompleteCallback onCompleteCallback) {
         final int imageSize = 1024 * 1024;
         final byte[] bytes = new byte[imageSize];
 
@@ -83,14 +84,14 @@ public class ChatListItem {
                                         lastMessage = container.getMessage();
                                     }
                                     if (null != container.getTime()) {
-                                        Date time = new Date(container.getTime());
-                                        date = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(time);
+                                        time = container.getTime();
+                                        date = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(new Date(time));
                                     }
                                     UserMediaHandler.downloadProfilePhotoFromFirebase(uid, bytes, imageSize, new OnCompleteCallback() {
                                         @Override
                                         public void update(boolean success, String message) {
                                             profileImage = BitmapFactory.decodeByteArray(bytes, 0, imageSize);
-                                            completeCallback.update(true, "Success");
+                                            onCompleteCallback.update(true, "Success");
                                         }
                                     });
                                 }
@@ -101,7 +102,7 @@ public class ChatListItem {
             @Override
             public void onFailure(@NonNull Exception e) {
                 /* Failed to download user information */
-                completeCallback.update(false, e.getMessage());
+                onCompleteCallback.update(false, e.getMessage());
             }
         });
     }

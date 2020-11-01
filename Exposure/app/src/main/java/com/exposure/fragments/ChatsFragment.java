@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +29,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChatsFragment extends Fragment {
@@ -56,15 +59,6 @@ public class ChatsFragment extends Fragment {
 
         chats = new ArrayList<>();
 
-        final OnCompleteCallback notifyCallback = new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    chatsAdapter.notifyDataSetChanged();
-                }
-            }
-        };
-
         OnItemPressedCallback pressedCallback = new OnItemPressedCallback() {
             @Override
             public void onPress(String uid) {
@@ -80,20 +74,26 @@ public class ChatsFragment extends Fragment {
         }
 
         chatsRecyclerView.setAdapter(chatsAdapter);
-        chatsAdapter.notifyDataSetChanged();
 
         UserInformationHandler.downloadCurrentUserConnections(MainActivity.getCurrentUser(), new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 for (ConnectionItem connection : MainActivity.getCurrentUser().getConnections()) {
                     if (!containsUid(connection.getUid())) {
-                        chats.add(new ChatListItem(connection.getUid(), notifyCallback));
+                        chats.add(new ChatListItem(connection.getUid()));
                     }
                 }
+                chatsAdapter.syncData();
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        chatsAdapter.syncData();
     }
 
     private void onChatItemPressed(String uid) {
