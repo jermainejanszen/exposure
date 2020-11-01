@@ -102,6 +102,7 @@ public class ChatListItem {
                                         }
                                     });
                                 }
+                                onCompleteCallback.update(false, "failed");
                             }
                         });
                     }
