@@ -1,5 +1,6 @@
 package com.exposure.handlers;
 
+import android.database.CursorIndexOutOfBoundsException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -248,6 +250,26 @@ public class UserInformationHandler {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         onCompleteCallback.update(false, e.getMessage());
+                    }
+                });
+    }
+
+    public static void downloadUsers(final List<CurrentUser> destination, final OnCompleteCallback onCompleteCallback) {
+        mFirestore.collection("Profiles").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot snapshot: queryDocumentSnapshots.getDocuments()) {
+                            CurrentUser user = new CurrentUser(snapshot.getId());
+                            convertDocumentSnapshotToUser(snapshot, user);
+                            destination.add(user);
+                        }
+                        onCompleteCallback.update(true, "success");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        onCompleteCallback.update(false, "failed to download all user data");
                     }
                 });
     }
