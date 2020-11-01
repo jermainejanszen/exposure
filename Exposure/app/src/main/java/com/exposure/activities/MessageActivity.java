@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.adapters.MessageListItem;
 import com.exposure.adapters.MessagesRecyclerViewAdapter;
+import com.exposure.fragments.ChatsFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -159,6 +160,8 @@ public class MessageActivity extends Activity {
             }
             db.collection("chats").document(docRefID)
                     .update("messages", messages);
+
+            ChatsFragment.syncChatsAdapter();
         }
     }
 

@@ -39,7 +39,7 @@ import java.util.List;
 public class ChatsFragment extends Fragment {
 
     private List<ChatListItem> chats;
-    private ChatsRecyclerViewAdapter chatsAdapter;
+    private static ChatsRecyclerViewAdapter chatsAdapter;
     private ProgressBar progressBar;
     private RecyclerView chatsRecyclerView;
 
@@ -123,13 +123,13 @@ public class ChatsFragment extends Fragment {
         return view;
     }
 
-    @Override
+    /*@Override
     public void onResume() {
         super.onResume();
         progressBar.setVisibility(View.VISIBLE);
         chatsRecyclerView.setVisibility(View.INVISIBLE);
         chatsAdapter.syncData();
-    }
+    }*/
 
     private void onChatItemPressed(String uid, String name, Bitmap profileImage) {
         Intent intent = new Intent(getContext(), MessageActivity.class);
@@ -151,5 +151,9 @@ public class ChatsFragment extends Fragment {
             }
         }
         return false;
+    }
+
+    public static void syncChatsAdapter() {
+        chatsAdapter.syncData();
     }
 }
