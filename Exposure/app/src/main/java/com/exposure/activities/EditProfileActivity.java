@@ -110,9 +110,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
     /**
      * Upon returning from activity, request codes are handled and action is taken accordingly
-     * @param requestCode Request code signifying what action is required
-     * @param resultCode Result code indicating the result of the returning activity
-     * @param data Data returned from the activity
+     * @param requestCode request code signifying what action is required
+     * @param resultCode result code indicating the result of the returning activity
+     * @param data data returned from the activity
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -21,11 +21,18 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Activity allows user to log in to the app with their email and password
+ */
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextInputLayout emailField, passwordField;
     private ProgressBar loginProgressBar;
 
+    /**
+     * Upon creating the activity, the view is set... TODO: finish this
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -53,7 +60,11 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 
-
+    /**
+     * Upon clicking to login to the app, email and password are checked, user is authenticated and
+     * if successful, user is signed in
+     * @param view the current GUI view
+     */
     public void loginUser(View view) {
         String email = emailField.getEditText().getText().toString().trim();
         String password = passwordField.getEditText().getText().toString().trim();
@@ -70,13 +81,15 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            Toast.makeText(getApplicationContext(), "Successful login.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Successful login.",
+                                    Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -87,6 +100,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Upon clicking to sign up for the application, user is redirected to the sign up activity
+     * @param view the current GUI view
+     */
     public void startSignUpActivity(View view) {
         startActivity(new Intent(this, SignUpActivity.class));
         finish();
