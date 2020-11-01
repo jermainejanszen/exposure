@@ -107,6 +107,7 @@ public class ChatsFragment extends Fragment {
                                 intermediateCallback, finishedCallback);
         } else {
             chats = chatsAdapter.getData();
+            finishedCallback.update(true, "");
         }
 
         chatsRecyclerView.setAdapter(chatsAdapter);
