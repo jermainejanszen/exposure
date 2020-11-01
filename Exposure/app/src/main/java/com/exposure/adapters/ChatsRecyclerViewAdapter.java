@@ -1,7 +1,5 @@
 package com.exposure.adapters;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
-import com.exposure.activities.MessageActivity;
+import com.exposure.callback.OnChatItemPressedCallback;
 import com.exposure.callback.OnCompleteCallback;
-import com.exposure.callback.OnItemPressedCallback;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,10 +20,10 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
-    private OnItemPressedCallback callback;
+    private OnChatItemPressedCallback callback;
     private List<ChatListItem> data;
 
-    public ChatsRecyclerViewAdapter(List<ChatListItem> data, OnItemPressedCallback callback) {
+    public ChatsRecyclerViewAdapter(List<ChatListItem> data, OnChatItemPressedCallback callback) {
         this.callback = callback;
         this.data = data;
     }
@@ -50,7 +47,10 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onPress(data.get(position).getUid());
+                callback.onPress(
+                        data.get(position).getUid(),
+                        data.get(position).getName(),
+                        data.get(position).getProfileImage());
             }
         });
     }

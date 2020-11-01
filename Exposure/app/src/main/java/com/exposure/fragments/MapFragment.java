@@ -17,7 +17,7 @@ import com.exposure.activities.ViewOtherProfileActivity;
 import com.exposure.adapters.MapListItem;
 import com.exposure.adapters.MapRecyclerViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
-import com.exposure.callback.OnItemPressedCallback;
+import com.exposure.callback.OnMapItemPressedCallback;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class MapFragment extends Fragment {
             }
         };
 
-        OnItemPressedCallback callback = new OnItemPressedCallback() {
+        OnMapItemPressedCallback callback = new OnMapItemPressedCallback() {
             @Override
             public void onPress(String uid) {
                 onMapItemPressed(uid);
