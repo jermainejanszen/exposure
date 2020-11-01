@@ -34,7 +34,7 @@ public class LastMessageContainer {
 
     /**
      * Sets the time the most recent message between two users was sent
-     * @param time the time the most recent message between two users was sent 
+     * @param time the time the most recent message between two users was sent
      */
     public void setTime(Long time) {
         this.time = time;

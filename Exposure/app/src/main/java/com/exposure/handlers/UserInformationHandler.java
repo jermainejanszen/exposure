@@ -1,7 +1,5 @@
 package com.exposure.handlers;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.exposure.callback.OnCompleteCallback;
@@ -10,10 +8,8 @@ import com.exposure.user.ConnectionItem;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.UserField;
 import com.exposure.user.User;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -25,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Handles the application users' profile and messaging information
+ */
 public class UserInformationHandler {
 
     private static FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
@@ -32,8 +31,8 @@ public class UserInformationHandler {
 
     /**
      * Download user information as document snapshot from firestore
-     * @param user The user whose information we are retrieving from firestore
-     * @param onCompleteCallback Notifies the calling class that the task has been executed
+     * @param user the user whose information we are retrieving from firestore
+     * @param onCompleteCallback notifies the calling class that the task has been executed
      */
     public static void downloadUserInformation(final User user, final OnCompleteCallback onCompleteCallback) {
         mFirestore.collection("Profiles").document(user.getUid()).get()
@@ -57,15 +56,23 @@ public class UserInformationHandler {
                 });
     }
 
-    public static void downloadCurrentUserConnections(final CurrentUser user, final OnCompleteCallback onCompleteCallback) {
+    /**
+     * Download the user's connections as a document snapshot from firestore
+     * @param user the user whose connections we are retrieving from firestore
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
+    public static void downloadCurrentUserConnections(final CurrentUser user, final
+    OnCompleteCallback onCompleteCallback) {
         mFirestore.collection("Profiles").document(user.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        List<Map<String, Object>> docConnections = (List<Map<String, Object>>) documentSnapshot.get(UserField.CONNECTIONS.toString());
+                        List<Map<String, Object>> docConnections = (List<Map<String, Object>>)
+                                documentSnapshot.get(UserField.CONNECTIONS.toString());
                         List<ConnectionItem> connections = new ArrayList<>();
                         for (Map<String, Object> connection : docConnections) {
-                            connections.add(new ConnectionItem((String) connection.get("uid"), (List<String>) connection.get("exposedInfo")));
+                            connections.add(new ConnectionItem((String) connection.get("uid"),
+                                    (List<String>) connection.get("exposedInfo")));
                         }
 
                         user.setConnections(connections);
@@ -80,7 +87,14 @@ public class UserInformationHandler {
                 });
     }
 
-    public static void addOtherUserConnection(final String userUid, final String uidToAdd, final OnCompleteCallback onCompleteCallback) {
+    /**
+     * Add another user connection and upload the resulting list of connections to firestore
+     * @param userUid the user id of the current user
+     * @param uidToAdd the uid of the new connection
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
+    public static void addOtherUserConnection(final String userUid, final String uidToAdd, final
+    OnCompleteCallback onCompleteCallback) {
         final CurrentUser otherUser = new CurrentUser(userUid);
         downloadUserInformation(otherUser, new OnCompleteCallback() {
             @Override
@@ -109,6 +123,13 @@ public class UserInformationHandler {
         });
     }
 
+    /**
+     * Download last chat message and time from firebase firestore
+     * @param uid1 the first user in taking part in the conversation in which this message belongs
+     * @param uid2 the second user in taking part in the conversation in which this message belongs
+     * @param messageContainer the message container of the message being downloaded
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
     public static void loadLastChatMessageAndTime(final String uid1,
                                                   final String uid2,
                                                   final LastMessageContainer messageContainer,
@@ -121,14 +142,16 @@ public class UserInformationHandler {
             docRefID = uid2.concat(uid1);
         }
 
-        final DocumentReference docRefMessages = mFirestore.collection("chats").document(docRefID);
+        final DocumentReference docRefMessages =
+                mFirestore.collection("chats").document(docRefID);
         docRefMessages.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists() && documentSnapshot.contains("messages")) {
                     List<Object> messages = (ArrayList<Object>) documentSnapshot.get("messages");
                     if (messages.size() > 0) {
-                        Map<String, Object> lastMessage = (Map<String, Object>) messages.get(messages.size() - 1);
+                        Map<String, Object> lastMessage = (Map<String, Object>)
+                                messages.get(messages.size() - 1);
                         messageContainer.setMessage((String) lastMessage.get("message"));
                         messageContainer.setTime((Long) lastMessage.get("time"));
                         onCompleteCallback.update(true, "success");
@@ -208,7 +231,8 @@ public class UserInformationHandler {
      * @param user The user whose information is being uploaded to the firestore
      * @param onCompleteCallback Notifies the calling class that the task has been executed
      */
-    public static void uploadUserInformationToFirestore(final User user, final OnCompleteCallback onCompleteCallback) {
+    public static void uploadUserInformationToFirestore(final User user, final OnCompleteCallback
+            onCompleteCallback) {
 
         final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(user.getName())
@@ -222,16 +246,20 @@ public class UserInformationHandler {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        mFirestore.collection("Profiles").document(user.getUid()).set(user)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        mFirestore.collection("Profiles").document(
+                                                user.getUid()).set(user)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>()
+                                                {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        onCompleteCallback.update(true, "success");
+                                                        onCompleteCallback.update(true,
+                                                                "success");
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        onCompleteCallback.update(false, e.getMessage());
+                                                        onCompleteCallback.update(false,
+                                                                e.getMessage());
                                                     }
                                         });
                                     }

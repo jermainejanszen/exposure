@@ -3,11 +3,9 @@ package com.exposure.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +17,13 @@ import com.exposure.adapters.MapRecyclerViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.callback.OnMapItemPressedCallback;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment representing the map displaying all users available to match within, organised
+ * according to their geographical distance from the current user
+ */
 public class MapFragment extends Fragment {
 
     private List<MapListItem> fifteenKM;
@@ -37,15 +38,23 @@ public class MapFragment extends Fragment {
     private MapRecyclerViewAdapter threeMapAdapter;
     private MapRecyclerViewAdapter zeroMapAdapter;
 
+    /**
+     * Empty constructor for the map fragment
+     */
     public MapFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Call upon creating the activity
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    //TODO
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,7 +62,6 @@ public class MapFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         assert null != getActivity();
-
 
         /* Placeholders */
         fifteenKM = new ArrayList<>();
@@ -128,10 +136,13 @@ public class MapFragment extends Fragment {
         threeMapRecyclerView.setAdapter(threeMapAdapter);
         zeroMapRecyclerView.setAdapter(zeroMapAdapter);
 
-
         return view;
     }
 
+    /**
+     * Upon clicking on another user's image on the map, user is taken to view their profile
+     * @param uid the uid of the other user who's image has been clicked on
+     */
     private void onMapItemPressed(String uid) {
         Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
         intent.putExtra("Uid", uid);

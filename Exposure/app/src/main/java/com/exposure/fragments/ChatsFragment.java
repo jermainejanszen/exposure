@@ -3,14 +3,11 @@ package com.exposure.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,12 +20,6 @@ import com.exposure.callback.OnChatItemPressedCallback;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.user.ConnectionItem;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -36,6 +27,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Fragment representing the list of existing chats the user has with their matches
+ */
 public class ChatsFragment extends Fragment {
 
     private List<ChatListItem> chats;
@@ -43,15 +37,29 @@ public class ChatsFragment extends Fragment {
     private ProgressBar progressBar;
     private RecyclerView chatsRecyclerView;
 
+    /**
+     * Empty public constructor for the chats fragment
+     */
     public ChatsFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Call upon creating the chats fragment
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * //TODO: this
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -113,7 +121,8 @@ public class ChatsFragment extends Fragment {
 
         chatsRecyclerView.setAdapter(chatsAdapter);
 
-        UserInformationHandler.downloadCurrentUserConnections(MainActivity.getCurrentUser(), new OnCompleteCallback() {
+        UserInformationHandler.downloadCurrentUserConnections(MainActivity.getCurrentUser(),
+                new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 for (ConnectionItem connection : MainActivity.getCurrentUser().getConnections()) {
@@ -128,14 +137,13 @@ public class ChatsFragment extends Fragment {
         return view;
     }
 
-    /*@Override
-    public void onResume() {
-        super.onResume();
-        progressBar.setVisibility(View.VISIBLE);
-        chatsRecyclerView.setVisibility(View.INVISIBLE);
-        chatsAdapter.syncData();
-    }*/
-
+    /**
+     * Upon clicking on a chat with another user in the chat list, the user is taken to a new
+     * activity where they will be able to converse with the other user
+     * @param uid uid of the other user
+     * @param name name of the other user
+     * @param profileImage profile image of the other user
+     */
     private void onChatItemPressed(String uid, String name, Bitmap profileImage) {
         Intent intent = new Intent(getContext(), MessageActivity.class);
         intent.putExtra("UID", uid);
@@ -149,6 +157,11 @@ public class ChatsFragment extends Fragment {
         getContext().startActivity(intent);
     }
 
+    /**
+     * TODO
+     * @param uid
+     * @return
+     */
     private boolean containsUid(String uid) {
         for (ChatListItem chat : chats) {
             if (0 == chat.getUid().compareTo(uid)) {
@@ -158,6 +171,9 @@ public class ChatsFragment extends Fragment {
         return false;
     }
 
+    /**
+     * TODO
+     */
     public static void syncChatsAdapter() {
         chatsAdapter.syncData();
     }
