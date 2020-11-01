@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MapFragment extends Fragment {
 
     private List<MapListItem> fifteenKM;
@@ -46,6 +49,8 @@ public class MapFragment extends Fragment {
     private MapRecyclerViewAdapter threeMapAdapter;
     private MapRecyclerViewAdapter zeroMapAdapter;
 
+    private View view;
+
     public MapFragment() {
         // Required empty public constructor
     }
@@ -59,7 +64,7 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_map, container, false);
+        view = inflater.inflate(R.layout.fragment_map, container, false);
 
         assert null != getActivity();
 
@@ -74,18 +79,27 @@ public class MapFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
-    private void setup(View view) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        /* Placeholders */
-        fifteenKM = new ArrayList<>();
-        nineKM = new ArrayList<>();
-        sixKM = new ArrayList<>();
-        threeKM = new ArrayList<>();
-        zeroKM = new ArrayList<>();
+        if (1 == requestCode) {
+            allUsers.clear();
+            UserInformationHandler.downloadUsers(allUsers, new OnCompleteCallback() {
+                @Override
+                public void update(boolean success, String message) {
+                    if (success) {
+                        setup(view);
+                    }
+                }
+            });
+        }
+    }
+
+    private void setup(View view) {
 
         OnMapItemPressedCallback callback = new OnMapItemPressedCallback() {
             @Override
@@ -93,6 +107,36 @@ public class MapFragment extends Fragment {
                 onMapItemPressed(uid);
             }
         };
+
+        if (null == fifteenKM) {
+            fifteenKM = new ArrayList<>();
+        } else {
+            fifteenKM.clear();
+        }
+
+        if (null == nineKM) {
+            nineKM = new ArrayList<>();
+        } else {
+            nineKM.clear();
+        }
+
+        if (null == sixKM) {
+            sixKM = new ArrayList<>();
+        } else {
+            sixKM.clear();
+        }
+
+        if (null == threeKM) {
+            threeKM = new ArrayList<>();
+        } else {
+            threeKM.clear();
+        }
+
+        if (null == zeroKM) {
+            zeroKM = new ArrayList<>();
+        } else {
+            zeroKM.clear();
+        }
 
         if (null == fifteenMapAdapter) {
             fifteenMapAdapter = new MapRecyclerViewAdapter(fifteenKM, callback);
@@ -142,11 +186,11 @@ public class MapFragment extends Fragment {
     private void onMapItemPressed(String uid) {
         Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
         intent.putExtra("Uid", uid);
-        getContext().startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     private void mapUsersToRegions() {
-        OnCompleteCallback notifyCallback = new OnCompleteCallback() {
+        final OnCompleteCallback notifyCallback = new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success) {
@@ -160,24 +204,32 @@ public class MapFragment extends Fragment {
         };
 
         //TODO: Perhaps be better to pass in current user as a serializable
-        CurrentUser currentUser = MainActivity.getCurrentUser();
+        final CurrentUser currentUser = MainActivity.getCurrentUser();
 
-        for (CurrentUser otherUser: allUsers) {
-            if (otherUser.getUid().equals(currentUser.getUid())) {
-                continue;
+        UserInformationHandler.downloadCurrentUserConnections(currentUser, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    for (CurrentUser otherUser : allUsers) {
+                        if (otherUser.getUid().equals(currentUser.getUid()) ||
+                                currentUser.isConnected(otherUser.getUid())) {
+                            continue;
+                        }
+                        int distance = DistanceHandler.distanceInKM(currentUser, otherUser);
+                        if (distance <= 2) {
+                            zeroKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                        } else if (distance <= 5) {
+                            threeKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                        } else if (distance <= 8) {
+                            sixKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                        } else if (distance <= 15) {
+                            nineKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                        } else {
+                            fifteenKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                        }
+                    }
+                }
             }
-            int distance = DistanceHandler.distanceInKM(currentUser, otherUser);
-            if (distance <= 2) {
-                zeroKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-            } else if (distance <= 5) {
-                threeKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-            } else if (distance <= 8) {
-                sixKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-            } else if (distance <= 15) {
-                nineKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-            } else {
-                fifteenKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-            }
-        }
+        });
     }
 }
