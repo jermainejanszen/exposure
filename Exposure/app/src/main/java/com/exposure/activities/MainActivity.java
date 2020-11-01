@@ -36,6 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Main activity of the application. TODO: finish
+ */
 public class MainActivity extends AppCompatActivity {
     private static CurrentUser currentUser;
     private static Map<String, Bitmap> bitmaps;
@@ -46,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
     private ChatsFragment chatsFragment;
     private ProgressBar progressBar;
 
+    /**
+     * On creating this activity, the view is set, user is directed to sign in and user information
+     * is downloaded from the firebase firestore
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,15 +78,17 @@ public class MainActivity extends AppCompatActivity {
                 new OnCompleteCallback() {
                     @Override
                     public void update(boolean success, String message) {
-                        /* Once the user information has downloaded (either success of failure), we can
-                           safely start initializing all of the fields */
+                        /* Once the user information has downloaded (either success of failure),
+                            we can safely start initializing all of the fields */
                         if (success) {
                             UserInformationHandler.downloadCurrentUserConnections(currentUser,
                                     new OnCompleteCallback() {
                                         @Override
                                         public void update(boolean success, String message) {
                                             if (success) {
-                                                UserMediaHandler.downloadImagesFromFirebase(currentUser.getUid(), bitmaps, imagePaths, new OnCompleteCallback() {
+                                                UserMediaHandler.downloadImagesFromFirebase
+                                                        (currentUser.getUid(), bitmaps,
+                                                                imagePaths, new OnCompleteCallback() {
                                                     @Override
                                                     public void update(boolean success, String message) {
                                                         setup();
@@ -99,19 +109,34 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    //TODO: not sure if this is the best way to handle this
+    /**
+     * Returns the current user object
+     * @return current user object
+     */
     public static CurrentUser getCurrentUser(){
         return currentUser;
     }
 
+    /**
+     * Returns the image paths for each of the pictures in the current user's profile
+     * @return image paths for each image in current user's profile
+     */
     public static List<String> getImagePaths() {
         return imagePaths;
     }
 
+    /**
+     * Returns the bitmaps corresponding to each of the pictures in the current user's profile
+     * @return bitmaps for each image in current user's profile
+     */
     public static Map<String, Bitmap> getBitmaps() {
         return bitmaps;
     }
 
+    /**
+     * Sets up the maps, chats and profile fragments of the application and initiates the navigation
+     * view listener
+     */
     private void setup() {
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();
@@ -137,16 +162,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /* When the user first signs up, send them to the edit profile page to fill in necessary details */
+        /* When user first signs up, send them to edit profile page to fill in necessary details */
         if (!currentUser.validState()) {
             onEditProfileClick(null);
         }
     }
 
+    /**
+     * Upon returning to the main activity from another activity, performs actions according to
+     * returning request code
+     * @param requestCode request code signifying what action is required
+     * @param resultCode result code indicating the result of the returning activity
+     * @param data data returned from the activity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        /* Upon retrieving an image from camera or library, generate time stamp and upload image to
+        * firebase firestore */
         if (RequestCodes.RETRIEVE_IMAGE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 profileFragment.setProgressBarVisibility(View.VISIBLE);
@@ -161,7 +195,8 @@ public class MainActivity extends AppCompatActivity {
                 } else if ("Library".equals(source)) {
                     id = DateHandler.generateTimestamp();
                     try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),
+                                data.getData());
                     } catch (IOException e) {
                         return;
                     }
@@ -169,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+                /* Upload image to firebase firestore */
                 UserMediaHandler.uploadImageToFirebase(id, bitmap, new OnCompleteCallback() {
                     @Override
                     public void update(boolean success, String message) {
@@ -179,7 +215,8 @@ public class MainActivity extends AppCompatActivity {
                                     bitmap
                             );
                         } else {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), message,
+                                    Toast.LENGTH_SHORT).show();
                         }
                         profileFragment.setProgressBarVisibility(View.INVISIBLE);
                     }
@@ -197,19 +234,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* onClick handler for the profile fragment */
+    /**
+     * OnClick handler for uploading an image to the application
+     * @param view the current GUI view
+     */
     public void onUploadImageClick(View view) {
         Intent intent = new Intent(this, RetrieveImageActivity.class);
         startActivityForResult(intent, RequestCodes.RETRIEVE_IMAGE_REQUEST);
     }
 
-    /* onClick handler for the profile fragment */
+    /**
+     * OnClick handler for clicking on the edit profile fragment
+     * @param view the current GUI view
+     */
     public void onEditProfileClick(View view) {
         Intent editProfileIntent = new Intent(this, EditProfileActivity.class);
         editProfileIntent.putExtra("current user", currentUser);
         startActivityForResult(editProfileIntent, RequestCodes.EDIT_PROFILE_REQUEST);
     }
 
+    /**
+     * TODO: this
+     * @param fragment
+     */
     private void setFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main,
                 fragment).commit();

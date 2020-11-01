@@ -68,7 +68,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
     //TODO: add comment in here
     private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), new
+                    ActivityResultCallback<Boolean>() {
                 @RequiresApi(api = Build.VERSION_CODES.R)
                 @Override
                 public void onActivityResult(Boolean result) {
@@ -100,8 +101,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void update(boolean success, String message) {
                         if (success) {
-                            profileBitmap = BitmapFactory.decodeByteArray(profileByteArray, 0,
-                                    profileByteArray.length);
+                            profileBitmap = BitmapFactory.decodeByteArray(profileByteArray,
+                                    0, profileByteArray.length);
                             profileImage.setImageBitmap(profileBitmap);
                         }
                     }
@@ -203,17 +204,18 @@ public class EditProfileActivity extends AppCompatActivity {
         RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
         RecyclerView hobbiesRecyclerView = findViewById(R.id.hobbies_recycler_view);
-        RecyclerView personalityTypesRecyclerView = findViewById(R.id.personality_types_recycler_view);
         RecyclerView truthsRecyclerView = findViewById(R.id.truths_recycler_view);
         RecyclerView liesRecyclerView = findViewById(R.id.lies_recycler_view);
+        RecyclerView personalityTypesRecyclerView =
+                findViewById(R.id.personality_types_recycler_view);
 
         /* Sets the adapter for each recycler view */
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
-        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
         truthsRecyclerView.setAdapter(truthsAdapter);
         liesRecyclerView.setAdapter(liesAdapter);
+        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
 
         /* Sets elements of the view for all remaining fields of the user profile */
         profileImage = findViewById(R.id.profile_image);
@@ -368,7 +370,8 @@ public class EditProfileActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -464,7 +467,8 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         /* If the user hasn't selected a preference, create error message */
-        if (!malesCheckBox.isChecked() && !femalesCheckBox.isChecked() && !othersCheckBox.isChecked()) {
+        if (!malesCheckBox.isChecked() && !femalesCheckBox.isChecked() &&
+                !othersCheckBox.isChecked()) {
             Toast.makeText(this, "You must select at least one preference",
                     Toast.LENGTH_LONG).show();
             return;
