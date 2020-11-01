@@ -141,10 +141,12 @@ public class ChatsFragment extends Fragment {
         intent.putExtra("UID", uid);
         intent.putExtra("Name", name);
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        profileImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        intent.putExtra("ProfileImage", byteArray);
+        if (null != profileImage) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            profileImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            intent.putExtra("ProfileImage", byteArray);
+        }
 
         getContext().startActivity(intent);
     }
