@@ -1,5 +1,8 @@
 package com.exposure.constants;
 
+/**
+ * Request codes for activity
+ */
 public class RequestCodes {
     public static int TAKE_PHOTO_REQUEST = 101;
     public static int CHOOSE_FROM_LIBRARY_REQUEST = 102;
