@@ -139,7 +139,7 @@ public class ChatsFragment extends Fragment {
             intent.putExtra("ProfileImage", byteArray);
         }
 
-        getContext().startActivity(intent);
+        startActivity(intent);
     }
 
     private boolean containsUid(String uid) {
