@@ -76,7 +76,7 @@ public class MapFragment extends Fragment {
 
         allUsers = new ArrayList<>();
 
-        UserInformationHandler.downloadUsers(allUsers, new OnCompleteCallback() {
+        UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success) {
@@ -95,7 +95,7 @@ public class MapFragment extends Fragment {
         if (RequestCodes.VIEW_PROFILE_REQUEST == requestCode) {
             loadingCover.setVisibility(View.VISIBLE);
             allUsers.clear();
-            UserInformationHandler.downloadUsers(allUsers, new OnCompleteCallback() {
+            UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
                 @Override
                 public void update(boolean success, String message) {
                     if (success) {
@@ -232,12 +232,14 @@ public class MapFragment extends Fragment {
             public void update(boolean success, String message) {
                 if (success) {
                     boolean newConnections = false;
+
                     for (int i = 0; i < allUsers.size(); i++) {
                         CurrentUser otherUser = allUsers.get(i);
-                        if (otherUser.getUid().equals(currentUser.getUid()) ||
-                                currentUser.isConnected(otherUser.getUid())) {
+
+                        if (currentUser.isConnected(otherUser.getUid())) {
                             continue;
                         }
+
                         OnCompleteCallback notifyCallback =
                                 (i == allUsers.size() - 1) ? finishedCallback : intermediateCallback;
 
