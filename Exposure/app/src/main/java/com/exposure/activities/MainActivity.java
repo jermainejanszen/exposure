@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -28,7 +27,6 @@ import com.exposure.popups.RetrieveImageActivity;
 import com.exposure.user.CurrentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.auth.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +35,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Main activity of the application. TODO: finish
+ * Main activity of the application, required for initialising application fragments and navigation.
+ * TODO: finish
  */
 public class MainActivity extends AppCompatActivity {
     private static CurrentUser currentUser;

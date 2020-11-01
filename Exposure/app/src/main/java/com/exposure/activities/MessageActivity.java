@@ -20,10 +20,8 @@ import com.exposure.adapters.MessageListItem;
 import com.exposure.adapters.MessagesRecyclerViewAdapter;
 import com.exposure.fragments.ChatsFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,13 +30,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Activity handling the messaging functionality of the application
+ */
 public class MessageActivity extends Activity {
 
     private String otherUID;
@@ -52,6 +52,11 @@ public class MessageActivity extends Activity {
     private ImageButton sendButton;
     private RecyclerView messageRecyclerView;
 
+    /**
+     * Upon creating the activity, view is set up, message input listener is initialised and
+     * communication via firebase firestore is begun TODO: fix
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +81,8 @@ public class MessageActivity extends Activity {
 
         CircleImageView profileImage = findViewById(R.id.message_user_image);
         byte[] byteArray = getIntent().getByteArrayExtra("ProfileImage");
-        profileImage.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+        profileImage.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0,
+                byteArray.length));
 
         TextView userName = findViewById(R.id.message_user_name);
         userName.setText(getIntent().getStringExtra("Name"));
@@ -85,6 +91,7 @@ public class MessageActivity extends Activity {
         sendButton = findViewById(R.id.send_button);
         messageRecyclerView = findViewById(R.id.messages_recycler_view);
 
+        /* Listener for when user sends message */
         messageInput.getEditText().setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
                     @Override
@@ -99,8 +106,11 @@ public class MessageActivity extends Activity {
                 }
         );
 
+        /* Messages at automatically uploaded to the firebase firestore upon sending, and downloaded
+        from the firebase firestore upon being recieved from another user */
         db = FirebaseFirestore.getInstance();
-        final DocumentReference docRefMessages = db.collection("chats").document(docRefID);
+        final DocumentReference docRefMessages =
+                db.collection("chats").document(docRefID);
         docRefMessages.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -108,10 +118,12 @@ public class MessageActivity extends Activity {
                     DocumentSnapshot document = task.getResult();
                     messages = new ArrayList<>();
                     if (null != document && document.exists()) {
-                        ArrayList<Map<String, Object>> messageArray = (ArrayList<Map<String, Object>>) document.get("messages");
+                        ArrayList<Map<String, Object>> messageArray = (ArrayList<Map<String,
+                                Object>>) document.get("messages");
                         if (null != messageArray) {
                            for(Map<String, Object> message : messageArray) {
-                               messages.add(new MessageListItem((String)message.get("message"), (String)message.get("sender")));
+                               messages.add(new MessageListItem((String)message.get("message"),
+                                       (String)message.get("sender")));
                            }
                         }
                     } else {
@@ -119,12 +131,14 @@ public class MessageActivity extends Activity {
                         doc.put("messages", messages);
                         docRefMessages.set(doc);
                     }
-                    messagesAdapter = new MessagesRecyclerViewAdapter(getApplicationContext(), messages);
+                    messagesAdapter = new MessagesRecyclerViewAdapter(getApplicationContext(),
+                            messages);
                     messageRecyclerView.setAdapter(messagesAdapter);
 
                     docRefMessages.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                         @Override
-                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable
+                                FirebaseFirestoreException error) {
                             if (error != null) {
                                 Log.w("MessageListener", "Listen failed.", error);
                                 return;
@@ -132,10 +146,13 @@ public class MessageActivity extends Activity {
 
                             if (null != value && value.exists()) {
                                 messages.clear();
-                                ArrayList<Map<String, Object>> messageArray = (ArrayList<Map<String, Object>>) value.get("messages");
+                                ArrayList<Map<String, Object>> messageArray = (ArrayList<Map<String,
+                                        Object>>) value.get("messages");
                                 if (null != messageArray) {
                                     for (Map<String, Object> message : messageArray) {
-                                        messages.add(new MessageListItem((String) message.get("message"), (String) message.get("sender")));
+                                        messages.add(new MessageListItem((String)
+                                                message.get("message"),
+                                                (String) message.get("sender")));
                                     }
                                 }
                                 messagesAdapter.notifyDataSetChanged();
@@ -150,6 +167,10 @@ public class MessageActivity extends Activity {
         });
     }
 
+    /**
+     * OnClick listener for the send message function
+     * @param view the current GUI view
+     */
     public void onSendPressed(View view) {
         String text = messageInput.getEditText().getText().toString().trim();
         if(text.length() > 0) {
@@ -166,6 +187,10 @@ public class MessageActivity extends Activity {
         }
     }
 
+    /**
+     * OnClick listener for when user clicks to see other user's profile
+     * @param view the current GUI view
+     */
     public void onUserBarPressed(View view) {
         Intent intent = new Intent(this, ViewOtherProfileActivity.class);
         intent.putExtra("Uid", getIntent().getStringExtra("UID"));
