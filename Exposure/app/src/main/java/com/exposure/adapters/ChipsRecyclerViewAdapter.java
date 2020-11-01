@@ -99,15 +99,27 @@ public class ChipsRecyclerViewAdapter extends
         return data.size();
     }
 
-    //TODO
+    /**
+     * TODO: Jermaine check dis :)
+     *  Describes an item view and metadata about its place within the RecyclerView
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         private TextView textView;
 
+        /**
+         * Constructor for ViewHolder
+         * @param itemView item view for ViewHolder
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.list_item);
         }
 
+        /**
+         * Gets the text view stored in ViewHolder
+         * @return the text view stored in the ViewHolder
+         */
         public TextView getTextView() {
             return textView;
         }
