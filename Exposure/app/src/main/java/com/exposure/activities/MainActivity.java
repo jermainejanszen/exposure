@@ -35,8 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Main activity of the application, required for initialising application fragments and navigation.
- * TODO: finish
+ * Main activity of the application, required for initialising application fragments and navigation
  */
 public class MainActivity extends AppCompatActivity {
     private static CurrentUser currentUser;
@@ -253,8 +252,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: this
-     * @param fragment
+     * Sets the default fragment for the application
+     * @param fragment the fragment to be the default fragment for the application
      */
     private void setFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main,

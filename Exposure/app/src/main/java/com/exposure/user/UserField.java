@@ -33,7 +33,7 @@ public enum UserField {
 
     /**
      * Converts the enum to a string
-     * @return enum in string format 
+     * @return enum in string format
      */
     @Override
     public String toString() {

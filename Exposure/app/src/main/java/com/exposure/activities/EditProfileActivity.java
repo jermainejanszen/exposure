@@ -361,7 +361,10 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    //TODO: java doc
+    /**
+     * Sets the user's location based on GPS
+     * TODO needs better commenting here
+     */
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void setUserLocation() {
         Criteria criteria = new Criteria();

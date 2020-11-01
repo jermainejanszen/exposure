@@ -1,6 +1,5 @@
 package com.exposure.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,22 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
+/**
+ * TODO Chat recycler view adapter
+ */
+public class ChatsRecyclerViewAdapter extends
+        RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
     private OnChatItemPressedCallback callback;
     private List<ChatListItem> data;
     private OnCompleteCallback intermediateCallback, finishedCallback;
 
+    /**
+     * Constructor for chats recycler view adapter object
+     * @param data
+     * @param callback
+     * @param intermediateCallback
+     * @param finishedCallback
+     */
     public ChatsRecyclerViewAdapter(List<ChatListItem> data, OnChatItemPressedCallback callback,
                                     OnCompleteCallback intermediateCallback,
                                     OnCompleteCallback finishedCallback) {
@@ -32,6 +42,13 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         this.finishedCallback = finishedCallback;
     }
 
+    /**
+     * Called when the recycler view needs a new ViewHolder of the given type to represent an item
+     * @param parent the ViewGroup to which the new View will be added after being bound to an
+     *               adapter position
+     * @param viewType the view type of the new view
+     * @return the resulting new ViewHolder
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,6 +56,11 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         return new ViewHolder(view);
     }
 
+    /**
+     * Called by the recycler view inorder to display the data at the given position
+     * @param holder the ViewHolder to be updated to reflect the item at the given position
+     * @param position the given position to display the data at
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         if(null != data.get(position).getProfileImage()) {
@@ -59,15 +81,24 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         });
     }
 
+    /**
+     * Returns the number of chat list items
+     * @return the number of chat list items
+     */
     @Override
     public int getItemCount() {
         return data.size();
     }
 
+    /**
+     * Returns the lsit of chat list items
+     * @return
+     */
     public List<ChatListItem> getData() {
         return this.data;
     }
 
+    //TODO
     public void syncData() {
         for (int i = 0; i < data.size(); i++) {
             ChatListItem item = data.get(i);
@@ -79,6 +110,7 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         }
     }
 
+    //TODO
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView profileImage;
         private final TextView name;
@@ -95,22 +127,43 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
             date = itemView.findViewById(R.id.chat_date);
         }
 
+        /**
+         * Gets the circle profile image of the other user
+         * @return The circle profile image of the other user
+         */
         public CircleImageView getProfileImage() {
             return profileImage;
         }
 
+        /**
+         * Gets the name of the other user
+         * @return the name of the other user
+         */
         public TextView getName() {
             return name;
         }
 
+        /**
+         * Gets the last message sent between the current user and other user
+         * @return the last message sent between the current user and other user
+         */
         public TextView getLastMessage() {
             return lastMessage;
         }
 
+        /**
+         * TODO
+         * @return
+         */
         public ImageButton getOpenButton() {
             return openButton;
         }
 
+        /**
+         * Gets the date of the most recent message sent between the current user and the other user
+         * @return the date of the most recent message sent between the current user and the other
+         * user
+         */
         public TextView getDate() {
             return date;
         }

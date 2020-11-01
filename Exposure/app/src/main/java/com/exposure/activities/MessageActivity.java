@@ -54,7 +54,7 @@ public class MessageActivity extends Activity {
 
     /**
      * Upon creating the activity, view is set up, message input listener is initialised and
-     * communication via firebase firestore is begun TODO: fix
+     * communication via firebase is set up
      * @param savedInstanceState saved instance state for the activity
      */
     @Override

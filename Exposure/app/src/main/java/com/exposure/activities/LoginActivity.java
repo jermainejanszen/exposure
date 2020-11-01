@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loginProgressBar;
 
     /**
-     * Upon creating the activity, the view is set... TODO: finish this
+     * Upon creating the activity, the view is set and password is verified
      * @param savedInstanceState saved instance state for the activity
      */
     @Override
