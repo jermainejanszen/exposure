@@ -17,13 +17,13 @@ import com.exposure.activities.ViewOtherProfileActivity;
 import com.exposure.adapters.MapListItem;
 import com.exposure.adapters.MapRecyclerViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
-import com.exposure.callback.OnItemPressedCallback;
+import com.exposure.callback.OnMapItemPressedCallback;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapFragment extends Fragment implements Serializable {
+public class MapFragment extends Fragment {
 
     private List<MapListItem> fifteenKM;
     private List<MapListItem> nineKM;
@@ -75,7 +75,7 @@ public class MapFragment extends Fragment implements Serializable {
             }
         };
 
-        OnItemPressedCallback callback = new OnItemPressedCallback() {
+        OnMapItemPressedCallback callback = new OnMapItemPressedCallback() {
             @Override
             public void onPress(String uid) {
                 onMapItemPressed(uid);
@@ -132,7 +132,7 @@ public class MapFragment extends Fragment implements Serializable {
         return view;
     }
 
-    public void onMapItemPressed(String uid) {
+    private void onMapItemPressed(String uid) {
         Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
         intent.putExtra("Uid", uid);
         getContext().startActivity(intent);

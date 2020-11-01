@@ -1,6 +1,8 @@
 package com.exposure.activities;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.adapters.MessageListItem;
 import com.exposure.adapters.MessagesRecyclerViewAdapter;
+import com.exposure.fragments.ChatsFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Timestamp;
@@ -32,6 +36,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageActivity extends Activity {
 
@@ -68,6 +74,13 @@ public class MessageActivity extends Activity {
 
         setContentView(R.layout.activity_message);
 
+        CircleImageView profileImage = findViewById(R.id.message_user_image);
+        byte[] byteArray = getIntent().getByteArrayExtra("ProfileImage");
+        profileImage.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+
+        TextView userName = findViewById(R.id.message_user_name);
+        userName.setText(getIntent().getStringExtra("Name"));
+
         messageInput = findViewById(R.id.chat_input_field);
         sendButton = findViewById(R.id.send_button);
         messageRecyclerView = findViewById(R.id.messages_recycler_view);
@@ -101,6 +114,10 @@ public class MessageActivity extends Activity {
                                messages.add(new MessageListItem((String)message.get("message"), (String)message.get("sender")));
                            }
                         }
+                    } else {
+                        HashMap<String, Object> doc = new HashMap<>();
+                        doc.put("messages", messages);
+                        docRefMessages.set(doc);
                     }
                     messagesAdapter = new MessagesRecyclerViewAdapter(getApplicationContext(), messages);
                     messageRecyclerView.setAdapter(messagesAdapter);
@@ -144,7 +161,15 @@ public class MessageActivity extends Activity {
             }
             db.collection("chats").document(docRefID)
                     .update("messages", messages);
+
+            ChatsFragment.syncChatsAdapter();
         }
+    }
+
+    public void onUserBarPressed(View view) {
+        Intent intent = new Intent(this, ViewOtherProfileActivity.class);
+        intent.putExtra("Uid", getIntent().getStringExtra("UID"));
+        startActivity(intent);
     }
 
 }

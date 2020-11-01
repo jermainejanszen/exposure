@@ -15,18 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
 import com.exposure.activities.ViewOtherProfileActivity;
-import com.exposure.callback.OnItemPressedCallback;
+import com.exposure.callback.OnMapItemPressedCallback;
 
 import java.io.Serializable;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerViewAdapter.ViewHolder> implements Serializable {
-    private final OnItemPressedCallback callback;
+public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerViewAdapter.ViewHolder> {
+    private final OnMapItemPressedCallback callback;
     private final List<MapListItem> data;
 
-    public MapRecyclerViewAdapter(List<MapListItem> data, OnItemPressedCallback callback) {
+    public MapRecyclerViewAdapter(List<MapListItem> data, OnMapItemPressedCallback callback) {
         this.callback = callback;
         this.data = data;
     }
