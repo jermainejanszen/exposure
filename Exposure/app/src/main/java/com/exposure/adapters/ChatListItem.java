@@ -2,6 +2,7 @@ package com.exposure.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -85,7 +86,13 @@ public class ChatListItem {
                                     }
                                     if (null != container.getTime()) {
                                         time = container.getTime();
-                                        date = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(new Date(time));
+                                        Date latestChatDate = new Date(time);
+
+                                        if (DateUtils.isToday(time)) {
+                                            date = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH).format(latestChatDate);
+                                        } else {
+                                            date = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(latestChatDate);
+                                        }
                                     }
                                     UserMediaHandler.downloadProfilePhotoFromFirebase(uid, bytes, imageSize, new OnCompleteCallback() {
                                         @Override
