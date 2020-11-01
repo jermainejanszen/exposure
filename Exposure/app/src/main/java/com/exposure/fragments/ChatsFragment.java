@@ -1,6 +1,7 @@
 package com.exposure.fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,8 +19,8 @@ import com.exposure.activities.MainActivity;
 import com.exposure.activities.MessageActivity;
 import com.exposure.adapters.ChatListItem;
 import com.exposure.adapters.ChatsRecyclerViewAdapter;
+import com.exposure.callback.OnChatItemPressedCallback;
 import com.exposure.callback.OnCompleteCallback;
-import com.exposure.callback.OnItemPressedCallback;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.user.ConnectionItem;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,10 +67,10 @@ public class ChatsFragment extends Fragment {
 
         chats = new ArrayList<>();
 
-        OnItemPressedCallback pressedCallback = new OnItemPressedCallback() {
+        OnChatItemPressedCallback pressedCallback = new OnChatItemPressedCallback() {
             @Override
-            public void onPress(String uid) {
-                onChatItemPressed(uid);
+            public void onPress(String uid, String name, Bitmap profileImage) {
+                onChatItemPressed(uid, name, profileImage);
             }
         };
 
@@ -129,9 +131,16 @@ public class ChatsFragment extends Fragment {
         chatsAdapter.syncData();
     }
 
-    private void onChatItemPressed(String uid) {
+    private void onChatItemPressed(String uid, String name, Bitmap profileImage) {
         Intent intent = new Intent(getContext(), MessageActivity.class);
         intent.putExtra("UID", uid);
+        intent.putExtra("Name", name);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        profileImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        intent.putExtra("ProfileImage", byteArray);
+
         getContext().startActivity(intent);
     }
 
