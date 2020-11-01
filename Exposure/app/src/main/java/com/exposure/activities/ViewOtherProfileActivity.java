@@ -120,11 +120,13 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         if (RequestCodes.GAME_RESULT == requestCode) {
             if (ResultCodes.WON_GAME == resultCode) {
                 Intent intent = new Intent(this, WonGameActivity.class);
+                intent.putExtra("UnlockedField", exposeField());
                 startActivity(intent);
             } else if (ResultCodes.LOST_GAME == resultCode) {
                 Intent intent = new Intent(this, LostGameActivity.class);
                 startActivity(intent);
             }
+            progressCover.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -254,7 +256,62 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         Intent gameIntent = new Intent(this, ThreeTruthsOneLieActivity.class);
         gameIntent.putExtra("current user", currentUser);
         gameIntent.putExtra("other user", otherUser);
+        progressCover.setVisibility(View.VISIBLE);
         startActivityForResult(gameIntent, RequestCodes.GAME_RESULT);
+    }
+
+    private String exposeField() {
+        String exposed = "Everything Exposed";
+        UserField updatedField = UserField.UID;
+        if (!otherUser.checkDetailExposed(UserField.NAME)) {
+            otherUser.exposeDetail(UserField.NAME);
+            currentUser.addConnection(otherUser.toConnectionItem());
+            updatedField = UserField.NAME;
+            exposed = "Full Name";
+        } else if (!otherUser.checkDetailExposed(UserField.PROFILE_IMAGE)) {
+            otherUser.exposeDetail(UserField.PROFILE_IMAGE);
+            currentUser.addConnection(otherUser.toConnectionItem());
+            updatedField = UserField.PROFILE_IMAGE;
+            exposed = "Profile Picture";
+        } else if (!otherUser.checkDetailExposed(UserField.PLACES_LIVED)) {
+            otherUser.exposeDetail(UserField.PLACES_LIVED);
+            currentUser.addConnection(otherUser.toConnectionItem());
+            updatedField = UserField.PLACES_LIVED;
+            exposed = "Places Lived";
+        } else if (!otherUser.checkDetailExposed(UserField.PLACES_STUDIED)) {
+            otherUser.exposeDetail(UserField.PLACES_STUDIED);
+            currentUser.addConnection(otherUser.toConnectionItem());
+            updatedField = UserField.PLACES_STUDIED;
+            exposed = "Places Studied";
+        } else if (!otherUser.checkDetailExposed(UserField.PERSONALITIES)) {
+            otherUser.exposeDetail(UserField.PERSONALITIES);
+            currentUser.addConnection(otherUser.toConnectionItem());
+            updatedField = UserField.PERSONALITIES;
+            exposed = "Personalities";
+        } else if (!otherUser.checkDetailExposed(UserField.HOBBIES)) {
+            otherUser.exposeDetail(UserField.HOBBIES);
+            currentUser.addConnection(otherUser.toConnectionItem());
+            updatedField = UserField.HOBBIES;
+            exposed = "Hobbies";
+        } else if (!otherUser.checkDetailExposed(UserField.GALLERY)) {
+            otherUser.exposeDetail(UserField.GALLERY);
+            currentUser.addConnection(otherUser.toConnectionItem());
+            updatedField = UserField.GALLERY;
+            exposed = "Photo Gallery";
+        }
+
+        final UserField finalField = updatedField;
+
+        UserInformationHandler.uploadUserInformationToFirestore(currentUser, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    showInfo(finalField);
+                }
+            }
+        });
+
+        return exposed;
     }
 
     private void hideInfo(UserField field) {
@@ -264,12 +321,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                 break;
             case NAME:
                 displayNameText.setText(otherUser.getNickname());
-                break;
-            case BIRTHDAY:
-                ageText.setText("Age ??");
-                break;
-            case PREFERENCES:
-                preferencesText.setText("Interested in ????");
                 break;
             case PLACES_STUDIED:
                 studyLocationsRecyclerView.setAdapter(unknownStudyLocationsAdapter);
@@ -282,6 +333,37 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                 break;
             case PERSONALITIES:
                 personalityTypesRecyclerView.setAdapter(unknownPersonalitiesAdapter);
+                break;
+        }
+    }
+
+    private void showInfo(UserField field) {
+        switch (field) {
+            case PROFILE_IMAGE:
+                if(null != profileByteArray) {
+                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                } else {
+                    profileImage.setImageDrawable(getDrawable(R.drawable.default_display_image));
+                }
+                break;
+            case NAME:
+                displayNameText.setText(otherUser.getName());
+                break;
+            case PLACES_STUDIED:
+                studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
+                break;
+            case PLACES_LIVED:
+                areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
+                break;
+            case HOBBIES:
+                hobbiesRecyclerView.setAdapter(hobbiesAdapter);
+                break;
+            case PERSONALITIES:
+                personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
+                break;
+            case GALLERY:
+                gridView.setAdapter(gridViewAdapter);
+                gridViewAdapter.notifyDataSetChanged();
                 break;
         }
     }
