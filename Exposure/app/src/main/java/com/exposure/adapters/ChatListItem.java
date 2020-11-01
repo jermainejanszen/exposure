@@ -89,7 +89,7 @@ public class ChatListItem {
                                         Date latestChatDate = new Date(time);
 
                                         if (DateUtils.isToday(time)) {
-                                            date = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH).format(latestChatDate);
+                                            date = new SimpleDateFormat("h:mm aa", Locale.ENGLISH).format(latestChatDate);
                                         } else {
                                             date = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(latestChatDate);
                                         }
@@ -102,6 +102,7 @@ public class ChatListItem {
                                         }
                                     });
                                 }
+                                onCompleteCallback.update(false, "failed");
                             }
                         });
                     }

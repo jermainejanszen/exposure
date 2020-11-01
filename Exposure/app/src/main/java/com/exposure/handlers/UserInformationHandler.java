@@ -131,8 +131,8 @@ public class UserInformationHandler {
                         Map<String, Object> lastMessage = (Map<String, Object>) messages.get(messages.size() - 1);
                         messageContainer.setMessage((String) lastMessage.get("message"));
                         messageContainer.setTime((Long) lastMessage.get("time"));
-                        onCompleteCallback.update(true, "success");
                     }
+                    onCompleteCallback.update(true, "success");
                 } else {
                     onCompleteCallback.update(true, "no chat");
                 }
