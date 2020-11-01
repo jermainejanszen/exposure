@@ -67,6 +67,10 @@ public class UserInformationHandler {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         List<Map<String, Object>> docConnections = (List<Map<String, Object>>) documentSnapshot.get(UserField.CONNECTIONS.toString());
+                        if (null == docConnections) {
+                            onCompleteCallback.update(true, "no connections");
+                            return;
+                        }
                         List<ConnectionItem> connections = new ArrayList<>();
                         for (Map<String, Object> connection : docConnections) {
                             connections.add(new ConnectionItem((String) connection.get("uid"), (List<String>) connection.get("exposedInfo")));
