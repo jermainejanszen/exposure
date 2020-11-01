@@ -21,6 +21,7 @@ import com.exposure.adapters.MapListItem;
 import com.exposure.adapters.MapRecyclerViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.callback.OnMapItemPressedCallback;
+import com.exposure.constants.RequestCodes;
 import com.exposure.handlers.DistanceHandler;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.user.CurrentUser;
@@ -86,7 +87,7 @@ public class MapFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (1 == requestCode) {
+        if (RequestCodes.VIEW_PROFILE_REQUEST == requestCode) {
             allUsers.clear();
             UserInformationHandler.downloadUsers(allUsers, new OnCompleteCallback() {
                 @Override
@@ -186,7 +187,7 @@ public class MapFragment extends Fragment {
     private void onMapItemPressed(String uid) {
         Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
         intent.putExtra("Uid", uid);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, RequestCodes.VIEW_PROFILE_REQUEST);
     }
 
     private void mapUsersToRegions() {
