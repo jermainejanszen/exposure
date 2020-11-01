@@ -3,7 +3,6 @@ package com.exposure.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BlurMaskFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +51,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     private GridView gridView;
     private Map<String, Bitmap> bitmaps;
     private GridViewAdapter gridViewAdapter;
+    private GridViewAdapter unexposedGridViewAdapter;
     private List<String> imagePaths;
     private byte[] profileByteArray;
     private ProgressBar progressBar;
@@ -94,6 +94,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         playButton = findViewById(R.id.play_button);
 
         progressBar.setVisibility(View.VISIBLE);
+        progressCover.setVisibility(View.VISIBLE);
 
         bitmaps = new HashMap<>();
         imagePaths = new ArrayList<>();
@@ -164,7 +165,12 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         UserMediaHandler.downloadImagesFromFirebase(otherUser.getUid(), bitmaps, imagePaths, new OnCompleteCallback() {
                 @Override
                 public void update(boolean success, String message) {
-                    gridViewAdapter.notifyDataSetChanged();
+                    if (!otherUser.checkDetailExposed(UserField.GALLERY)) {
+                        unexposedGridViewAdapter = initialiseUnexposedGridViewAdapter();
+                        gridView.setAdapter(unexposedGridViewAdapter);
+                    } else {
+                        gridViewAdapter.notifyDataSetChanged();
+                    }
                 }
             });
 
@@ -253,6 +259,9 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
     private void hideInfo(UserField field) {
         switch (field) {
+            case PROFILE_IMAGE:
+                profileImage.setImageDrawable(getDrawable(R.drawable.unexposed_image));
+                break;
             case NAME:
                 displayNameText.setText(otherUser.getNickname());
                 break;
@@ -283,5 +292,13 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
             newList.add("??????");
         }
         return newList;
+    }
+
+    private GridViewAdapter initialiseUnexposedGridViewAdapter() {
+        Map<String, Bitmap> emptyBitmaps = new HashMap<>();
+        for (String path : imagePaths) {
+            emptyBitmaps.put(path, null);
+        }
+        return new GridViewAdapter(getApplicationContext(), emptyBitmaps, imagePaths);
     }
 }

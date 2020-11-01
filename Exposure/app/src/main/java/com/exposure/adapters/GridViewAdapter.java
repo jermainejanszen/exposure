@@ -49,8 +49,11 @@ public class GridViewAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.grid_view_item, null);
         }
         ImageView imageView = view.findViewById(R.id.grid_view_item);
-        imageView.setImageBitmap(bitmaps.get(getItem(position)));
-
+        if (null != bitmaps.get(getItem(position))) {
+            imageView.setImageBitmap(bitmaps.get(getItem(position)));
+        } else {
+            imageView.setImageDrawable(context.getDrawable(R.drawable.unexposed_image));
+        }
         return view;
     }
 }
