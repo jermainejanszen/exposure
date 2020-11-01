@@ -21,6 +21,15 @@ public class CurrentUser extends User {
         return connections;
     }
 
+    public ConnectionItem getConnection(String uid) {
+        for (ConnectionItem connection : connections) {
+            if (0 == connection.getUid().compareTo(uid)) {
+                return connection;
+            }
+        }
+        return null;
+    }
+
     /* Setters */
     public void setConnections(List<ConnectionItem> connections) {
         this.connections = connections;

@@ -3,12 +3,14 @@ package com.exposure.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import com.exposure.handlers.UserInformationHandler;
 import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
+import com.exposure.user.UserField;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +45,7 @@ import java.util.Map;
 public class ViewOtherProfileActivity extends AppCompatActivity {
 
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
+    private ChipsRecyclerViewAdapter unknownStudyLocationsAdapter, unknownAreasLivedInAdapter, unknownHobbiesAdapter, unknownPersonalitiesAdapter;
     private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView, personalityTypesRecyclerView;
     private TextView displayNameText, ageText, preferencesText;
     private ImageView profileImage;
@@ -51,7 +55,9 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     private List<String> imagePaths;
     private byte[] profileByteArray;
     private ProgressBar progressBar;
+    private RelativeLayout progressCover;
     private OtherUser otherUser;
+    private ConnectionItem otherUserConnection;
     private CurrentUser currentUser;
     private Button connectButton;
     private Button playButton;
@@ -66,7 +72,12 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
             finish();
         }
 
-        otherUser = new OtherUser(getIntent().getStringExtra("Uid"));
+        otherUserConnection = currentUser.getConnection(getIntent().getStringExtra("Uid"));
+        if (null != otherUserConnection) {
+            otherUser = new OtherUser(otherUserConnection);
+        } else {
+            otherUser = new OtherUser(getIntent().getStringExtra("Uid"));
+        }
 
         studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
         areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
@@ -78,6 +89,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         gridView = findViewById(R.id.image_grid_view);
         progressBar = findViewById(R.id.other_profile_progress_bar);
+        progressCover = findViewById(R.id.other_profile_white_cover);
         connectButton = findViewById(R.id.connect_button);
         playButton = findViewById(R.id.play_button);
 
@@ -123,12 +135,25 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
             connectButton.setVisibility(View.VISIBLE);
         }
 
-        //TODO: add conditions based on 'exposed information'
-
         studyLocationsAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getPlacesStudied(), false);
+        unknownStudyLocationsAdapter = new ChipsRecyclerViewAdapter(this,
+                initialiseUnexposedArrayList(otherUser.getPlacesStudied().size()),
+                false);
+
         areasLivedInAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getPlacesLived(), false);
+        unknownAreasLivedInAdapter = new ChipsRecyclerViewAdapter(this,
+                initialiseUnexposedArrayList(otherUser.getPlacesLived().size()),
+                false);
+
         hobbiesAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getHobbies(), false);
+        unknownHobbiesAdapter = new ChipsRecyclerViewAdapter(this,
+                initialiseUnexposedArrayList(otherUser.getHobbies().size()),
+                false);
+
         personalitiesAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getPersonalities(), false);
+        unknownPersonalitiesAdapter = new ChipsRecyclerViewAdapter(this,
+                initialiseUnexposedArrayList(otherUser.getPersonalities().size()),
+                false);
 
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
@@ -143,9 +168,8 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                 }
             });
 
-        /* Set the display name to the nickname if it exists, otherwise just use the users name */
-        displayNameText.setText(
-                otherUser.getNickname() == null ? otherUser.getName() : otherUser.getNickname());
+
+        displayNameText.setText(otherUser.getName());
 
         /* Set the users age if they have entered their birthday */
         if (null != otherUser.getBirthday()) {
@@ -182,7 +206,16 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
+
+                // Set the unexposed items to invisible
+                for (UserField field : UserField.values()) {
+                    if (!otherUser.checkDetailExposed(field)) {
+                        hideInfo(field);
+                    }
+                }
+
                 progressBar.setVisibility(View.INVISIBLE);
+                progressCover.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -216,5 +249,39 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         gameIntent.putExtra("current user", currentUser);
         gameIntent.putExtra("other user", otherUser);
         startActivityForResult(gameIntent, RequestCodes.GAME_RESULT);
+    }
+
+    private void hideInfo(UserField field) {
+        switch (field) {
+            case NAME:
+                displayNameText.setText(otherUser.getNickname());
+                break;
+            case BIRTHDAY:
+                ageText.setText("Age ??");
+                break;
+            case PREFERENCES:
+                preferencesText.setText("Interested in ????");
+                break;
+            case PLACES_STUDIED:
+                studyLocationsRecyclerView.setAdapter(unknownStudyLocationsAdapter);
+                break;
+            case PLACES_LIVED:
+                areasLivedInRecyclerView.setAdapter(unknownAreasLivedInAdapter);
+                break;
+            case HOBBIES:
+                hobbiesRecyclerView.setAdapter(unknownHobbiesAdapter);
+                break;
+            case PERSONALITIES:
+                personalityTypesRecyclerView.setAdapter(unknownPersonalitiesAdapter);
+                break;
+        }
+    }
+
+    private ArrayList<String> initialiseUnexposedArrayList(int length) {
+        ArrayList<String> newList = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            newList.add("??????");
+        }
+        return newList;
     }
 }
