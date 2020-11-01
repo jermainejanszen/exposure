@@ -69,6 +69,10 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
     }
 
     public void syncData() {
+        if (0 == data.size()) {
+            finishedCallback.update(true, "Success");
+        }
+
         for (int i = 0; i < data.size(); i++) {
             ChatListItem item = data.get(i);
             if (i == data.size() - 1) {
