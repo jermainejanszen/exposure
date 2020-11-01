@@ -75,7 +75,7 @@ public class ChatsFragment extends Fragment {
         final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
-                chatsAdapter.notifyDataSetChanged();
+                // Do nothing
             }
         };
 
