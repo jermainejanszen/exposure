@@ -255,12 +255,15 @@ public class UserInformationHandler {
                 });
     }
 
-    public static void downloadUsers(final List<CurrentUser> destination, final OnCompleteCallback onCompleteCallback) {
+    public static void downloadOtherUsers(final List<CurrentUser> destination, final OnCompleteCallback onCompleteCallback) {
         mFirestore.collection("Profiles").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for (DocumentSnapshot snapshot: queryDocumentSnapshots.getDocuments()) {
+                            if (snapshot.getId().equals(mAuth.getCurrentUser().getUid())) {
+                                continue;
+                            }
                             CurrentUser user = new CurrentUser(snapshot.getId());
                             convertDocumentSnapshotToUser(snapshot, user);
                             destination.add(user);
