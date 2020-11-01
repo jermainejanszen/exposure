@@ -45,7 +45,7 @@
             android:paddingHorizontal="26dp"
             android:background="@drawable/rounded_corners"
             android:backgroundTint="@color/Primary100"
-            android:text="ITEM GOES HERE"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/Secondary900"
             android:textSize="20sp" />

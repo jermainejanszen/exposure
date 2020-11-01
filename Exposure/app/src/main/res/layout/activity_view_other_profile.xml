@@ -11,7 +11,16 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="invisible"
+        android:elevation="2dp"
         />
+
+    <RelativeLayout
+        android:id="@+id/other_profile_white_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/White"
+        android:elevation="1dp"
+        android:visibility="invisible"/>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -38,7 +47,7 @@
                     android:layout_height="70dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
-                    android:src="@drawable/default_display_image"
+                    android:src="@drawable/unexposed_image"
                     app:civ_border_width="0dp"
                     app:civ_border_color="#FF000000"
                     />

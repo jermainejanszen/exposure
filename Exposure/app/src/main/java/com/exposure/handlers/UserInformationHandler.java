@@ -4,10 +4,12 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.exposure.activities.MainActivity;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.containers.LastMessageContainer;
 import com.exposure.user.ConnectionItem;
 import com.exposure.user.CurrentUser;
+import com.exposure.user.OtherUser;
 import com.exposure.user.UserField;
 import com.exposure.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -90,7 +92,7 @@ public class UserInformationHandler {
                         @Override
                         public void update(boolean success, String message) {
                             if (success) {
-                                otherUser.addConnection(uidToAdd);
+                                otherUser.addConnection(new OtherUser(uidToAdd).toConnectionItem());
                                 uploadUserInformationToFirestore(otherUser, new OnCompleteCallback() {
                                     @Override
                                     public void update(boolean success, String message) {

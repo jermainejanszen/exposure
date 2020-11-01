@@ -9,13 +9,20 @@ import java.util.List;
  */
 public class OtherUser extends User {
 
-    private final List<String> exposedInfo = new ArrayList<>();
+    private List<String> exposedInfo;
 
     /* Constructor */
     public OtherUser(String uid) {
         super(uid);
+        exposedInfo = new ArrayList<>();
+        exposedInfo.add(UserField.NICKNAME.toString());
+        exposedInfo.add(UserField.BIRTHDAY.toString());
+        exposedInfo.add(UserField.PREFERENCES.toString());
+    }
 
-        // TODO: Load exposed info from Firebase
+    public OtherUser(ConnectionItem connectionItem) {
+        super(connectionItem.getUid());
+        this.exposedInfo = connectionItem.getExposedInfo();
     }
 
     /**
