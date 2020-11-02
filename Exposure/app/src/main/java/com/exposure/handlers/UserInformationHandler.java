@@ -160,8 +160,13 @@ public class UserInformationHandler {
         user.setBirthday(timestamp == null ? null : timestamp.toDate());
         user.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
 
-        user.setName(mAuth.getCurrentUser().getDisplayName());
-        user.setEmail(mAuth.getCurrentUser().getEmail());
+        if (mAuth.getCurrentUser().getUid().equals(user.getUid())) {
+            user.setName(mAuth.getCurrentUser().getDisplayName());
+            user.setEmail(mAuth.getCurrentUser().getEmail());
+        } else {
+            user.setName((String) documentSnapshot.get(UserField.NAME.toString()));
+            user.setEmail((String) documentSnapshot.get(UserField.EMAIL.toString()));
+        }
 
         Map<String, Double> location = (Map<String, Double>) documentSnapshot.get(UserField.LOCATION.toString());
         List<String> preferences = (List<String>) documentSnapshot.get(UserField.PREFERENCES.toString());
@@ -215,44 +220,65 @@ public class UserInformationHandler {
      */
     public static void uploadUserInformationToFirestore(final User user, final OnCompleteCallback onCompleteCallback) {
 
-        final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(user.getName())
-                .build();
+        // If we are updating the currently logged in users information, update their
+        // Display name and email as well. Otherwise just upload other information.
+        if (mAuth.getCurrentUser().getUid().equals(user.getUid())) {
 
-        mAuth.getCurrentUser().updateEmail(user.getEmail())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        mAuth.getCurrentUser().updateProfile(profileUpdates)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        mFirestore.collection("Profiles").document(user.getUid()).set(user)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        onCompleteCallback.update(true, "success");
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        onCompleteCallback.update(false, e.getMessage());
-                                                    }
-                                        });
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        onCompleteCallback.update(false, e.getMessage());
-                                    }
-                                });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        onCompleteCallback.update(false, e.getMessage());
-                    }
-                });
+            final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(user.getName())
+                    .build();
+
+            mAuth.getCurrentUser().updateEmail(user.getEmail())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            mAuth.getCurrentUser().updateProfile(profileUpdates)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mFirestore.collection("Profiles").document(user.getUid()).set(user)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            onCompleteCallback.update(true, "success");
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    onCompleteCallback.update(false, e.getMessage());
+                                                }
+                                            });
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    onCompleteCallback.update(false, e.getMessage());
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    onCompleteCallback.update(false, e.getMessage());
+                }
+            });
+
+        } else {
+
+            mFirestore.collection("Profiles").document(user.getUid()).set(user)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            onCompleteCallback.update(true, "success");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    onCompleteCallback.update(false, e.getMessage());
+                }
+            });
+
+        }
     }
 
     public static void downloadOtherUsers(final List<CurrentUser> destination, final OnCompleteCallback onCompleteCallback) {
