@@ -179,6 +179,10 @@ public class UserMediaHandler {
         }
 
         bitmap.compress(Bitmap.CompressFormat.JPEG, qualityCompression, baos);
-        return baos.toByteArray();
+        byte[] data =  baos.toByteArray();
+
+        Log.d("COMPRESSED", "IMAGE SIZE IS " + data.length);
+
+        return data;
     }
 }
