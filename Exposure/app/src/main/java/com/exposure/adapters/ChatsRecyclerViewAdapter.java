@@ -83,6 +83,11 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         }
     }
 
+    public void filterChats(List<ChatListItem> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView profileImage;
         private final TextView name;

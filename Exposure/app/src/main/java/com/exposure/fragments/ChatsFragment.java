@@ -3,10 +3,13 @@ package com.exposure.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -124,7 +127,39 @@ public class ChatsFragment extends Fragment {
             }
         });
 
+        EditText searchBar = view.findViewById(R.id.chat_search_bar_text);
+
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filterChats(s.toString());
+            }
+        });
+
         return view;
+    }
+
+    private void filterChats(String text) {
+        text = text.toLowerCase();
+        List<ChatListItem> filteredList = new ArrayList<>();
+
+        for (ChatListItem item: chats) {
+            if (item.getName().toLowerCase().contains(text)) {
+                filteredList.add(item);
+            }
+        }
+
+        chatsAdapter.filterChats(filteredList);
     }
 
     private void onChatItemPressed(String uid, String name, Bitmap profileImage) {
