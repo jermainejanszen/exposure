@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     private void setup() {
         mapFragment = new MapFragment();
         chatsFragment = new ChatsFragment();
-        profileFragment = ProfileFragment.newInstance(currentUser);
+        profileFragment = new ProfileFragment();
 
         /* Set profile fragment as the default fragment */
         setFragment(profileFragment);

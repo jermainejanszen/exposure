@@ -49,14 +49,6 @@ public class ProfileFragment extends Fragment {
     private byte[] profileByteArray;
     private ProgressBar progressBar;
 
-    public static ProfileFragment newInstance(CurrentUser currentUser) {
-        ProfileFragment profileFragment = new ProfileFragment();
-        Bundle args =  new Bundle();
-        args.putSerializable("current user", currentUser);
-        profileFragment.setArguments(args);
-        return profileFragment;
-    }
-
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -64,7 +56,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentUser = (CurrentUser) getArguments().getSerializable("current user");
+        currentUser = MainActivity.getCurrentUser();
         bitmaps = MainActivity.getBitmaps();
         imagePaths = MainActivity.getImagePaths();
     }
