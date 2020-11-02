@@ -233,12 +233,16 @@ public class MapFragment extends Fragment {
                 if (success) {
                     boolean newConnections = false;
 
+                    /* Remove connections */
+                    for (int i = allUsers.size() - 1; i >= 0; i--) {
+                        CurrentUser otherUser = allUsers.get(i);
+                        if (currentUser.isConnected(otherUser.getUid())) {
+                            allUsers.remove(i);
+                        }
+                    }
+
                     for (int i = 0; i < allUsers.size(); i++) {
                         CurrentUser otherUser = allUsers.get(i);
-
-                        if (currentUser.isConnected(otherUser.getUid())) {
-                            continue;
-                        }
 
                         OnCompleteCallback notifyCallback =
                                 (i == allUsers.size() - 1) ? finishedCallback : intermediateCallback;
