@@ -36,9 +36,7 @@ public class UserMediaHandler {
         final StorageReference mProfilePics = mStorage.child(path);
         Log.d("Upload", path);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        profilePhoto.compress(Bitmap.CompressFormat.JPEG, 80, baos);
-        byte[] data = baos.toByteArray();
+        byte[] data = compress(profilePhoto);
 
         UploadTask uploadTask = mProfilePics.putBytes(data);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -60,9 +58,7 @@ public class UserMediaHandler {
 
         final StorageReference imageRef = mStorage.child(refPath);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 80, baos);
-        byte[] data = baos.toByteArray();
+        byte[] data = compress(image);
 
         UploadTask uploadTask = imageRef.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -160,8 +156,29 @@ public class UserMediaHandler {
         });
     }
 
+    private static byte[] compress(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
+        int qualityCompression = 90;
+        int imageSize = bitmap.getByteCount();
+        int megabyte = 1048576;
 
+        Log.d("COMPRESSING", "IMAGE SIZE IS " + imageSize);
 
+        // Quality compression depends on the original size of the photo
+        if (imageSize > 2 * megabyte) {
+            qualityCompression = 10;
+        } else if (imageSize > megabyte) {
+            qualityCompression = 20;
+        } else if (imageSize > 0.5 * megabyte) {
+            qualityCompression = 40;
+        } else if (imageSize > 0.25 * megabyte) {
+            qualityCompression = 50;
+        } else if (imageSize > 0.125 * megabyte) {
+            qualityCompression = 60;
+        }
 
+        bitmap.compress(Bitmap.CompressFormat.JPEG, qualityCompression, baos);
+        return baos.toByteArray();
+    }
 }
