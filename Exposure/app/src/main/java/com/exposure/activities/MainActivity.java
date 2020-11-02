@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         if (null == FirebaseAuth.getInstance().getCurrentUser()) {
             startActivity(new Intent(this, SignUpActivity.class));
             finish();
+            return;
         }
 
         currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
