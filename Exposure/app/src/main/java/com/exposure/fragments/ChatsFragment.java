@@ -45,6 +45,7 @@ public class ChatsFragment extends Fragment {
     private static ChatsRecyclerViewAdapter chatsAdapter;
     private ProgressBar progressBar;
     private RecyclerView chatsRecyclerView;
+    private EditText searchBar;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -127,24 +128,27 @@ public class ChatsFragment extends Fragment {
             }
         });
 
-        EditText searchBar = view.findViewById(R.id.chat_search_bar_text);
+        if (null == searchBar) {
+            searchBar = view.findViewById(R.id.chat_search_bar_text);
 
-        searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            searchBar.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    Log.d("Detected event", s.toString() + "!");
+                    filterChats(s.toString());
+                }
 
-            }
+                @Override
+                public void afterTextChanged(Editable s) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                filterChats(s.toString());
-            }
-        });
+                }
+            });
+        }
 
         return view;
     }
