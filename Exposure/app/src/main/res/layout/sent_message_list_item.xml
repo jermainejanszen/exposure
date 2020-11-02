@@ -12,19 +12,19 @@
         android:id="@+id/message_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corners"
+        android:background="@drawable/message_background"
         android:backgroundTint="@color/Secondary100"
         android:layoutDirection="rtl"
         android:layout_alignParentEnd="true">
 
         <TextView
+            android:textAlignment="textStart"
             android:id="@+id/message_contents"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             android:layout_margin="12dp"
-            android:gravity="end"
-            android:maxEms="15" />
+            android:maxEms="15"/>
 
     </RelativeLayout>
 
