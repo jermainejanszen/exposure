@@ -1,167 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_map"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:id="@+id/fragment_map">
 
     <RelativeLayout
-        android:id="@+id/map_15k"
+        android:id="@+id/map_loading_cover"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/Primary50"
-        android:elevation="20dp">
+        android:layout_height="match_parent"
+        android:background="@color/White"
+        android:visibility="invisible"
+        android:elevation="1dp">
 
-        <TextView
-            android:id="@+id/map_15k_label"
+        <ProgressBar
+            android:id="@+id/map_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fifteen_plus_km"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="12dp"
-            android:textColor="@android:color/black" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/map_15k_recycler"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:overScrollMode="never" />
+            android:layout_centerInParent="true"
+            android:elevation="10dp"
+            />
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/map_9k"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/Primary100"
-        android:elevation="16dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/map_9k_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/nine_km"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="12dp"
-            android:textColor="@android:color/black" />
+        <RelativeLayout
+            android:id="@+id/map_15k"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/Primary50"
+            android:elevation="20dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/map_9k_recycler"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:overScrollMode="never" />
+            <TextView
+                android:id="@+id/map_15k_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fifteen_plus_km"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="12dp"
+                android:textColor="@android:color/black" />
 
-    </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/map_15k_recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:overScrollMode="never" />
 
-    <RelativeLayout
-        android:id="@+id/map_6k"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/Primary200"
-        android:elevation="12dp">
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/map_6k_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/six_km"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="12dp"
-            android:textColor="@android:color/black" />
+        <RelativeLayout
+            android:id="@+id/map_9k"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/Primary100"
+            android:elevation="16dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/map_6k_recycler"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:overScrollMode="never" />
+            <TextView
+                android:id="@+id/map_9k_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nine_km"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="12dp"
+                android:textColor="@android:color/black" />
 
-    </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/map_9k_recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:overScrollMode="never" />
 
-    <RelativeLayout
-        android:id="@+id/map_3k"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/Primary300"
-        android:elevation="8dp">
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/map_3k_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/three_km"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="12dp"
-            android:textColor="@android:color/black" />
+        <RelativeLayout
+            android:id="@+id/map_6k"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/Primary200"
+            android:elevation="12dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/map_3k_recycler"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:overScrollMode="never" />
+            <TextView
+                android:id="@+id/map_6k_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/six_km"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="12dp"
+                android:textColor="@android:color/black" />
 
-    </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/map_6k_recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:overScrollMode="never" />
 
-    <RelativeLayout
-        android:id="@+id/map_0k"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/Primary400"
-        android:elevation="4dp">
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/map_0k_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/zero_km"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="12dp"
-            android:textColor="@android:color/black" />
+        <RelativeLayout
+            android:id="@+id/map_3k"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/Primary300"
+            android:elevation="8dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/map_0k_recycler"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:overScrollMode="never" />
+            <TextView
+                android:id="@+id/map_3k_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/three_km"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="12dp"
+                android:textColor="@android:color/black" />
 
-    </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/map_3k_recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:overScrollMode="never" />
 
-    <RelativeLayout
-        android:id="@+id/map_you"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.87"
-        android:background="@color/Primary500">
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/map_you_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/map_you"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="12dp"
-            android:textColor="@android:color/black" />
+        <RelativeLayout
+            android:id="@+id/map_0k"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/Primary400"
+            android:elevation="4dp">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/map_0k_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zero_km"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="12dp"
+                android:textColor="@android:color/black" />
 
-</LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/map_0k_recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:overScrollMode="never" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/map_you"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.87"
+            android:background="@color/Primary500">
+
+            <TextView
+                android:id="@+id/map_you_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/map_you"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="12dp"
+                android:textColor="@android:color/black" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>

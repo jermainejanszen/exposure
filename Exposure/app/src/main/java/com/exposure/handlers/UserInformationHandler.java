@@ -1,11 +1,11 @@
 package com.exposure.handlers;
 
 import androidx.annotation.NonNull;
-
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.containers.LastMessageContainer;
 import com.exposure.user.ConnectionItem;
 import com.exposure.user.CurrentUser;
+import com.exposure.user.OtherUser;
 import com.exposure.user.UserField;
 import com.exposure.user.User;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -16,6 +16,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +35,13 @@ public class UserInformationHandler {
      * @param user the user whose information we are retrieving from firestore
      * @param onCompleteCallback notifies the calling class that the task has been executed
      */
-    public static void downloadUserInformation(final User user, final OnCompleteCallback onCompleteCallback) {
+    public static void downloadUserInformation(final User user, final OnCompleteCallback
+            onCompleteCallback) {
         mFirestore.collection("Profiles").document(user.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         convertDocumentSnapshotToUser(documentSnapshot, user);
-
-                        /* Temporary */
-                        user.setName(mAuth.getCurrentUser().getDisplayName());
-                        user.setEmail(mAuth.getCurrentUser().getEmail());
 
                         onCompleteCallback.update(true, "Success");
                     }
@@ -67,8 +65,14 @@ public class UserInformationHandler {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
+
                         List<Map<String, Object>> docConnections = (List<Map<String, Object>>)
                                 documentSnapshot.get(UserField.CONNECTIONS.toString());
+                        if (null == docConnections) {
+                            onCompleteCallback.update(true, "no connections");
+                            return;
+                        }
+
                         List<ConnectionItem> connections = new ArrayList<>();
                         for (Map<String, Object> connection : docConnections) {
                             connections.add(new ConnectionItem((String) connection.get("uid"),
@@ -104,7 +108,7 @@ public class UserInformationHandler {
                         @Override
                         public void update(boolean success, String message) {
                             if (success) {
-                                otherUser.addConnection(uidToAdd);
+                                otherUser.addConnection(new OtherUser(uidToAdd).toConnectionItem());
                                 uploadUserInformationToFirestore(otherUser, new OnCompleteCallback() {
                                     @Override
                                     public void update(boolean success, String message) {
@@ -154,8 +158,8 @@ public class UserInformationHandler {
                                 messages.get(messages.size() - 1);
                         messageContainer.setMessage((String) lastMessage.get("message"));
                         messageContainer.setTime((Long) lastMessage.get("time"));
-                        onCompleteCallback.update(true, "success");
                     }
+                    onCompleteCallback.update(true, "success");
                 } else {
                     onCompleteCallback.update(true, "no chat");
                 }
@@ -174,21 +178,30 @@ public class UserInformationHandler {
      * @param user Current user to set fields of
      */
     private static void convertDocumentSnapshotToUser(DocumentSnapshot documentSnapshot, User user) {
-        user.setName((String) documentSnapshot.get(UserField.NAME.toString()));
         user.setNickname((String) documentSnapshot.get(UserField.NICKNAME.toString()));
-        user.setEmail((String) documentSnapshot.get(UserField.EMAIL.toString()));
         Timestamp timestamp = (Timestamp) documentSnapshot.get(UserField.BIRTHDAY.toString());
         user.setBirthday(timestamp == null ? null : timestamp.toDate());
         user.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
 
-        Map<String, Double> location = (Map<String, Double>) documentSnapshot.get(UserField.LOCATION.toString());
-        List<String> preferences = (List<String>) documentSnapshot.get(UserField.PREFERENCES.toString());
-        List<String> hobbies = (List<String>) documentSnapshot.get(UserField.HOBBIES.toString());
-        List<String> placesLived = (List<String>) documentSnapshot.get(UserField.PLACES_LIVED.toString());
-        List<String> placesStudied = (List<String>) documentSnapshot.get(UserField.PLACES_STUDIED.toString());
-        List<String> personalities = (List<String>) documentSnapshot.get(UserField.PERSONALITIES.toString());
-        List<String> truths = (List<String>) documentSnapshot.get(UserField.TRUTHS.toString());
-        List<String> lies = (List<String>) documentSnapshot.get(UserField.LIES.toString());
+        user.setName(mAuth.getCurrentUser().getDisplayName());
+        user.setEmail(mAuth.getCurrentUser().getEmail());
+
+        Map<String, Double> location = (Map<String, Double>) documentSnapshot.get(
+                UserField.LOCATION.toString());
+        List<String> preferences = (List<String>) documentSnapshot.get(
+                UserField.PREFERENCES.toString());
+        List<String> hobbies = (List<String>) documentSnapshot.get(
+                UserField.HOBBIES.toString());
+        List<String> placesLived = (List<String>) documentSnapshot.get(
+                UserField.PLACES_LIVED.toString());
+        List<String> placesStudied = (List<String>) documentSnapshot.get(
+                UserField.PLACES_STUDIED.toString());
+        List<String> personalities = (List<String>) documentSnapshot.get(
+                UserField.PERSONALITIES.toString());
+        List<String> truths = (List<String>) documentSnapshot.get(
+                UserField.TRUTHS.toString());
+        List<String> lies = (List<String>) documentSnapshot.get(
+                UserField.LIES.toString());
 
         if (null != location) {
             if (null != location.get("Latitude") && null != location.get("Longitude")) {
@@ -228,8 +241,8 @@ public class UserInformationHandler {
 
     /**
      * Uploads the data associated with current user to the firestore
-     * @param user The user whose information is being uploaded to the firestore
-     * @param onCompleteCallback Notifies the calling class that the task has been executed
+     * @param user the user whose information is being uploaded to the firestore
+     * @param onCompleteCallback notifies the calling class that the task has been executed
      */
     public static void uploadUserInformationToFirestore(final User user, final OnCompleteCallback
             onCompleteCallback) {
@@ -274,6 +287,31 @@ public class UserInformationHandler {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         onCompleteCallback.update(false, e.getMessage());
+                    }
+                });
+    }
+
+    public static void downloadOtherUsers(final List<CurrentUser> destination, final
+    OnCompleteCallback onCompleteCallback) {
+        mFirestore.collection("Profiles").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot snapshot: queryDocumentSnapshots.getDocuments()) {
+                            if (snapshot.getId().equals(mAuth.getCurrentUser().getUid())) {
+                                continue;
+                            }
+                            CurrentUser user = new CurrentUser(snapshot.getId());
+                            convertDocumentSnapshotToUser(snapshot, user);
+                            destination.add(user);
+                        }
+                        onCompleteCallback.update(true, "success");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        onCompleteCallback.update(false, "failed to download " +
+                                "all user data");
                     }
                 });
     }

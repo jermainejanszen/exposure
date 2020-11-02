@@ -35,14 +35,4 @@ public class MessageListItem {
     public String getSender() {
         return sender;
     }
-
-    //TODO: do we still need this?
-
-    /**
-     * Returns the time the message was sent
-     * @return the time the message was sent
-     */
-    public Long getTime() {
-        return time;
-    }
 }

@@ -27,22 +27,26 @@ public class CurrentUser extends User {
         return connections;
     }
 
-    /**
-     * Sets the connections for the current user
-     * @param connections the connections to set for the current user
-     */
+    //TODO
+    public ConnectionItem getConnection(String uid) {
+        for (ConnectionItem connection : connections) {
+            if (0 == connection.getUid().compareTo(uid)) {
+                return connection;
+            }
+        }
+        return null;
+    }
+
     public void setConnections(List<ConnectionItem> connections) {
         this.connections = connections;
     }
 
-    /**
-     * Adds a connection to the list of the current user's current connections
-     * @param uid the user id of the new connection
-     */
-    public void addConnection(String uid) {
-        if (!isConnected(uid)) {
-            this.connections.add(new ConnectionItem(uid, new ArrayList<String>()));
+    public void addConnection(ConnectionItem connectionItem) {
+        ConnectionItem connection = getConnection(connectionItem.getUid());
+        if (null != connection) {
+            connections.remove(connection);
         }
+        this.connections.add(connectionItem);
     }
 
     /**
@@ -51,12 +55,7 @@ public class CurrentUser extends User {
      * @return true if already connected, else false
      */
     public boolean isConnected(String otherUid) {
-        for (ConnectionItem connection : this.connections) {
-            if (connection.getUid().equals(otherUid)) {
-                return true;
-            }
-        }
-        return false;
+        return null != getConnection(otherUid);
     }
 
 }

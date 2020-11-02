@@ -68,6 +68,7 @@ public class MapListItem {
         final int imageSize = 1024 * 1024;
         final byte[] bytes = new byte[imageSize];
 
+        /* download other user profile photo from firebase */
         FirebaseFirestore.getInstance().collection("Profiles").document(uid).get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override

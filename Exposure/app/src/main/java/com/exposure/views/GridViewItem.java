@@ -36,7 +36,7 @@ public class GridViewItem extends androidx.appcompat.widget.AppCompatImageView {
     }
 
     /**
-     * TODO
+     * TODO: Jermaine pls check/fix
      * Ensures the height is always equivalent to the width of the grid view item
      * @param widthMeasureSpec width to set the grid view item
      * @param heightMeasureSpec height to set the grid view item

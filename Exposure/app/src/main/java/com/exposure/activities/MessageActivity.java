@@ -81,8 +81,11 @@ public class MessageActivity extends Activity {
 
         CircleImageView profileImage = findViewById(R.id.message_user_image);
         byte[] byteArray = getIntent().getByteArrayExtra("ProfileImage");
-        profileImage.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0,
-                byteArray.length));
+
+        if (null != byteArray) {
+            profileImage.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0,
+                    byteArray.length));
+        }
 
         TextView userName = findViewById(R.id.message_user_name);
         userName.setText(getIntent().getStringExtra("Name"));
@@ -157,6 +160,7 @@ public class MessageActivity extends Activity {
                                 }
                                 messagesAdapter.notifyDataSetChanged();
                                 messageRecyclerView.scrollToPosition(messages.size() - 1);
+                                ChatsFragment.syncChatsAdapter();
                             } else {
                                 Log.d("MessageListener", "Data = null");
                             }

@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class OtherUser extends User {
 
-    private final List<String> exposedInfo = new ArrayList<>();
+    private List<String> exposedInfo;
 
     /**
      * Constructor for the other user
@@ -16,8 +16,16 @@ public class OtherUser extends User {
      */
     public OtherUser(String uid) {
         super(uid);
+        exposedInfo = new ArrayList<>();
+        exposedInfo.add(UserField.NICKNAME.toString());
+        exposedInfo.add(UserField.BIRTHDAY.toString());
+        exposedInfo.add(UserField.PREFERENCES.toString());
+        exposedInfo.add(UserField.PROFILE_IMAGE.toString());
+    }
 
-        // TODO: Load exposed info from Firebase
+    public OtherUser(ConnectionItem connectionItem) {
+        super(connectionItem.getUid());
+        this.exposedInfo = connectionItem.getExposedInfo();
     }
 
     /**
@@ -37,15 +45,6 @@ public class OtherUser extends User {
         if(!checkDetailExposed(field)) {
             this.exposedInfo.add(field.toString());
         }
-        return this.toConnectionItem();
-    }
-
-    /**
-     * Hides the given field.
-     * @param field Field to hide.
-     */
-    public ConnectionItem hideDetail(UserField field) {
-        this.exposedInfo.remove(field.toString());
         return this.toConnectionItem();
     }
 

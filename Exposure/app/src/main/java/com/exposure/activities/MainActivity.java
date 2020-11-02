@@ -60,7 +60,10 @@ public class MainActivity extends AppCompatActivity {
         if (null == FirebaseAuth.getInstance().getCurrentUser()) {
             startActivity(new Intent(this, SignUpActivity.class));
             finish();
+            return;
         }
+
+        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
@@ -68,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setSelectedItemId(R.id.fragment_profile);
 
-        currentUser = new CurrentUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
         bitmaps = new HashMap<>();
         imagePaths = new ArrayList<>();
 
+        /* download user information from firebase firestore*/
         UserInformationHandler.downloadUserInformation(currentUser,
                 new OnCompleteCallback() {
                     @Override
@@ -131,6 +134,20 @@ public class MainActivity extends AppCompatActivity {
         return bitmaps;
     }
 
+
+    /**
+     * TODO
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (null == FirebaseAuth.getInstance().getCurrentUser()) {
+            startActivity(new Intent(this, LoginActivity.class));
+            chatsFragment.clearChats();
+            finish();
+        }
+    }
+
     /**
      * Sets up the maps, chats and profile fragments of the application and initiates the navigation
      * view listener
@@ -143,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         /* Set profile fragment as the default fragment */
         setFragment(profileFragment);
 
+        /* Set on click listeners for navigation bar */
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

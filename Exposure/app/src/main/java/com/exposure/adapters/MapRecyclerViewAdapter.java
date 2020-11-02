@@ -74,7 +74,9 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
         return this.data;
     }
 
-    //TODO
+    /**
+     * Synchronise all MapListItems with the firebase firestore
+     */
     public void syncData() {
         for (MapListItem item : data) {
             item.loadFields();
@@ -92,10 +94,18 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
             name = itemView.findViewById(R.id.map_name);
         }
 
+        /**
+         * Gets the circle profile image of the other user
+         * @return The circle profile image of the other user
+         */
         public CircleImageView getProfileImage() {
             return profileImage;
         }
 
+        /**
+         * Gets the name of the other user
+         * @return the name of the other user
+         */
         public TextView getName() {
             return name;
         }

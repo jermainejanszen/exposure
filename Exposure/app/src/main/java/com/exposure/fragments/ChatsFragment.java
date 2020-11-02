@@ -73,8 +73,6 @@ public class ChatsFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         chatsRecyclerView.setVisibility(View.INVISIBLE);
 
-        chats = new ArrayList<>();
-
         OnChatItemPressedCallback pressedCallback = new OnChatItemPressedCallback() {
             @Override
             public void onPress(String uid, String name, Bitmap profileImage) {
@@ -104,19 +102,20 @@ public class ChatsFragment extends Fragment {
                             return (int) (o2.getTime() - o1.getTime());
                         }
                     });
-                    chatsAdapter.notifyDataSetChanged();
                 }
+                chatsAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.INVISIBLE);
                 chatsRecyclerView.setVisibility(View.VISIBLE);
             }
         };
 
         if (null == chatsAdapter) {
+            chats = new ArrayList<>();
             chatsAdapter = new ChatsRecyclerViewAdapter(chats, pressedCallback,
                                 intermediateCallback, finishedCallback);
         } else {
             chats = chatsAdapter.getData();
-            chatsAdapter.syncData();
+            finishedCallback.update(true, "");
         }
 
         chatsRecyclerView.setAdapter(chatsAdapter);
@@ -145,22 +144,25 @@ public class ChatsFragment extends Fragment {
      * @param profileImage profile image of the other user
      */
     private void onChatItemPressed(String uid, String name, Bitmap profileImage) {
-        Intent intent = new Intent(getContext(), MessageActivity.class);
+        Intent intent = new Intent(getActivity(), MessageActivity.class);
         intent.putExtra("UID", uid);
         intent.putExtra("Name", name);
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        profileImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        intent.putExtra("ProfileImage", byteArray);
+        if (null != profileImage) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            profileImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            intent.putExtra("ProfileImage", byteArray);
+        }
 
-        getContext().startActivity(intent);
+        startActivity(intent);
     }
 
     /**
-     * TODO
-     * @param uid
-     * @return
+     * Determine whether there is an existing chat between the current user and the user with the
+     * given user id
+     * @param uid the user id of the other user
+     * @return true if the chat exists, else false
      */
     private boolean containsUid(String uid) {
         for (ChatListItem chat : chats) {
@@ -172,9 +174,16 @@ public class ChatsFragment extends Fragment {
     }
 
     /**
-     * TODO
+     * Synchronise all chats in the adapter with the firebase firestore
      */
     public static void syncChatsAdapter() {
         chatsAdapter.syncData();
+    }
+
+    /**
+     * Clear all chats in the adapter
+     */
+    public void clearChats() {
+        chatsAdapter = null;
     }
 }

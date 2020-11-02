@@ -18,7 +18,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * TODO Chat recycler view adapter
+ * Adapter for the recycler view used for the chat list items
  */
 public class ChatsRecyclerViewAdapter extends
         RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
@@ -28,8 +28,8 @@ public class ChatsRecyclerViewAdapter extends
 
     /**
      * Constructor for chats recycler view adapter object
-     * @param data
-     * @param callback
+     * @param data the chat list items to be used in the chat recycler view
+     * @param callback TODO these
      * @param intermediateCallback
      * @param finishedCallback
      */
@@ -52,7 +52,8 @@ public class ChatsRecyclerViewAdapter extends
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chats_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chats_list_item,
+                parent, false);
         return new ViewHolder(view);
     }
 
@@ -98,8 +99,14 @@ public class ChatsRecyclerViewAdapter extends
         return this.data;
     }
 
-    //TODO
+    /**
+     * Sync fields with the firebase firestore
+     */
     public void syncData() {
+        if (0 == data.size()) {
+            finishedCallback.update(true, "Success");
+        }
+
         for (int i = 0; i < data.size(); i++) {
             ChatListItem item = data.get(i);
             if (i == data.size() - 1) {
@@ -149,14 +156,6 @@ public class ChatsRecyclerViewAdapter extends
          */
         public TextView getLastMessage() {
             return lastMessage;
-        }
-
-        /**
-         * TODO
-         * @return
-         */
-        public ImageButton getOpenButton() {
-            return openButton;
         }
 
         /**

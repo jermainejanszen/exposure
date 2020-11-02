@@ -102,12 +102,14 @@ public class ChatListItem {
         final int imageSize = 1024 * 1024;
         final byte[] bytes = new byte[imageSize];
 
+        /* load in nickname from firebase firestore */
         FirebaseFirestore.getInstance().collection("Profiles").document(uid).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         name = (String) documentSnapshot.get(UserField.NICKNAME.toString());
                         final LastMessageContainer container = new LastMessageContainer();
+                        /* load in last chat message and time from firebase firestore */
                         UserInformationHandler.loadLastChatMessageAndTime
                                 (MainActivity.getCurrentUser().getUid(), uid, container,
                                         new OnCompleteCallback() {
@@ -122,13 +124,14 @@ public class ChatListItem {
                                         Date latestChatDate = new Date(time);
 
                                         if (DateUtils.isToday(time)) {
-                                            date = new SimpleDateFormat("hh:mm aa",
+                                            date = new SimpleDateFormat("h:mm aa",
                                                     Locale.ENGLISH).format(latestChatDate);
                                         } else {
                                             date = new SimpleDateFormat("dd/MM/yy",
                                                     Locale.ENGLISH).format(latestChatDate);
                                         }
                                     }
+                                    /* load in profile photo from firebase firestore */
                                     UserMediaHandler.downloadProfilePhotoFromFirebase(uid, bytes,
                                             imageSize, new OnCompleteCallback() {
                                         @Override
@@ -140,6 +143,7 @@ public class ChatListItem {
                                         }
                                     });
                                 }
+                                onCompleteCallback.update(false, "failed");
                             }
                         });
                     }

@@ -5,6 +5,8 @@ package com.exposure.user;
  */
 public enum UserField {
     UID("uid"),
+    PROFILE_IMAGE("profileImage"),
+    GALLERY("gallery"),
     NAME("name"),
     NICKNAME("nickname"),
     BIRTHDAY("birthday"),
