@@ -49,6 +49,8 @@ public class ProfileFragment extends Fragment {
     private byte[] profileByteArray;
     private ProgressBar progressBar;
 
+    private static Bitmap profileImageBitmap;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -165,18 +167,22 @@ public class ProfileFragment extends Fragment {
             preferencesText.setText(preferencesString);
         }
 
-        profileByteArray = new byte[1024*1024];
-
-        UserMediaHandler.downloadProfilePhotoFromFirebase(currentUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success){
-                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
-                } else {
-                    Toast.makeText(getContext(), "Failed to download profile image", Toast.LENGTH_SHORT).show();
+        if (null == profileImageBitmap) {
+            profileByteArray = new byte[1024 * 1024];
+            UserMediaHandler.downloadProfilePhotoFromFirebase(currentUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+                @Override
+                public void update(boolean success, String message) {
+                    if (success) {
+                        profileImageBitmap = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
+                        profileImage.setImageBitmap(profileImageBitmap);
+                    } else {
+                        Toast.makeText(getContext(), "Failed to download profile image", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            profileImage.setImageBitmap(profileImageBitmap);
+        }
     }
 
     /* Will need to refactor this */
@@ -188,5 +194,13 @@ public class ProfileFragment extends Fragment {
 
     public void setProgressBarVisibility(int visibility) {
         progressBar.setVisibility(visibility);
+    }
+
+    public static Bitmap getProfileImageBitmap() {
+        return profileImageBitmap;
+    }
+
+    public static void setProfileImageBitmap(Bitmap bitmap) {
+        profileImageBitmap = bitmap;
     }
 }

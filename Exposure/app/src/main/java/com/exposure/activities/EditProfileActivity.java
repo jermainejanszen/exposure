@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
+import com.exposure.fragments.ProfileFragment;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.handlers.UserMediaHandler;
@@ -62,7 +63,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private CurrentUser currentUser;
     private Bitmap profileBitmap;
-    private byte[] profileByteArray;
     private LocationManager lm;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
@@ -82,19 +82,12 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
         initialiseFields();
-        profileByteArray = new byte[1024 * 1024];
-        profileImage = findViewById(R.id.profile_image);
-        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        UserMediaHandler.downloadProfilePhotoFromFirebase(currentUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    profileBitmap = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
-                    profileImage.setImageBitmap(profileBitmap);
-                }
-            }
-        });
+        profileBitmap = ProfileFragment.getProfileImageBitmap();
+        profileImage = findViewById(R.id.profile_image);
+        profileImage.setImageBitmap(profileBitmap);
+
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
     }
 
@@ -107,10 +100,12 @@ public class EditProfileActivity extends AppCompatActivity {
                 String source = data.getStringExtra("Source");
                 if ("Image Capture".equals(source)) {
                     profileBitmap = (Bitmap) data.getExtras().get("data");
+                    ProfileFragment.setProfileImageBitmap(profileBitmap);
                     profileImage.setImageBitmap(profileBitmap);
                 } else if ("Library".equals(source)) {
                     try {
                         profileBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                        ProfileFragment.setProfileImageBitmap(profileBitmap);
                         profileImage.setImageBitmap(profileBitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -474,6 +469,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void onLogoutPress(View view) {
         FirebaseAuth.getInstance().signOut();
+        ProfileFragment.setProfileImageBitmap(null);
         finish();
     }
 }
