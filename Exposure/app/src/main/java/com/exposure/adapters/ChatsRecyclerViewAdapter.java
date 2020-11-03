@@ -76,6 +76,7 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
         for (int i = 0; i < data.size(); i++) {
             ChatListItem item = data.get(i);
             if (i == data.size() - 1) {
+                Log.d("FINISHED CALLBACK", "INSIDE ADAPTER");
                 item.loadFields(finishedCallback);
             } else {
                 item.loadFields(intermediateCallback);

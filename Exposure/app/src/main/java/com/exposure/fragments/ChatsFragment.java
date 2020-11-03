@@ -79,6 +79,7 @@ public class ChatsFragment extends Fragment {
         final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
+                chatsAdapter.filterChats(chats);
                 chatsAdapter.notifyDataSetChanged();
             }
         };
@@ -98,7 +99,26 @@ public class ChatsFragment extends Fragment {
                             return (int) (o2.getTime() - o1.getTime());
                         }
                     });
+
+                    Log.d("ADD TEXT CHANGED", "ADDED TEXT CHANGE LISTENER");
+                    searchBar.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            filterChats(s.toString());
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                        }
+                    });
                 }
+                filterChats(searchBar.getText().toString());
                 chatsAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.INVISIBLE);
                 chatsRecyclerView.setVisibility(View.VISIBLE);
@@ -109,9 +129,6 @@ public class ChatsFragment extends Fragment {
             chats = new ArrayList<>();
             chatsAdapter = new ChatsRecyclerViewAdapter(chats, pressedCallback,
                                 intermediateCallback, finishedCallback);
-        } else {
-            chats = chatsAdapter.getData();
-            finishedCallback.update(true, "");
         }
 
         chatsRecyclerView.setAdapter(chatsAdapter);
@@ -128,32 +145,14 @@ public class ChatsFragment extends Fragment {
             }
         });
 
-        if (null == searchBar) {
-            searchBar = view.findViewById(R.id.chat_search_bar_text);
-
-            searchBar.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    Log.d("Detected event", s.toString() + "!");
-                    filterChats(s.toString());
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-        }
+        searchBar = view.findViewById(R.id.chat_search_bar_text);
 
         return view;
     }
 
     private void filterChats(String text) {
+
+        Log.d("filtering", "data");
         text = text.toLowerCase();
         List<ChatListItem> filteredList = new ArrayList<>();
 
