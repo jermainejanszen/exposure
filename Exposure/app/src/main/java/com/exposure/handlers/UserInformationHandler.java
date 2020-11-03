@@ -154,7 +154,7 @@ public class UserInformationHandler {
      * @param documentSnapshot Document snapshot containing user information from firestore
      * @param user Current user to set fields of
      */
-    private static void convertDocumentSnapshotToUser(DocumentSnapshot documentSnapshot, User user) {
+    public static void convertDocumentSnapshotToUser(DocumentSnapshot documentSnapshot, User user) {
         user.setNickname((String) documentSnapshot.get(UserField.NICKNAME.toString()));
         Timestamp timestamp = (Timestamp) documentSnapshot.get(UserField.BIRTHDAY.toString());
         user.setBirthday(timestamp == null ? null : timestamp.toDate());
@@ -286,6 +286,7 @@ public class UserInformationHandler {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        destination.clear();
                         for (DocumentSnapshot snapshot: queryDocumentSnapshots.getDocuments()) {
                             if (snapshot.getId().equals(mAuth.getCurrentUser().getUid())) {
                                 continue;

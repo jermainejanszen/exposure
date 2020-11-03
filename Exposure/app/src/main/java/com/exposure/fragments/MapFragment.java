@@ -25,13 +25,20 @@ import com.exposure.callback.OnMapItemPressedCallback;
 import com.exposure.constants.RequestCodes;
 import com.exposure.handlers.DistanceHandler;
 import com.exposure.handlers.UserInformationHandler;
+import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
+import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -54,6 +61,9 @@ public class MapFragment extends Fragment {
     private View view;
     private RelativeLayout loadingCover;
 
+    private OnCompleteCallback finishedCallback;
+    private OnCompleteCallback intermediateCallback;
+
     public MapFragment() {
         // Required empty public constructor
     }
@@ -61,6 +71,39 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (null == FirebaseAuth.getInstance().getUid()) {
+            return;
+        }
+
+        final DocumentReference userProfileRef = FirebaseFirestore.getInstance().collection("Profiles").document(FirebaseAuth.getInstance().getUid());
+        userProfileRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (null != error) {
+                    return;
+                }
+
+                if (null != value && value.exists()) {
+                    final CurrentUser currentUser = new CurrentUser(FirebaseAuth.getInstance().getUid());
+                    // TODO: update main activity static current user with this new one
+                    UserInformationHandler.convertDocumentSnapshotToUser(value, currentUser);
+                    UserInformationHandler.downloadCurrentUserConnections(currentUser, new OnCompleteCallback() {
+                        @Override
+                        public void update(boolean success, String message) {
+                            for (int i = allUsers.size() - 1; i >= 0; i--) {
+                                CurrentUser user = allUsers.get(i);
+                                if (currentUser.isConnected(user.getUid())) {
+                                    allUsers.remove(i);
+                                    removeConnectedUserFromRegions(user.getUid());
+                                }
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
     }
 
     @Override
@@ -70,20 +113,16 @@ public class MapFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_map, container, false);
 
         loadingCover = view.findViewById(R.id.map_loading_cover);
-        loadingCover.setVisibility(View.VISIBLE);
 
         assert null != getActivity();
 
-        allUsers = new ArrayList<>();
-
-        UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    setup(view);
-                }
-            }
-        });
+        if (null == allUsers) {
+            loadingCover.setVisibility(View.VISIBLE);
+            allUsers = new ArrayList<>();
+            updateMapUsers();
+        } else {
+            setup(view);
+        }
 
         return view;
     }
@@ -92,18 +131,29 @@ public class MapFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (RequestCodes.VIEW_PROFILE_REQUEST == requestCode) {
+        /*if (RequestCodes.VIEW_PROFILE_REQUEST == requestCode) {
             loadingCover.setVisibility(View.VISIBLE);
-            allUsers.clear();
             UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
                 @Override
                 public void update(boolean success, String message) {
                     if (success) {
-                        setup(view);
+                        setup(view, true);
                     }
                 }
             });
-        }
+        }*/
+    }
+
+    private void updateMapUsers() {
+        UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    setup(view);
+                    mapUsersToRegions();
+                }
+            }
+        });
     }
 
     private void setup(View view) {
@@ -118,64 +168,52 @@ public class MapFragment extends Fragment {
         if (null == fifteenKM) {
             fifteenKM = new ArrayList<>();
         } else {
-            fifteenKM.clear();
+            // fifteenKM.clear();
         }
 
         if (null == nineKM) {
             nineKM = new ArrayList<>();
         } else {
-            nineKM.clear();
+            // nineKM.clear();
         }
 
         if (null == sixKM) {
             sixKM = new ArrayList<>();
         } else {
-            sixKM.clear();
+            // sixKM.clear();
         }
 
         if (null == threeKM) {
             threeKM = new ArrayList<>();
         } else {
-            threeKM.clear();
+            // threeKM.clear();
         }
 
         if (null == zeroKM) {
             zeroKM = new ArrayList<>();
         } else {
-            zeroKM.clear();
+            // zeroKM.clear();
         }
 
         if (null == fifteenMapAdapter) {
             fifteenMapAdapter = new MapRecyclerViewAdapter(fifteenKM, callback);
-        } else {
-            fifteenMapAdapter.syncData();
         }
 
         if (null == nineMapAdapter) {
             nineMapAdapter = new MapRecyclerViewAdapter(nineKM, callback);
-        } else {
-            nineMapAdapter.syncData();
         }
 
         if (null == sixMapAdapter) {
             sixMapAdapter = new MapRecyclerViewAdapter(sixKM, callback);
-        } else {
-            sixMapAdapter.syncData();
         }
 
         if (null == threeMapAdapter) {
             threeMapAdapter = new MapRecyclerViewAdapter(threeKM, callback);
-        } else {
-            threeMapAdapter.syncData();
         }
 
         if (null == zeroMapAdapter) {
             zeroMapAdapter = new MapRecyclerViewAdapter(zeroKM, callback);
-        } else {
-            zeroMapAdapter.syncData();
         }
-
-        mapUsersToRegions();
 
         RecyclerView fifteenMapRecyclerView = view.findViewById(R.id.map_15k_recycler);
         RecyclerView nineMapRecyclerView = view.findViewById(R.id.map_9k_recycler);
@@ -188,16 +226,8 @@ public class MapFragment extends Fragment {
         sixMapRecyclerView.setAdapter(sixMapAdapter);
         threeMapRecyclerView.setAdapter(threeMapAdapter);
         zeroMapRecyclerView.setAdapter(zeroMapAdapter);
-    }
 
-    private void onMapItemPressed(String uid) {
-        Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
-        intent.putExtra("Uid", uid);
-        startActivityForResult(intent, RequestCodes.VIEW_PROFILE_REQUEST);
-    }
-
-    private void mapUsersToRegions() {
-        final OnCompleteCallback finishedCallback = new OnCompleteCallback() {
+        finishedCallback = new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success) {
@@ -211,7 +241,7 @@ public class MapFragment extends Fragment {
             }
         };
 
-        final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
+        intermediateCallback = new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success) {
@@ -223,52 +253,89 @@ public class MapFragment extends Fragment {
                 }
             }
         };
+    }
 
-        //TODO: Perhaps be better to pass in current user as a serializable
+    private void mapUsersToRegions() {
+
         final CurrentUser currentUser = MainActivity.getCurrentUser();
 
-        UserInformationHandler.downloadCurrentUserConnections(currentUser, new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    boolean newConnections = false;
-
-                    /* Remove connections */
-                    for (int i = allUsers.size() - 1; i >= 0; i--) {
-                        CurrentUser otherUser = allUsers.get(i);
-                        if (currentUser.isConnected(otherUser.getUid())) {
-                            allUsers.remove(i);
-                        }
-                    }
-
-                    for (int i = 0; i < allUsers.size(); i++) {
-                        CurrentUser otherUser = allUsers.get(i);
-
-                        OnCompleteCallback notifyCallback =
-                                (i == allUsers.size() - 1) ? finishedCallback : intermediateCallback;
-
-                        newConnections = true;
-
-                        int distance = DistanceHandler.distanceInKM(currentUser, otherUser);
-                        if (distance <= 2) {
-                            zeroKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        } else if (distance <= 5) {
-                            threeKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        } else if (distance <= 8) {
-                            sixKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        } else if (distance <= 15) {
-                            nineKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        } else {
-                            fifteenKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        }
-                    }
-                    if (!newConnections) {
-                        finishedCallback.update(true, "finished");
-                    }
-                } else {
-                    finishedCallback.update(false, "failed to download user data");
-                }
+        for (int i = allUsers.size() - 1; i >= 0; i--) {
+            CurrentUser user = allUsers.get(i);
+            if (currentUser.isConnected(user.getUid())) {
+                allUsers.remove(i);
             }
-        });
+        }
+
+        for (int i = 0; i < allUsers.size(); i++) {
+            CurrentUser otherUser = allUsers.get(i);
+
+            OnCompleteCallback notifyCallback =
+                    (i == allUsers.size() - 1) ? finishedCallback : intermediateCallback;
+
+            int distance = DistanceHandler.distanceInKM(currentUser, otherUser);
+            if (distance <= 2) {
+                zeroKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+            } else if (distance <= 5) {
+                threeKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+            } else if (distance <= 8) {
+                sixKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+            } else if (distance <= 15) {
+                nineKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+            } else {
+                fifteenKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+            }
+        }
+    }
+
+    private void removeConnectedUserFromRegions(String uid) {
+        Log.d("SDAASDASD", "CALLED REMOVED CONNECT USERS FROM REGIIONS");
+
+        for (MapListItem item : zeroKM) {
+            if (item.getUid().equals(uid)) {
+                zeroKM.remove(item);
+                zeroMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+        for (MapListItem item : threeKM) {
+            if (item.getUid().equals(uid)) {
+                threeKM.remove(item);
+                threeMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+        for (MapListItem item : sixKM) {
+            if (item.getUid().equals(uid)) {
+                Log.d("SDAASDASD", "FOUND USER TO REMOVESSSSSSSSSSSSSSSS");
+                sixKM.remove(item);
+                sixMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+        for (MapListItem item : nineKM) {
+            if (item.getUid().equals(uid)) {
+                nineKM.remove(item);
+                nineMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+        for (MapListItem item : fifteenKM) {
+            if (item.getUid().equals(uid)) {
+                fifteenKM.remove(item);
+                fifteenMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+    }
+
+    private void onMapItemPressed(String uid) {
+        Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
+        intent.putExtra("Uid", uid);
+        startActivityForResult(intent, RequestCodes.VIEW_PROFILE_REQUEST);
     }
 }
