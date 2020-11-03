@@ -118,7 +118,7 @@ public class ChatsFragment extends Fragment {
                         }
                     });
                 }
-                filterChats(searchBar.getText().toString());
+                filterChats("");
                 chatsAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.INVISIBLE);
                 chatsRecyclerView.setVisibility(View.VISIBLE);
@@ -146,8 +146,15 @@ public class ChatsFragment extends Fragment {
         });
 
         searchBar = view.findViewById(R.id.chat_search_bar_text);
+        searchBar.setText("");
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        searchBar.setText("");
     }
 
     private void filterChats(String text) {
