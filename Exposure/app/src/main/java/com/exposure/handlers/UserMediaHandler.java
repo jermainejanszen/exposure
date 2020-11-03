@@ -38,6 +38,7 @@ public class UserMediaHandler {
 
         byte[] data = compress(profilePhoto);
 
+
         UploadTask uploadTask = mProfilePics.putBytes(data);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -88,6 +89,8 @@ public class UserMediaHandler {
                         final List<StorageReference> imageRefs = listResult.getItems();
                         final int size = 1024 * 1024;
 
+                        Log.d("SIZE", "" + listResult.getItems().size());
+
                         if (listResult.getItems().size() == 0) {
                             onCompleteCallback.update(true, "finished");
                             return;
@@ -95,7 +98,6 @@ public class UserMediaHandler {
 
                         for (int i = 0; i < listResult.getItems().size(); i++) {
                             final StorageReference imageRef = listResult.getItems().get(i);
-                            final int currentImage = i;
                             imageRef.getBytes(size)
                                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                         @Override
@@ -103,9 +105,14 @@ public class UserMediaHandler {
                                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                             bitmaps.put(imageRef.getName(), bitmap);
                                             imagePaths.add(imageRef.getName());
-                                            if (currentImage == listResult.getItems().size() - 1) {
+                                            if (imagePaths.size() == listResult.getItems().size()) {
                                                 onCompleteCallback.update(true, "finished");
                                             }
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d("FAILED", e.getMessage());
                                         }
                                     });
                         }

@@ -173,7 +173,9 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                         gridView.setAdapter(unexposedGridViewAdapter);
                     } else {
                         gridViewAdapter.notifyDataSetChanged();
+                        Log.d("View other", "FAILURE");
                     }
+                    Log.d("View other", "" + bitmaps.size());
                 }
             });
 
