@@ -100,7 +100,7 @@ public class ChatsFragment extends Fragment {
                         }
                     });
 
-                    Log.d("ADD TEXT CHANGED", "ADDED TEXT CHANGE LISTENER");
+                    Log.d("Finished callback", "Executed");
                     searchBar.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -117,11 +117,12 @@ public class ChatsFragment extends Fragment {
 
                         }
                     });
+
+                    chatsAdapter.filterChats(chats);
+                    chatsAdapter.notifyDataSetChanged();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    chatsRecyclerView.setVisibility(View.VISIBLE);
                 }
-                filterChats("");
-                chatsAdapter.notifyDataSetChanged();
-                progressBar.setVisibility(View.INVISIBLE);
-                chatsRecyclerView.setVisibility(View.VISIBLE);
             }
         };
 
@@ -146,7 +147,6 @@ public class ChatsFragment extends Fragment {
         });
 
         searchBar = view.findViewById(R.id.chat_search_bar_text);
-        searchBar.setText("");
 
         return view;
     }
@@ -158,8 +158,6 @@ public class ChatsFragment extends Fragment {
     }
 
     private void filterChats(String text) {
-
-        Log.d("filtering", "data");
         text = text.toLowerCase();
         List<ChatListItem> filteredList = new ArrayList<>();
 
@@ -188,6 +186,9 @@ public class ChatsFragment extends Fragment {
     }
 
     private boolean containsUid(String uid) {
+        if (null == uid || null == chats) {
+            return false;
+        }
         for (ChatListItem chat : chats) {
             if (0 == chat.getUid().compareTo(uid)) {
                 return true;
