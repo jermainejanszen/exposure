@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -254,7 +255,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
     public void onPlayPressed(View view) {
         Intent gameIntent = new Intent(this, ThreeTruthsOneLieActivity.class);
-        gameIntent.putExtra("current user", currentUser);
         gameIntent.putExtra("other user", otherUser);
         progressCover.setVisibility(View.VISIBLE);
         startActivityForResult(gameIntent, RequestCodes.GAME_RESULT);

@@ -1,10 +1,14 @@
 package com.exposure.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.ResultCodes;
+import com.exposure.handlers.UserMediaHandler;
 import com.exposure.popups.LostGameActivity;
 import com.exposure.popups.WonGameActivity;
 import com.exposure.user.CurrentUser;
@@ -23,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ThreeTruthsOneLieActivity extends AppCompatActivity {
 
@@ -52,6 +59,14 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
         if (null == currentUser) {
             finish();
         }
+
+        final CircleImageView profileImage = findViewById(R.id.game_user_image);
+        TextView profileName = findViewById(R.id.game_user_name);
+        profileName.setText(otherUser.getNickname());
+
+        TextView gameSubtitle = findViewById(R.id.game_subtitle);
+        String subtitle = "Guess which one is the lie to learn a little bit more about " + otherUser.getNickname() + ".";
+        gameSubtitle.setText(subtitle);
 
         truths = otherUser.getTruths();
         lies = otherUser.getLies();
@@ -93,6 +108,15 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
                 }
             });
         }
+
+        final byte[] profileByteArray = new byte[1024*1024];
+        UserMediaHandler.downloadProfilePhotoFromFirebase(otherUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                Bitmap profileBitmap = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
+                profileImage.setImageBitmap(profileBitmap);
+            }
+        });
     }
 
     public void wonGame() {
@@ -103,5 +127,9 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
     public void lostGame() {
         setResult(ResultCodes.LOST_GAME);
         finish();
+    }
+
+    public void onBackPressed(View view) {
+        super.onBackPressed();
     }
 }
