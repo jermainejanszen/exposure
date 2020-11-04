@@ -7,30 +7,33 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.exposure.callback.OnCompleteCallback;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Handles all media related to the users of the application
+ */
 public class UserMediaHandler {
 
     private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private static StorageReference mStorage = FirebaseStorage.getInstance().getReference();
 
-
-    public static void uploadProfilePhotoToFirebase(Bitmap profilePhoto, final OnCompleteCallback onCompleteCallback){
+    /**
+     * Upload user profile photo to firebase
+     * @param profilePhoto the profile photo to be uploaded
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
+    public static void uploadProfilePhotoToFirebase(Bitmap profilePhoto, final OnCompleteCallback
+            onCompleteCallback){
         String path = "Profile Photos/" + FirebaseAuth.getInstance().getUid();
 
         final StorageReference mProfilePics = mStorage.child(path);
@@ -53,7 +56,14 @@ public class UserMediaHandler {
         });
     }
 
-    public static void uploadImageToFirebase(String id, Bitmap image, final OnCompleteCallback onCompleteCallback) {
+    /**
+     * Upload a user's images to firebase
+     * @param id the id of the image
+     * @param image the image to be uploaded
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
+    public static void uploadImageToFirebase(String id, Bitmap image, final OnCompleteCallback
+            onCompleteCallback) {
         String refPath = mAuth.getCurrentUser().getUid() + "/Images/" + id;
 
         final StorageReference imageRef = mStorage.child(refPath);
@@ -74,7 +84,15 @@ public class UserMediaHandler {
         });
     }
 
-    public static void downloadImagesFromFirebase(final String uid, final Map<String, Bitmap> bitmaps, final List<String> imagePaths, final OnCompleteCallback onCompleteCallback) {
+    /**
+     * Download a user's images from firebase
+     * @param uid the users id
+     * @param bitmaps the bitmaps to be added to upon downloading images from firebase
+     * @param imagePaths the image paths to be added to upon downloading images from firebase
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
+    public static void downloadImagesFromFirebase(final String uid, final Map<String, Bitmap>
+            bitmaps, final List<String> imagePaths, final OnCompleteCallback onCompleteCallback) {
         String path = uid + "/Images/";
 
         Log.d("UserMedia", path);
@@ -100,11 +118,13 @@ public class UserMediaHandler {
                                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                         @Override
                                         public void onSuccess(byte[] bytes) {
-                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,
+                                                    0, bytes.length);
                                             bitmaps.put(imageRef.getName(), bitmap);
                                             imagePaths.add(imageRef.getName());
                                             if (currentImage == listResult.getItems().size() - 1) {
-                                                onCompleteCallback.update(true, "finished");
+                                                onCompleteCallback.update(true,
+                                                        "finished");
                                             }
                                         }
                                     });
@@ -118,6 +138,10 @@ public class UserMediaHandler {
                 });
     }
 
+    /**
+     * Deletes an image stored in firebase
+     * @param id the id of the image to delete from firebase
+     */
     public static void deleteImageFromFirebase(String id) {
         String refPath = mAuth.getCurrentUser().getUid() + "/Images/" + id;
 
@@ -138,7 +162,17 @@ public class UserMediaHandler {
                 });
     }
 
-    public static void downloadProfilePhotoFromFirebase(String uid, final byte[] profilePicture, final long photoSize, final OnCompleteCallback onCompleteCallback){
+    /**
+     * Download a user's profile image from firebase
+     * @param uid the user id of the user whose profile image we want to download from firebase
+     * @param profilePicture the profile picture of the user that will be updated upon downloading
+     *                       from firebase
+     * @param photoSize the size of the profile image to be downloaded from firebase
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
+    public static void downloadProfilePhotoFromFirebase(String uid, final byte[] profilePicture,
+                                                        final long photoSize, final
+                                                        OnCompleteCallback onCompleteCallback){
         final StorageReference mProfilePics = mStorage.child("Profile Photos" + "/" + uid);
 
         mProfilePics.getBytes(photoSize).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -156,6 +190,7 @@ public class UserMediaHandler {
         });
     }
 
+    // TODO : Javadocs
     private static byte[] compress(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,12 +24,6 @@ import com.exposure.callback.OnChatItemPressedCallback;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.user.ConnectionItem;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -39,6 +31,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Fragment representing the list of existing chats the user has with their matches
+ */
 public class ChatsFragment extends Fragment {
 
     private List<ChatListItem> chats;
@@ -47,15 +42,29 @@ public class ChatsFragment extends Fragment {
     private RecyclerView chatsRecyclerView;
     private EditText searchBar;
 
+    /**
+     * Empty public constructor for the chats fragment
+     */
     public ChatsFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Call upon creating the chats fragment
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * //TODO: this
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -103,12 +112,14 @@ public class ChatsFragment extends Fragment {
                     Log.d("Finished callback", "Executed");
                     searchBar.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        public void beforeTextChanged(CharSequence s, int start, int count,
+                                                      int after) {
 
                         }
 
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        public void onTextChanged(CharSequence s, int start, int before,
+                                                  int count) {
                             filterChats(s.toString());
                         }
 
@@ -134,7 +145,8 @@ public class ChatsFragment extends Fragment {
 
         chatsRecyclerView.setAdapter(chatsAdapter);
 
-        UserInformationHandler.downloadCurrentUserConnections(MainActivity.getCurrentUser(), new OnCompleteCallback() {
+        UserInformationHandler.downloadCurrentUserConnections(MainActivity.getCurrentUser(),
+                new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 for (ConnectionItem connection : MainActivity.getCurrentUser().getConnections()) {
@@ -157,6 +169,7 @@ public class ChatsFragment extends Fragment {
         searchBar.setText("");
     }
 
+    // TODO : Javadocs
     private void filterChats(String text) {
         text = text.toLowerCase();
         List<ChatListItem> filteredList = new ArrayList<>();
@@ -169,6 +182,14 @@ public class ChatsFragment extends Fragment {
 
         chatsAdapter.filterChats(filteredList);
     }
+
+    /**
+     * Upon clicking on a chat with another user in the chat list, the user is taken to a new
+     * activity where they will be able to converse with the other user
+     * @param uid uid of the other user
+     * @param name name of the other user
+     * @param profileImage profile image of the other user
+     */
 
     private void onChatItemPressed(String uid, String name, Bitmap profileImage) {
         Intent intent = new Intent(getActivity(), MessageActivity.class);
@@ -185,6 +206,12 @@ public class ChatsFragment extends Fragment {
         startActivity(intent);
     }
 
+    /**
+     * Determine whether there is an existing chat between the current user and the user with the
+     * given user id
+     * @param uid the user id of the other user
+     * @return true if the chat exists, else false
+     */
     private boolean containsUid(String uid) {
         if (null == uid || null == chats) {
             return false;
@@ -197,10 +224,16 @@ public class ChatsFragment extends Fragment {
         return false;
     }
 
+    /**
+     * Synchronise all chats in the adapter with the firebase firestore
+     */
     public static void syncChatsAdapter() {
         chatsAdapter.syncData();
     }
 
+    /**
+     * Clear all chats in the adapter
+     */
     public void clearChats() {
         chatsAdapter = null;
     }

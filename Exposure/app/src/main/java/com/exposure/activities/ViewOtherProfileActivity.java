@@ -23,13 +23,13 @@ import com.exposure.adapters.ChipsRecyclerViewAdapter;
 import com.exposure.constants.ResultCodes;
 import com.exposure.popups.LostGameActivity;
 import com.exposure.popups.WonGameActivity;
-import com.exposure.user.ConnectionItem;
 import com.exposure.adapters.GridViewAdapter;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.RequestCodes;
 import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.handlers.UserMediaHandler;
+import com.exposure.user.ConnectionItem;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
 import com.exposure.user.UserField;
@@ -42,11 +42,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Activity allowing current user to view another user's profile
+ */
 public class ViewOtherProfileActivity extends AppCompatActivity {
 
-    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
-    private ChipsRecyclerViewAdapter unknownStudyLocationsAdapter, unknownAreasLivedInAdapter, unknownHobbiesAdapter, unknownPersonalitiesAdapter;
-    private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView, personalityTypesRecyclerView;
+    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter,
+            personalitiesAdapter;
+    private ChipsRecyclerViewAdapter unknownStudyLocationsAdapter, unknownAreasLivedInAdapter,
+            unknownHobbiesAdapter, unknownPersonalitiesAdapter;
+    private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView,
+            personalityTypesRecyclerView;
+
     private TextView displayNameText, ageText, preferencesText;
     private ImageView profileImage;
     private GridView gridView;
@@ -63,6 +70,11 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     private Button connectButton;
     private Button playButton;
 
+    /**
+     * On creating this activity, the view is set and the profile information about the other user
+     * is downloaded.
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,18 +114,26 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         gridViewAdapter = new GridViewAdapter(getApplicationContext(), bitmaps, imagePaths);
         gridView.setAdapter(gridViewAdapter);
 
+        /* Download user information from firebase firestore */
         UserInformationHandler.downloadUserInformation(otherUser,
                 new OnCompleteCallback() {
                     @Override
                     public void update(boolean success, String message) {
-                        /* Once the user information has downloaded (either success of failure), we can
-                           safely start initializing all of the fields */
+                        /* Once the user information has downloaded (either success of failure),
+                            we can safely start initializing all of the fields */
                         initialiseFields();
                     }
                 });
 
     }
 
+    /**
+     * On returning from the game, this is called to handle the actions required if the participant
+     * either wins or looses the game
+     * @param requestCode the request code signifying what action has occurred
+     * @param resultCode the result code denoting whether the participant won or lost the game
+     * @param data the data returned from the game activity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -131,6 +151,9 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initialise the fields of the other user's profile
+     */
     private void initialiseFields() {
 
         if (currentUser.isConnected(otherUser.getUid())) {
@@ -139,33 +162,39 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
             connectButton.setVisibility(View.VISIBLE);
         }
 
-        studyLocationsAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getPlacesStudied(), false);
+        studyLocationsAdapter = new ChipsRecyclerViewAdapter(this,
+                otherUser.getPlacesStudied(), false);
         unknownStudyLocationsAdapter = new ChipsRecyclerViewAdapter(this,
                 initialiseUnexposedArrayList(otherUser.getPlacesStudied().size()),
                 false);
 
-        areasLivedInAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getPlacesLived(), false);
+        areasLivedInAdapter = new ChipsRecyclerViewAdapter(this,
+                otherUser.getPlacesLived(), false);
         unknownAreasLivedInAdapter = new ChipsRecyclerViewAdapter(this,
                 initialiseUnexposedArrayList(otherUser.getPlacesLived().size()),
                 false);
 
-        hobbiesAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getHobbies(), false);
+        hobbiesAdapter = new ChipsRecyclerViewAdapter(this,
+                otherUser.getHobbies(), false);
         unknownHobbiesAdapter = new ChipsRecyclerViewAdapter(this,
                 initialiseUnexposedArrayList(otherUser.getHobbies().size()),
                 false);
 
-        personalitiesAdapter = new ChipsRecyclerViewAdapter(this, otherUser.getPersonalities(), false);
+        personalitiesAdapter = new ChipsRecyclerViewAdapter(this,
+                otherUser.getPersonalities(), false);
         unknownPersonalitiesAdapter = new ChipsRecyclerViewAdapter(this,
                 initialiseUnexposedArrayList(otherUser.getPersonalities().size()),
                 false);
 
+        /* Set adapters for recycler views */
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
 
         /* If we haven't already downloaded the user's images from firebase, do so */
-        UserMediaHandler.downloadImagesFromFirebase(otherUser.getUid(), bitmaps, imagePaths, new OnCompleteCallback() {
+        UserMediaHandler.downloadImagesFromFirebase(otherUser.getUid(), bitmaps, imagePaths, new
+                OnCompleteCallback() {
                 @Override
                 public void update(boolean success, String message) {
                     if (!otherUser.checkDetailExposed(UserField.GALLERY)) {
@@ -196,7 +225,8 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         if (!preferences.isEmpty()) {
             Collections.sort(preferences);
 
-            StringBuilder preferencesString = new StringBuilder("Interested in " + preferences.get(0));
+            StringBuilder preferencesString = new StringBuilder("Interested in " +
+                    preferences.get(0));
 
             for (int i = 1; i < preferences.size(); i++) {
                 preferencesString.append(", ").append(preferences.get(i));
@@ -207,11 +237,14 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
         profileByteArray = new byte[1024*1024];
 
-        UserMediaHandler.downloadProfilePhotoFromFirebase(otherUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
+        /* download the profile photo of the other user from firebase */
+        UserMediaHandler.downloadProfilePhotoFromFirebase(otherUser.getUid(), profileByteArray,
+                profileByteArray.length, new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success){
-                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
+                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray,
+                            0, profileByteArray.length));
                 } else {
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
@@ -229,14 +262,21 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * OnClick handler for when the current user choose to connect with the other user
+     * @param view the current GUI view
+     */
     public void onConnectPressed(View view) {
         progressBar.setVisibility(View.VISIBLE);
         currentUser.addConnection(otherUser.toConnectionItem());
 
-        UserInformationHandler.uploadUserInformationToFirestore(currentUser, new OnCompleteCallback() {
+        /* upload the user information to firestore after having added a new connection */
+        UserInformationHandler.uploadUserInformationToFirestore(currentUser,
+                new OnCompleteCallback() {
             public void update(boolean success, String message) {
                 if (success) {
-                    UserInformationHandler.addOtherUserConnection(otherUser.getUid(), currentUser.getUid(), new OnCompleteCallback() {
+                    UserInformationHandler.addOtherUserConnection(otherUser.getUid(),
+                            currentUser.getUid(), new OnCompleteCallback() {
                         @Override
                         public void update(boolean success, String message) {
                             if (success) {
@@ -253,6 +293,10 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * OnClick handler for the play game button
+     * @param view the current GUI view
+     */
     public void onPlayPressed(View view) {
         Intent gameIntent = new Intent(this, ThreeTruthsOneLieActivity.class);
         gameIntent.putExtra("other user", otherUser);
@@ -260,6 +304,10 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         startActivityForResult(gameIntent, RequestCodes.GAME_RESULT);
     }
 
+    /**
+     * Expose a field in the other user's profile page
+     * @return the exposed field
+     */
     private String exposeField() {
         String exposed = "Everything Exposed";
         UserField updatedField = UserField.UID;
@@ -297,6 +345,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
         final UserField finalField = updatedField;
 
+        /* upload user information to firebase firestore */
         UserInformationHandler.uploadUserInformationToFirestore(currentUser, new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
@@ -309,6 +358,10 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         return exposed;
     }
 
+    /**
+     * Hide a given field on the other user's profile page
+     * @param field the field to hide
+     */
     private void hideInfo(UserField field) {
         switch (field) {
             case NAME:
@@ -329,6 +382,10 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Show a given field on the other user's profile page
+     * @param field the given field to unveil
+     */
     private void showInfo(UserField field) {
         switch (field) {
             case NAME:
@@ -353,6 +410,11 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initialise an unexposed array list
+     * @param length length of the unexposed array list
+     * @return array list of the unexposed information
+     */
     private ArrayList<String> initialiseUnexposedArrayList(int length) {
         ArrayList<String> newList = new ArrayList<>();
         for (int i = 0; i < length; i++) {
@@ -361,6 +423,10 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         return newList;
     }
 
+    /**
+     * Initialise the unexposed grid view adapter
+     * @return the new grid view adapter
+     */
     private GridViewAdapter initialiseUnexposedGridViewAdapter() {
         Map<String, Bitmap> emptyBitmaps = new HashMap<>();
         for (String path : imagePaths) {
