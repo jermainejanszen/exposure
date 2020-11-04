@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class ChipsRecyclerViewAdapter extends
         RecyclerView.Adapter<ChipsRecyclerViewAdapter.ViewHolder> {
-    private Context context;
-    private List<String> data;
-    private boolean editable;
+    private final Context context;
+    private final List<String> data;
+    private final boolean editable;
 
     /**
      * Constructor for the ChipsRecyclerViewAdapter
@@ -100,12 +100,11 @@ public class ChipsRecyclerViewAdapter extends
     }
 
     /**
-     * TODO: Jermaine check dis :)
-     *  Describes an item view and metadata about its place within the RecyclerView
+     * The view holder for each chips item in the chips list
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textView;
+        private final TextView textView;
 
         /**
          * Constructor for ViewHolder

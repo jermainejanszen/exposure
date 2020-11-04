@@ -1,10 +1,8 @@
 package com.exposure.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,15 +21,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class ChatsRecyclerViewAdapter extends
         RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
-    private OnChatItemPressedCallback callback;
+
+    private final OnChatItemPressedCallback callback;
+    private final OnCompleteCallback itemLoadCallback;
     private List<ChatListItem> data;
-    private OnCompleteCallback itemLoadCallback;
 
     /**
      * Constructor for chats recycler view adapter object
      * @param data the chat list items to be used in the chat recycler view
-     * @param callback TODO these
-     * @param itemLoadCallback
+     * @param callback callback to define behaviour when pressing on a chat list item
+     * @param itemLoadCallback callback to notify when a chat list item has been loaded
      */
     public ChatsRecyclerViewAdapter(List<ChatListItem> data, OnChatItemPressedCallback callback,
                                     OnCompleteCallback itemLoadCallback) {
@@ -90,8 +89,8 @@ public class ChatsRecyclerViewAdapter extends
     }
 
     /**
-     * Returns the lsit of chat list items
-     * @return
+     * Returns the list of chat list items
+     * @return data associated with the adapter
      */
     public List<ChatListItem> getData() {
         return this.data;
@@ -111,17 +110,21 @@ public class ChatsRecyclerViewAdapter extends
         }
     }
 
-    // TODO : Javadocs
+    /**
+     * Sets the chats data associated with the adapter
+     * @param data data to set
+     */
     public void setChats(List<ChatListItem> data) {
         this.data = data;
     }
 
-    // TODO : Javadocs
+    /**
+     * The view holder for each chat list item in the chats list
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView profileImage;
         private final TextView name;
         private final TextView lastMessage;
-        private final ImageButton openButton;
         private final TextView date;
 
         public ViewHolder(@NonNull View itemView) {
@@ -129,7 +132,6 @@ public class ChatsRecyclerViewAdapter extends
             profileImage = itemView.findViewById(R.id.chat_profile_image);
             name = itemView.findViewById(R.id.chat_name);
             lastMessage = itemView.findViewById(R.id.chat_last_message);
-            openButton = itemView.findViewById(R.id.chat_open_button);
             date = itemView.findViewById(R.id.chat_date);
         }
 

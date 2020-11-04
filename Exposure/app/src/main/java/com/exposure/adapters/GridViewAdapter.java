@@ -17,10 +17,10 @@ import java.util.Map;
  * Adapter for the grid view in which the user photos are displayed
  */
 public class GridViewAdapter extends BaseAdapter {
-    private Context context;
+    private final Context context;
     private LayoutInflater inflater;
-    private Map<String, Bitmap> bitmaps;
-    private List<String> imagePaths;
+    private final Map<String, Bitmap> bitmaps;
+    private final List<String> imagePaths;
 
     /**
      * Constructor for the grid view adapter
@@ -36,7 +36,7 @@ public class GridViewAdapter extends BaseAdapter {
 
     /**
      * Returns the number of bitmaps stored in the grid view
-     * @return
+     * @return number of images
      */
     @Override
     public int getCount() {
@@ -64,12 +64,11 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     /**
-     * TODO
      * Get the view for a given position
      * @param position position
-     * @param view
-     * @param viewGroup
-     * @return
+     * @param view view for the grid item
+     * @param viewGroup the view group of the grid
+     * @return view of the individual grid item
      */
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {

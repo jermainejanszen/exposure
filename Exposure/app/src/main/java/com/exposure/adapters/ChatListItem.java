@@ -143,7 +143,9 @@ public class ChatListItem {
                                         }
                                     });
                                 } else {
-                                    onCompleteCallback.update(false, "Failed to download last chat message and time");
+                                    onCompleteCallback.update(
+                                            false,
+                                            "Failed to download last chat item");
                                 }
                             }
                         });
