@@ -40,9 +40,9 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ChatsFragment extends Fragment {
+    private static ChatsRecyclerViewAdapter chatsAdapter;
 
     private List<ChatListItem> chats;
-    private static ChatsRecyclerViewAdapter chatsAdapter;
     private ProgressBar progressBar;
     private RecyclerView chatsRecyclerView;
     private EditText searchBar;
@@ -66,6 +66,8 @@ public class ChatsFragment extends Fragment {
 
         chatsRecyclerView = view.findViewById(R.id.chat_list);
         progressBar = view.findViewById(R.id.progress_bar);
+        searchBar = view.findViewById(R.id.chat_search_bar_text);
+
         progressBar.setVisibility(View.VISIBLE);
         chatsRecyclerView.setVisibility(View.INVISIBLE);
 
@@ -76,52 +78,22 @@ public class ChatsFragment extends Fragment {
             }
         };
 
-        final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                chatsAdapter.filterChats(chats);
-                chatsAdapter.notifyDataSetChanged();
-            }
-        };
+        final OnCompleteCallback itemLoadCallback = new OnCompleteCallback() {
+            int successfulCalls = 0;
 
-        final OnCompleteCallback finishedCallback = new OnCompleteCallback() {
             @Override
-            public void update(boolean success, String message) {
+            public synchronized void update(boolean success, String message) {
                 if (success) {
-                    Collections.sort(chats, new Comparator<ChatListItem>() {
-                        @Override
-                        public int compare(ChatListItem o1, ChatListItem o2) {
-                            if (0 == o1.getTime()) {
-                                return 1;
-                            } else if (0 == o2.getTime()) {
-                                return -1;
-                            }
-                            return (int) (o2.getTime() - o1.getTime());
-                        }
-                    });
+                    successfulCalls++;
+                }
 
-                    Log.d("Finished callback", "Executed");
-                    searchBar.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            filterChats(s.toString());
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-
-                        }
-                    });
-
-                    chatsAdapter.filterChats(chats);
-                    chatsAdapter.notifyDataSetChanged();
+                if (successfulCalls == chats.size()) {
+                    sortChats();
+                    setupSearchBarListener();
+                    filterChats(searchBar.getText().toString());
                     progressBar.setVisibility(View.INVISIBLE);
                     chatsRecyclerView.setVisibility(View.VISIBLE);
+                    successfulCalls = 0;
                 }
             }
         };
@@ -129,7 +101,11 @@ public class ChatsFragment extends Fragment {
         if (null == chatsAdapter) {
             chats = new ArrayList<>();
             chatsAdapter = new ChatsRecyclerViewAdapter(chats, pressedCallback,
-                                intermediateCallback, finishedCallback);
+                                itemLoadCallback);
+        } else {
+            chatsAdapter.setChats(chats);
+            progressBar.setVisibility(View.INVISIBLE);
+            chatsRecyclerView.setVisibility(View.VISIBLE);
         }
 
         chatsRecyclerView.setAdapter(chatsAdapter);
@@ -146,15 +122,7 @@ public class ChatsFragment extends Fragment {
             }
         });
 
-        searchBar = view.findViewById(R.id.chat_search_bar_text);
-
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        searchBar.setText("");
     }
 
     private void filterChats(String text) {
@@ -167,7 +135,8 @@ public class ChatsFragment extends Fragment {
             }
         }
 
-        chatsAdapter.filterChats(filteredList);
+        chatsAdapter.setChats(filteredList);
+        chatsAdapter.notifyDataSetChanged();
     }
 
     private void onChatItemPressed(String uid, String name, Bitmap profileImage) {
@@ -203,5 +172,47 @@ public class ChatsFragment extends Fragment {
 
     public void clearChats() {
         chatsAdapter = null;
+    }
+
+    private void sortChats() {
+        Collections.sort(chats, new Comparator<ChatListItem>() {
+            @Override
+            public int compare(ChatListItem o1, ChatListItem o2) {
+                if (0 == o1.getTime()) {
+                    return 1;
+                } else if (0 == o2.getTime()) {
+                    return -1;
+                }
+                return (int) (o2.getTime() - o1.getTime());
+            }
+        });
+    }
+
+    private void setupSearchBarListener() {
+        if (null == searchBar) {
+            return;
+        }
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterChats(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        searchBar.setText("");
     }
 }

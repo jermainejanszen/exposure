@@ -21,15 +21,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
     private OnChatItemPressedCallback callback;
     private List<ChatListItem> data;
-    private OnCompleteCallback intermediateCallback, finishedCallback;
+    private OnCompleteCallback itemLoadCallback;
 
     public ChatsRecyclerViewAdapter(List<ChatListItem> data, OnChatItemPressedCallback callback,
-                                    OnCompleteCallback intermediateCallback,
-                                    OnCompleteCallback finishedCallback) {
+                                    OnCompleteCallback itemLoadCallback) {
         this.callback = callback;
         this.data = data;
-        this.intermediateCallback = intermediateCallback;
-        this.finishedCallback = finishedCallback;
+        this.itemLoadCallback = itemLoadCallback;
     }
 
     @NonNull
@@ -70,23 +68,17 @@ public class ChatsRecyclerViewAdapter extends RecyclerView.Adapter<ChatsRecycler
 
     public void syncData() {
         if (0 == data.size()) {
-            finishedCallback.update(true, "Success");
+            itemLoadCallback.update(true, "Success");
         }
 
         for (int i = 0; i < data.size(); i++) {
             ChatListItem item = data.get(i);
-            if (i == data.size() - 1) {
-                Log.d("FINISHED CALLBACK", "INSIDE ADAPTER");
-                item.loadFields(finishedCallback);
-            } else {
-                item.loadFields(intermediateCallback);
-            }
+            item.loadFields(itemLoadCallback);
         }
     }
 
-    public void filterChats(List<ChatListItem> data) {
+    public void setChats(List<ChatListItem> data) {
         this.data = data;
-        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
