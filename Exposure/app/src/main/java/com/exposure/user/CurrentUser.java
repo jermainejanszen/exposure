@@ -1,6 +1,5 @@
 package com.exposure.user;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,15 +11,23 @@ public class CurrentUser extends User {
 
    private List<ConnectionItem> connections = new ArrayList<>();
 
+    /**
+     * The current user
+     * @param uid the id of the current user
+     */
     public CurrentUser(String uid) {
         super(uid);
     }
 
-    /* Getters */
+    /**
+     * Returns all the connections that the current user has accrued
+     * @return all the connections that the current user has accrued
+     */
     public List<ConnectionItem> getConnections() {
         return connections;
     }
 
+    //TODO
     public ConnectionItem getConnection(String uid) {
         for (ConnectionItem connection : connections) {
             if (0 == connection.getUid().compareTo(uid)) {
@@ -30,7 +37,6 @@ public class CurrentUser extends User {
         return null;
     }
 
-    /* Setters */
     public void setConnections(List<ConnectionItem> connections) {
         this.connections = connections;
     }
@@ -43,6 +49,11 @@ public class CurrentUser extends User {
         this.connections.add(connectionItem);
     }
 
+    /**
+     * Checks to see whether the current user has connected with another user
+     * @param otherUid the user id of the other user
+     * @return true if already connected, else false
+     */
     public boolean isConnected(String otherUid) {
         return null != getConnection(otherUid);
     }

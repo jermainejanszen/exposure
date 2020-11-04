@@ -2,13 +2,11 @@ package com.exposure.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Parcelable;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,14 +32,15 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 
-import static android.app.Activity.RESULT_OK;
 
+/**
+ * Fragment representing the map displaying all users available to match within, organised
+ * according to their geographical distance from the current user
+ */
 public class MapFragment extends Fragment {
 
     private List<MapListItem> fifteenKM;
@@ -64,10 +63,17 @@ public class MapFragment extends Fragment {
     private OnCompleteCallback finishedCallback;
     private OnCompleteCallback intermediateCallback;
 
+    /**
+     * Empty constructor for the map fragment
+     */
     public MapFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Call upon creating the activity
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +82,9 @@ public class MapFragment extends Fragment {
             return;
         }
 
-        final DocumentReference userProfileRef = FirebaseFirestore.getInstance().collection("Profiles").document(FirebaseAuth.getInstance().getUid());
+        final DocumentReference userProfileRef = FirebaseFirestore.getInstance()
+                .collection("Profiles")
+                .document(FirebaseAuth.getInstance().getUid());
         userProfileRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -85,10 +93,13 @@ public class MapFragment extends Fragment {
                 }
 
                 if (null != value && value.exists()) {
-                    final CurrentUser currentUser = new CurrentUser(FirebaseAuth.getInstance().getUid());
+                    final CurrentUser currentUser = new CurrentUser(
+                            FirebaseAuth.getInstance().getUid());
                     // TODO: update main activity static current user with this new one
                     UserInformationHandler.convertDocumentSnapshotToUser(value, currentUser);
-                    UserInformationHandler.downloadCurrentUserConnections(currentUser, new OnCompleteCallback() {
+                    UserInformationHandler.downloadCurrentUserConnections(
+                            currentUser,
+                            new OnCompleteCallback() {
                         @Override
                         public void update(boolean success, String message) {
                             for (int i = allUsers.size() - 1; i >= 0; i--) {
@@ -100,12 +111,18 @@ public class MapFragment extends Fragment {
                             }
                         }
                     });
-
                 }
             }
         });
     }
 
+    /**
+     * On creating the view, TODO
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -127,23 +144,7 @@ public class MapFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        /*if (RequestCodes.VIEW_PROFILE_REQUEST == requestCode) {
-            loadingCover.setVisibility(View.VISIBLE);
-            UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
-                @Override
-                public void update(boolean success, String message) {
-                    if (success) {
-                        setup(view, true);
-                    }
-                }
-            });
-        }*/
-    }
-
+    // TODO : Javadocs
     private void updateMapUsers() {
         UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
             @Override
@@ -156,6 +157,11 @@ public class MapFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets up the map view showing all users, ordered on their screen by their geographical
+     * distance from the current user
+     * @param view the view
+     */
     private void setup(View view) {
 
         OnMapItemPressedCallback callback = new OnMapItemPressedCallback() {
@@ -167,32 +173,22 @@ public class MapFragment extends Fragment {
 
         if (null == fifteenKM) {
             fifteenKM = new ArrayList<>();
-        } else {
-            // fifteenKM.clear();
         }
 
         if (null == nineKM) {
             nineKM = new ArrayList<>();
-        } else {
-            // nineKM.clear();
         }
 
         if (null == sixKM) {
             sixKM = new ArrayList<>();
-        } else {
-            // sixKM.clear();
         }
 
         if (null == threeKM) {
             threeKM = new ArrayList<>();
-        } else {
-            // threeKM.clear();
         }
 
         if (null == zeroKM) {
             zeroKM = new ArrayList<>();
-        } else {
-            // zeroKM.clear();
         }
 
         if (null == fifteenMapAdapter) {
@@ -253,8 +249,13 @@ public class MapFragment extends Fragment {
                 }
             }
         };
+
     }
 
+    /**
+     * Adds users to the different distance ranges on the maps page according to their geographical
+     * distance from the current user
+     */
     private void mapUsersToRegions() {
 
         final CurrentUser currentUser = MainActivity.getCurrentUser();
@@ -287,6 +288,7 @@ public class MapFragment extends Fragment {
         }
     }
 
+    // TODO : Javadocs
     private void removeConnectedUserFromRegions(String uid) {
         Log.d("SDAASDASD", "CALLED REMOVED CONNECT USERS FROM REGIIONS");
 
@@ -333,6 +335,10 @@ public class MapFragment extends Fragment {
 
     }
 
+    /**
+     * Upon clicking on another user's image on the map, user is taken to view their profile
+     * @param uid the uid of the other user who's image has been clicked on
+     */
     private void onMapItemPressed(String uid) {
         Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
         intent.putExtra("Uid", uid);
