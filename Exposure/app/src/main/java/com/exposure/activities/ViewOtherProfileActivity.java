@@ -208,7 +208,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                 }
             });
 
-
         displayNameText.setText(otherUser.getName());
 
         /* Set the users age if they have entered their birthday */
