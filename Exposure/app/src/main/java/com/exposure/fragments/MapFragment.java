@@ -232,15 +232,13 @@ public class MapFragment extends Fragment {
         final CurrentUser currentUser = MainActivity.getCurrentUser();
 
         OnCompleteCallback callback = new OnCompleteCallback() {
-            int successfulCalls = 0;
+            int calls = 0;
 
             @Override
             public synchronized void update(boolean success, String message) {
-                if (success) {
-                    successfulCalls += 1;
-                }
+                calls += 1;
 
-                if (successfulCalls == allUsers.size()) {
+                if (calls == allUsers.size()) {
                     fifteenMapAdapter.notifyDataSetChanged();
                     nineMapAdapter.notifyDataSetChanged();
                     sixMapAdapter.notifyDataSetChanged();

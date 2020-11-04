@@ -88,21 +88,19 @@ public class ChatsFragment extends Fragment {
         };
 
         final OnCompleteCallback itemLoadCallback = new OnCompleteCallback() {
-            int successfulCalls = 0;
+            int calls = 0;
 
             @Override
             public synchronized void update(boolean success, String message) {
-                if (success) {
-                    successfulCalls++;
-                }
+                calls += 1;
 
-                if (successfulCalls == chats.size()) {
+                if (calls == chats.size()) {
                     sortChats();
                     setupSearchBarListener();
                     filterChats(searchBar.getText().toString());
                     progressBar.setVisibility(View.INVISIBLE);
                     chatsRecyclerView.setVisibility(View.VISIBLE);
-                    successfulCalls = 0;
+                    calls = 0;
                 }
             }
         };
