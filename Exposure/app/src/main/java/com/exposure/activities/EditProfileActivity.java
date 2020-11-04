@@ -93,7 +93,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
         profileBitmap = ProfileFragment.getProfileImageBitmap();
         profileImage = findViewById(R.id.profile_image);
-        profileImage.setImageBitmap(profileBitmap);
+
+        if (null != profileBitmap) {
+            profileImage.setImageBitmap(profileBitmap);
+        }
 
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
