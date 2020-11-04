@@ -33,7 +33,6 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
         this.data = data;
     }
 
-    //TODO
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,7 +40,6 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
         return new ViewHolder(view);
     }
 
-    //TODO
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         if(null != data.get(position).getProfileImage()) {
@@ -75,15 +73,8 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
     }
 
     /**
-     * Synchronise all MapListItems with the firebase firestore
+     * View holder for each of the map recycler view items
      */
-    public void syncData() {
-        for (MapListItem item : data) {
-            item.loadFields();
-        }
-    }
-
-    //TODO
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView profileImage;
         private final TextView name;

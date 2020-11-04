@@ -35,4 +35,12 @@ public class MessageListItem {
     public String getSender() {
         return sender;
     }
+
+    /**
+     * Returns the time of the message
+     * @return the time of the message
+     */
+    public Long getTime() {
+        return time;
+    }
 }
