@@ -60,8 +60,7 @@ public class MapFragment extends Fragment {
     private View view;
     private RelativeLayout loadingCover;
 
-    private OnCompleteCallback finishedCallback;
-    private OnCompleteCallback intermediateCallback;
+    private OnCompleteCallback callback;
 
     /**
      * Empty constructor for the map fragment
@@ -222,34 +221,6 @@ public class MapFragment extends Fragment {
         sixMapRecyclerView.setAdapter(sixMapAdapter);
         threeMapRecyclerView.setAdapter(threeMapAdapter);
         zeroMapRecyclerView.setAdapter(zeroMapAdapter);
-
-        finishedCallback = new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    fifteenMapAdapter.notifyDataSetChanged();
-                    nineMapAdapter.notifyDataSetChanged();
-                    sixMapAdapter.notifyDataSetChanged();
-                    threeMapAdapter.notifyDataSetChanged();
-                    zeroMapAdapter.notifyDataSetChanged();
-                }
-                loadingCover.setVisibility(View.INVISIBLE);
-            }
-        };
-
-        intermediateCallback = new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    fifteenMapAdapter.notifyDataSetChanged();
-                    nineMapAdapter.notifyDataSetChanged();
-                    sixMapAdapter.notifyDataSetChanged();
-                    threeMapAdapter.notifyDataSetChanged();
-                    zeroMapAdapter.notifyDataSetChanged();
-                }
-            }
-        };
-
     }
 
     /**
@@ -259,6 +230,24 @@ public class MapFragment extends Fragment {
     private void mapUsersToRegions() {
 
         final CurrentUser currentUser = MainActivity.getCurrentUser();
+
+        OnCompleteCallback callback = new OnCompleteCallback() {
+            int calls = 0;
+
+            @Override
+            public synchronized void update(boolean success, String message) {
+                calls += 1;
+
+                if (calls == allUsers.size()) {
+                    fifteenMapAdapter.notifyDataSetChanged();
+                    nineMapAdapter.notifyDataSetChanged();
+                    sixMapAdapter.notifyDataSetChanged();
+                    threeMapAdapter.notifyDataSetChanged();
+                    zeroMapAdapter.notifyDataSetChanged();
+                    loadingCover.setVisibility(View.INVISIBLE);
+                }
+            }
+        };
 
         for (int i = allUsers.size() - 1; i >= 0; i--) {
             CurrentUser user = allUsers.get(i);
@@ -270,20 +259,17 @@ public class MapFragment extends Fragment {
         for (int i = 0; i < allUsers.size(); i++) {
             CurrentUser otherUser = allUsers.get(i);
 
-            OnCompleteCallback notifyCallback =
-                    (i == allUsers.size() - 1) ? finishedCallback : intermediateCallback;
-
             int distance = DistanceHandler.distanceInKM(currentUser, otherUser);
             if (distance <= 2) {
-                zeroKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                zeroKM.add(new MapListItem(otherUser.getUid(), callback));
             } else if (distance <= 5) {
-                threeKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                threeKM.add(new MapListItem(otherUser.getUid(), callback));
             } else if (distance <= 8) {
-                sixKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                sixKM.add(new MapListItem(otherUser.getUid(), callback));
             } else if (distance <= 15) {
-                nineKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                nineKM.add(new MapListItem(otherUser.getUid(), callback));
             } else {
-                fifteenKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
+                fifteenKM.add(new MapListItem(otherUser.getUid(), callback));
             }
         }
     }
