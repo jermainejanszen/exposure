@@ -1,18 +1,11 @@
 package com.exposure.activities;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,8 +13,6 @@ import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.ResultCodes;
 import com.exposure.handlers.UserMediaHandler;
-import com.exposure.popups.LostGameActivity;
-import com.exposure.popups.WonGameActivity;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
 
@@ -83,7 +74,7 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
         truths = otherUser.getTruths();
         lies = otherUser.getLies();
 
-        /* randomise order of truths and lies */
+        /* Randomise order of truths and lies */
         Collections.shuffle(truths);
         Collections.shuffle(lies);
 
@@ -92,13 +83,13 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
         mapTruthsLiesToView.put("Truth 3", truths.get(2));
         mapTruthsLiesToView.put("Lie", lies.get(0));
 
-        /* randomly assign lie and truths to view */
+        /* Randomly assign lie and truths to view */
         List mapKeys = new ArrayList(mapTruthsLiesToView.keySet());
         Collections.shuffle(mapKeys);
         int i = 0;
         while (i < 4) {
             for (Object key : mapKeys) {
-                // Access keys/values in a random order
+                /* Access keys/values in a random order */
                 inputFields[i].setText(mapTruthsLiesToView.get(key));
                 if (key == "Lie"){
                     indexOfLie = i;
@@ -107,7 +98,7 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
             }
         }
 
-        /* set listeners to determine which tile the user clicks on as their guess */
+        /* Set listeners to determine which tile the user clicks on as their guess */
         for (int k = 0; k < 4; k++){
             final int finalK = k;
             inputFields[k].setOnClickListener(new View.OnClickListener() {
@@ -150,6 +141,11 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Calls the native back pressed button. Used to provide back press functionality to
+     * UI back buttons.
+     * @param view The current view
+     */
     public void onBackPressed(View view) {
         super.onBackPressed();
     }

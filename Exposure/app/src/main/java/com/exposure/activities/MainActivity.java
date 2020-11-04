@@ -136,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * TODO
+     * Checks if the user is logged in when resuming the main activity.
+     * If no user is logged in, finish the activity and show the login screen.
      */
     @Override
     protected void onResume() {
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         /* Upon retrieving an image from camera or library, generate time stamp and upload image to
-        * firebase firestore */
+         * firebase firestore */
         if (RequestCodes.RETRIEVE_IMAGE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
                 profileFragment.setProgressBarVisibility(View.VISIBLE);

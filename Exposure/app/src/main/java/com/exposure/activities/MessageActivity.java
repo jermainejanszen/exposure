@@ -109,8 +109,8 @@ public class MessageActivity extends Activity {
                 }
         );
 
-        /* Messages at automatically uploaded to the firebase firestore upon sending, and downloaded
-        from the firebase firestore upon being recieved from another user */
+        /* Messages are automatically uploaded to the firebase firestore upon sending, and
+        downloaded from the firebase firestore upon being recieved from another user */
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRefMessages =
                 db.collection("chats").document(docRefID);

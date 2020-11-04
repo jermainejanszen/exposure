@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -47,25 +46,25 @@ import java.util.Map;
  */
 public class ViewOtherProfileActivity extends AppCompatActivity {
 
+    /* Recycler / Grid views and adapters for the exposed and unexposed user info */
     private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter,
             personalitiesAdapter;
     private ChipsRecyclerViewAdapter unknownStudyLocationsAdapter, unknownAreasLivedInAdapter,
             unknownHobbiesAdapter, unknownPersonalitiesAdapter;
     private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView,
             personalityTypesRecyclerView;
+    private GridViewAdapter gridViewAdapter;
+    private GridViewAdapter unexposedGridViewAdapter;
+    private GridView gridView;
 
     private TextView displayNameText, ageText, preferencesText;
     private ImageView profileImage;
-    private GridView gridView;
     private Map<String, Bitmap> bitmaps;
-    private GridViewAdapter gridViewAdapter;
-    private GridViewAdapter unexposedGridViewAdapter;
     private List<String> imagePaths;
     private byte[] profileByteArray;
     private ProgressBar progressBar;
     private RelativeLayout progressCover;
     private OtherUser otherUser;
-    private ConnectionItem otherUserConnection;
     private CurrentUser currentUser;
     private Button connectButton;
     private Button playButton;
@@ -85,7 +84,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
             finish();
         }
 
-        otherUserConnection = currentUser.getConnection(getIntent().getStringExtra("Uid"));
+        ConnectionItem otherUserConnection = currentUser.getConnection(getIntent().getStringExtra("Uid"));
         if (null != otherUserConnection) {
             otherUser = new OtherUser(otherUserConnection);
         } else {
@@ -270,7 +269,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         currentUser.addConnection(otherUser.toConnectionItem());
 
-        /* upload the user information to firestore after having added a new connection */
+        /* Upload the user information to firestore after having added a new connection */
         UserInformationHandler.uploadUserInformationToFirestore(currentUser,
                 new OnCompleteCallback() {
             public void update(boolean success, String message) {
@@ -345,7 +344,7 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
 
         final UserField finalField = updatedField;
 
-        /* upload user information to firebase firestore */
+        /* Upload user information to firebase firestore */
         UserInformationHandler.uploadUserInformationToFirestore(currentUser, new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
