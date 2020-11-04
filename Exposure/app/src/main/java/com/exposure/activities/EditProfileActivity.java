@@ -66,7 +66,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private Bitmap profileBitmap;
     private LocationManager lm;
 
-    //TODO: add comment in here
+    /* Result launcher to request user permission to read current location */
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), new
                     ActivityResultCallback<Boolean>() {
@@ -330,10 +330,9 @@ public class EditProfileActivity extends AppCompatActivity {
         startActivityForResult(intent, RequestCodes.RETRIEVE_IMAGE_REQUEST);
     }
 
-    //TODO: check this java doc
     /**
      * Upon clicking to update their location, accesses the users location and updates it on the
-     * interface
+     * interface. If the user hasn't granted access for location, request it.
      * @param view the current GUI view
      */
     @RequiresApi(api = Build.VERSION_CODES.R)
@@ -343,19 +342,17 @@ public class EditProfileActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED) {
-            // You can use the API that requires the permission.
+            /* Permission is granted to read location */
             setUserLocation();
         } else {
-            // You can directly ask for the permission.
-            // The registered ActivityResultCallback gets the result of this request.
+            /* Request user permission for fine location access */
             requestPermissionLauncher.launch(
                     Manifest.permission.ACCESS_FINE_LOCATION);
         }
     }
 
     /**
-     * Sets the user's location based on GPS
-     * TODO needs better commenting here
+     * Sets the user's location using the devices recorded location through GPS
      */
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void setUserLocation() {
@@ -363,17 +360,9 @@ public class EditProfileActivity extends AppCompatActivity {
         criteria.setPowerRequirement(Criteria.POWER_LOW);
 
         if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissionLauncher.launch(
+                    Manifest.permission.ACCESS_FINE_LOCATION);
             return;
         }
 
@@ -383,8 +372,6 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onLocationChanged(@NonNull Location location) {
                 if (0 != location.getLatitude() && 0 != location.getLongitude()) {
                     currentUser.setLocation(location.getLatitude(), location.getLongitude());
-                    Toast.makeText(getApplicationContext(), "Successfully updated location.",
-                            Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.INVISIBLE);
                 }
             }
