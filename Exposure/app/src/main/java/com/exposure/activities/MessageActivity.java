@@ -134,8 +134,7 @@ public class MessageActivity extends Activity {
                         doc.put("messages", messages);
                         docRefMessages.set(doc);
                     }
-                    messagesAdapter = new MessagesRecyclerViewAdapter(getApplicationContext(),
-                            messages);
+                    messagesAdapter = new MessagesRecyclerViewAdapter(messages);
                     messageRecyclerView.setAdapter(messagesAdapter);
 
                     docRefMessages.addSnapshotListener(new EventListener<DocumentSnapshot>() {

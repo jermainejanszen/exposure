@@ -1,5 +1,6 @@
 package com.exposure.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -70,6 +71,7 @@ public class GridViewAdapter extends BaseAdapter {
      * @param viewGroup the view group of the grid
      * @return view of the individual grid item
      */
+    @SuppressLint({"InflateParams", "UseCompatLoadingForDrawables"})
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         if (null == inflater) {

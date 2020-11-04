@@ -18,16 +18,13 @@ import java.util.List;
  * Recycler view adapter for representing the messages sent between users
  */
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private Context context;
-    private List<MessageListItem> data;
+    private final List<MessageListItem> data;
 
     /**
      * The constructor for the MessageRecylerViewAdapter
-     * @param context the context for the adapter
      * @param data the list of message items to be used by the recycler view
      */
-    public MessagesRecyclerViewAdapter(Context context, List<MessageListItem> data) {
-        this.context = context;
+    public MessagesRecyclerViewAdapter(List<MessageListItem> data) {
         this.data = data;
     }
 
@@ -73,7 +70,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     /**
      * Return the view type of the item at the given position
      * @param position position to retrieve the view type of the item at
-     * @return
+     * @return 0 if the message is sent and 1 if it is received
      */
     @Override
     public int getItemViewType(int position) {
@@ -91,7 +88,9 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         return data.size();
     }
 
-    //TODO
+    /**
+     * View holder for the sent message items
+     */
     static class SentViewHolder extends RecyclerView.ViewHolder {
         private final TextView content;
 
@@ -105,7 +104,9 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    //TODO
+    /**
+     * View holder for the received message items
+     */
     static class ReceivedViewHolder extends RecyclerView.ViewHolder {
         private final TextView content;
 
