@@ -1,7 +1,6 @@
 package com.exposure.callback;
 
 import android.graphics.Bitmap;
-
 import java.io.Serializable;
 
 /**
@@ -10,10 +9,10 @@ import java.io.Serializable;
 public interface OnChatItemPressedCallback extends Serializable {
 
     /**
-     * Upon pressing a user in the chat fragment, TODO
-     * @param uid
-     * @param name
-     * @param profileImage
+     * Defines behaviour when pressing an item in the chats list.
+     * @param uid uid of the pressed user
+     * @param name name of the pressed user
+     * @param profileImage profile image of the pressed user
      */
     void onPress(String uid, String name, Bitmap profileImage);
 }
