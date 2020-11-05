@@ -59,13 +59,13 @@ public class SignUpActivity extends AppCompatActivity {
 
         /* Checks user information has been inputted and creates user with the given information */
         if (fullName.isEmpty()) {
-            Toast.makeText(this, "Full name required", Toast.LENGTH_LONG).show();
+            fullNameField.getEditText().setError("Name required");
             fullNameField.getEditText().requestFocus();
         } else if (email.isEmpty()) {
-            Toast.makeText(this, "Email required", Toast.LENGTH_LONG).show();
+            emailField.getEditText().setError("Email required");
             emailField.getEditText().requestFocus();
         } else if (password.isEmpty()) {
-            Toast.makeText(this, "Password required", Toast.LENGTH_LONG).show();
+            passwordField.getEditText().setError("Password required");
             passwordField.getEditText().requestFocus();
         } else if (!termsOfService.isChecked()) {
             Toast.makeText(getApplicationContext(), "You must accept the Terms of Service " +
