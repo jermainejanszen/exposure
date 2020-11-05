@@ -12,7 +12,7 @@ import java.util.Locale;
  */
 public class DateHandler {
 
-    private static SimpleDateFormat sdf =
+    private static final SimpleDateFormat sdf =
             new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
     /**

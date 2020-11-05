@@ -27,9 +27,6 @@ import java.util.Map;
  */
 public class UserInformationHandler {
 
-    private static FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
     /**
      * Download user information as document snapshot from firestore
      * @param user the user whose information we are retrieving from firestore
@@ -37,6 +34,7 @@ public class UserInformationHandler {
      */
     public static void downloadUserInformation(final User user, final OnCompleteCallback
             onCompleteCallback) {
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
         mFirestore.collection("Profiles").document(user.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -61,6 +59,7 @@ public class UserInformationHandler {
      */
     public static void downloadCurrentUserConnections(final CurrentUser user, final
     OnCompleteCallback onCompleteCallback) {
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
         mFirestore.collection("Profiles").document(user.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -146,6 +145,7 @@ public class UserInformationHandler {
             docRefID = uid2.concat(uid1);
         }
 
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
         final DocumentReference docRefMessages =
                 mFirestore.collection("chats").document(docRefID);
         docRefMessages.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -153,11 +153,13 @@ public class UserInformationHandler {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists() && documentSnapshot.contains("messages")) {
                     List<Object> messages = (ArrayList<Object>) documentSnapshot.get("messages");
-                    if (messages.size() > 0) {
-                        Map<String, Object> lastMessage = (Map<String, Object>)
-                                messages.get(messages.size() - 1);
-                        messageContainer.setMessage((String) lastMessage.get("message"));
-                        messageContainer.setTime((Long) lastMessage.get("time"));
+                    if (null != messages) {
+                        if (messages.size() > 0) {
+                            Map<String, Object> lastMessage = (Map<String, Object>)
+                                    messages.get(messages.size() - 1);
+                            messageContainer.setMessage((String) lastMessage.get("message"));
+                            messageContainer.setTime((Long) lastMessage.get("time"));
+                        }
                     }
                     onCompleteCallback.update(true, "success");
                 } else {
@@ -183,6 +185,10 @@ public class UserInformationHandler {
         user.setBirthday(timestamp == null ? null : timestamp.toDate());
         user.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
 
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (null == mAuth.getCurrentUser()) {
+            return;
+        }
         if (mAuth.getCurrentUser().getUid().equals(user.getUid())) {
             user.setName(mAuth.getCurrentUser().getDisplayName());
             user.setEmail(mAuth.getCurrentUser().getEmail());
@@ -209,8 +215,10 @@ public class UserInformationHandler {
                 UserField.LIES.toString());
 
         if (null != location) {
-            if (null != location.get("Latitude") && null != location.get("Longitude")) {
-                user.setLocation(location.get("Latitude"), location.get("Longitude"));
+            Double lat = location.get("Latitude");
+            Double lon = location.get("Longitude");
+            if (null != lat && null != lon) {
+                user.setLocation(lat, lon);
             }
         }
 
@@ -251,11 +259,16 @@ public class UserInformationHandler {
      */
     public static void uploadUserInformationToFirestore(final User user, final OnCompleteCallback
             onCompleteCallback) {
+        final FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (null == mAuth.getCurrentUser()) {
+            onCompleteCallback.update(false, "No user logged in");
+            return;
+        }
 
-        // If we are updating the currently logged in users information, update their
-        // Display name and email as well. Otherwise just upload other information.
+        /* If we are updating the currently logged in users information, update their
+         * Display name and email as well. Otherwise just upload other information. */
         if (mAuth.getCurrentUser().getUid().equals(user.getUid())) {
-
             final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(user.getName())
                     .build();
@@ -301,9 +314,7 @@ public class UserInformationHandler {
                     onCompleteCallback.update(false, e.getMessage());
                 }
             });
-
         } else {
-
             mFirestore.collection("Profiles").document(user.getUid()).set(user)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -316,13 +327,23 @@ public class UserInformationHandler {
                     onCompleteCallback.update(false, e.getMessage());
                 }
             });
-
         }
     }
 
-    // TODO : Javadocs
+    /**
+     * Downloads all of the users in the database
+     * @param destination list to store all of the downloaded users
+     * @param onCompleteCallback callback to call when download is complete
+     */
     public static void downloadOtherUsers(final List<CurrentUser> destination, final
     OnCompleteCallback onCompleteCallback) {
+        final FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (null == mAuth.getCurrentUser()) {
+            onCompleteCallback.update(false, "No user logged in");
+            return;
+        }
+
         mFirestore.collection("Profiles").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
