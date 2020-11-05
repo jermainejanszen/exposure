@@ -1,11 +1,6 @@
 package com.exposure.handlers;
 
-import android.database.CursorIndexOutOfBoundsException;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
-
-import com.exposure.activities.MainActivity;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.containers.LastMessageContainer;
 import com.exposure.user.ConnectionItem;
@@ -13,10 +8,8 @@ import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
 import com.exposure.user.UserField;
 import com.exposure.user.User;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -29,17 +22,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Handles the application users' profile and messaging information
+ */
 public class UserInformationHandler {
-
-    private static FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     /**
      * Download user information as document snapshot from firestore
-     * @param user The user whose information we are retrieving from firestore
-     * @param onCompleteCallback Notifies the calling class that the task has been executed
+     * @param user the user whose information we are retrieving from firestore
+     * @param onCompleteCallback notifies the calling class that the task has been executed
      */
-    public static void downloadUserInformation(final User user, final OnCompleteCallback onCompleteCallback) {
+    public static void downloadUserInformation(final User user, final OnCompleteCallback
+            onCompleteCallback) {
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
         mFirestore.collection("Profiles").document(user.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -57,19 +52,30 @@ public class UserInformationHandler {
                 });
     }
 
-    public static void downloadCurrentUserConnections(final CurrentUser user, final OnCompleteCallback onCompleteCallback) {
+    /**
+     * Download the user's connections as a document snapshot from firestore
+     * @param user the user whose connections we are retrieving from firestore
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
+    public static void downloadCurrentUserConnections(final CurrentUser user, final
+    OnCompleteCallback onCompleteCallback) {
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
         mFirestore.collection("Profiles").document(user.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        List<Map<String, Object>> docConnections = (List<Map<String, Object>>) documentSnapshot.get(UserField.CONNECTIONS.toString());
+
+                        List<Map<String, Object>> docConnections = (List<Map<String, Object>>)
+                                documentSnapshot.get(UserField.CONNECTIONS.toString());
                         if (null == docConnections) {
                             onCompleteCallback.update(true, "no connections");
                             return;
                         }
+
                         List<ConnectionItem> connections = new ArrayList<>();
                         for (Map<String, Object> connection : docConnections) {
-                            connections.add(new ConnectionItem((String) connection.get("uid"), (List<String>) connection.get("exposedInfo")));
+                            connections.add(new ConnectionItem((String) connection.get("uid"),
+                                    (List<String>) connection.get("exposedInfo")));
                         }
 
                         user.setConnections(connections);
@@ -84,7 +90,14 @@ public class UserInformationHandler {
                 });
     }
 
-    public static void addOtherUserConnection(final String userUid, final String uidToAdd, final OnCompleteCallback onCompleteCallback) {
+    /**
+     * Add another user connection and upload the resulting list of connections to firestore
+     * @param userUid the user id of the current user
+     * @param uidToAdd the uid of the new connection
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
+    public static void addOtherUserConnection(final String userUid, final String uidToAdd, final
+    OnCompleteCallback onCompleteCallback) {
         final CurrentUser otherUser = new CurrentUser(userUid);
         downloadUserInformation(otherUser, new OnCompleteCallback() {
             @Override
@@ -113,6 +126,13 @@ public class UserInformationHandler {
         });
     }
 
+    /**
+     * Download last chat message and time from firebase firestore
+     * @param uid1 the first user in taking part in the conversation in which this message belongs
+     * @param uid2 the second user in taking part in the conversation in which this message belongs
+     * @param messageContainer the message container of the message being downloaded
+     * @param onCompleteCallback notifies the calling class that the task has been executed
+     */
     public static void loadLastChatMessageAndTime(final String uid1,
                                                   final String uid2,
                                                   final LastMessageContainer messageContainer,
@@ -125,16 +145,21 @@ public class UserInformationHandler {
             docRefID = uid2.concat(uid1);
         }
 
-        final DocumentReference docRefMessages = mFirestore.collection("chats").document(docRefID);
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+        final DocumentReference docRefMessages =
+                mFirestore.collection("chats").document(docRefID);
         docRefMessages.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists() && documentSnapshot.contains("messages")) {
                     List<Object> messages = (ArrayList<Object>) documentSnapshot.get("messages");
-                    if (messages.size() > 0) {
-                        Map<String, Object> lastMessage = (Map<String, Object>) messages.get(messages.size() - 1);
-                        messageContainer.setMessage((String) lastMessage.get("message"));
-                        messageContainer.setTime((Long) lastMessage.get("time"));
+                    if (null != messages) {
+                        if (messages.size() > 0) {
+                            Map<String, Object> lastMessage = (Map<String, Object>)
+                                    messages.get(messages.size() - 1);
+                            messageContainer.setMessage((String) lastMessage.get("message"));
+                            messageContainer.setTime((Long) lastMessage.get("time"));
+                        }
                     }
                     onCompleteCallback.update(true, "success");
                 } else {
@@ -154,27 +179,46 @@ public class UserInformationHandler {
      * @param documentSnapshot Document snapshot containing user information from firestore
      * @param user Current user to set fields of
      */
-    private static void convertDocumentSnapshotToUser(DocumentSnapshot documentSnapshot, User user) {
+    public static void convertDocumentSnapshotToUser(DocumentSnapshot documentSnapshot, User user) {
         user.setNickname((String) documentSnapshot.get(UserField.NICKNAME.toString()));
         Timestamp timestamp = (Timestamp) documentSnapshot.get(UserField.BIRTHDAY.toString());
         user.setBirthday(timestamp == null ? null : timestamp.toDate());
         user.setPhone((String) documentSnapshot.get(UserField.PHONE.toString()));
 
-        user.setName(mAuth.getCurrentUser().getDisplayName());
-        user.setEmail(mAuth.getCurrentUser().getEmail());
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (null == mAuth.getCurrentUser()) {
+            return;
+        }
+        if (mAuth.getCurrentUser().getUid().equals(user.getUid())) {
+            user.setName(mAuth.getCurrentUser().getDisplayName());
+            user.setEmail(mAuth.getCurrentUser().getEmail());
+        } else {
+            user.setName((String) documentSnapshot.get(UserField.NAME.toString()));
+            user.setEmail((String) documentSnapshot.get(UserField.EMAIL.toString()));
+        }
 
-        Map<String, Double> location = (Map<String, Double>) documentSnapshot.get(UserField.LOCATION.toString());
-        List<String> preferences = (List<String>) documentSnapshot.get(UserField.PREFERENCES.toString());
-        List<String> hobbies = (List<String>) documentSnapshot.get(UserField.HOBBIES.toString());
-        List<String> placesLived = (List<String>) documentSnapshot.get(UserField.PLACES_LIVED.toString());
-        List<String> placesStudied = (List<String>) documentSnapshot.get(UserField.PLACES_STUDIED.toString());
-        List<String> personalities = (List<String>) documentSnapshot.get(UserField.PERSONALITIES.toString());
-        List<String> truths = (List<String>) documentSnapshot.get(UserField.TRUTHS.toString());
-        List<String> lies = (List<String>) documentSnapshot.get(UserField.LIES.toString());
+        Map<String, Double> location = (Map<String, Double>) documentSnapshot.get(
+                UserField.LOCATION.toString());
+        List<String> preferences = (List<String>) documentSnapshot.get(
+                UserField.PREFERENCES.toString());
+        List<String> hobbies = (List<String>) documentSnapshot.get(
+                UserField.HOBBIES.toString());
+        List<String> placesLived = (List<String>) documentSnapshot.get(
+                UserField.PLACES_LIVED.toString());
+        List<String> placesStudied = (List<String>) documentSnapshot.get(
+                UserField.PLACES_STUDIED.toString());
+        List<String> personalities = (List<String>) documentSnapshot.get(
+                UserField.PERSONALITIES.toString());
+        List<String> truths = (List<String>) documentSnapshot.get(
+                UserField.TRUTHS.toString());
+        List<String> lies = (List<String>) documentSnapshot.get(
+                UserField.LIES.toString());
 
         if (null != location) {
-            if (null != location.get("Latitude") && null != location.get("Longitude")) {
-                user.setLocation(location.get("Latitude"), location.get("Longitude"));
+            Double lat = location.get("Latitude");
+            Double lon = location.get("Longitude");
+            if (null != lat && null != lon) {
+                user.setLocation(lat, lon);
             }
         }
 
@@ -210,56 +254,101 @@ public class UserInformationHandler {
 
     /**
      * Uploads the data associated with current user to the firestore
-     * @param user The user whose information is being uploaded to the firestore
-     * @param onCompleteCallback Notifies the calling class that the task has been executed
+     * @param user the user whose information is being uploaded to the firestore
+     * @param onCompleteCallback notifies the calling class that the task has been executed
      */
-    public static void uploadUserInformationToFirestore(final User user, final OnCompleteCallback onCompleteCallback) {
+    public static void uploadUserInformationToFirestore(final User user, final OnCompleteCallback
+            onCompleteCallback) {
+        final FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (null == mAuth.getCurrentUser()) {
+            onCompleteCallback.update(false, "No user logged in");
+            return;
+        }
 
-        final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(user.getName())
-                .build();
+        /* If we are updating the currently logged in users information, update their
+         * Display name and email as well. Otherwise just upload other information. */
+        if (mAuth.getCurrentUser().getUid().equals(user.getUid())) {
+            final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(user.getName())
+                    .build();
 
-        mAuth.getCurrentUser().updateEmail(user.getEmail())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        mAuth.getCurrentUser().updateProfile(profileUpdates)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        mFirestore.collection("Profiles").document(user.getUid()).set(user)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        onCompleteCallback.update(true, "success");
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        onCompleteCallback.update(false, e.getMessage());
-                                                    }
-                                        });
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        onCompleteCallback.update(false, e.getMessage());
-                                    }
-                                });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        onCompleteCallback.update(false, e.getMessage());
-                    }
-                });
+            mAuth.getCurrentUser().updateEmail(user.getEmail())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            mAuth.getCurrentUser().updateProfile(profileUpdates)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mFirestore.collection("Profiles").
+                                                    document(user.getUid()).set(user)
+                                                    .addOnSuccessListener(
+                                                            new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            onCompleteCallback.update(
+                                                                    true,
+                                                                    "success");
+                                                        }
+                                                    }).addOnFailureListener(
+                                                            new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    onCompleteCallback.update(
+                                                            false,
+                                                            e.getMessage());
+                                                }
+                                            });
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    onCompleteCallback.update(false, e.getMessage());
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    onCompleteCallback.update(false, e.getMessage());
+                }
+            });
+        } else {
+            mFirestore.collection("Profiles").document(user.getUid()).set(user)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            onCompleteCallback.update(true, "success");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    onCompleteCallback.update(false, e.getMessage());
+                }
+            });
+        }
     }
 
-    public static void downloadOtherUsers(final List<CurrentUser> destination, final OnCompleteCallback onCompleteCallback) {
+    /**
+     * Downloads all of the users in the database
+     * @param destination list to store all of the downloaded users
+     * @param onCompleteCallback callback to call when download is complete
+     */
+    public static void downloadOtherUsers(final List<CurrentUser> destination, final
+    OnCompleteCallback onCompleteCallback) {
+        final FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (null == mAuth.getCurrentUser()) {
+            onCompleteCallback.update(false, "No user logged in");
+            return;
+        }
+
         mFirestore.collection("Profiles").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        destination.clear();
                         for (DocumentSnapshot snapshot: queryDocumentSnapshots.getDocuments()) {
                             if (snapshot.getId().equals(mAuth.getCurrentUser().getUid())) {
                                 continue;
@@ -273,7 +362,8 @@ public class UserInformationHandler {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        onCompleteCallback.update(false, "failed to download all user data");
+                        onCompleteCallback.update(false, "failed to download " +
+                                "all user data");
                     }
                 });
     }

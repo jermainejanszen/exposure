@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,52 +27,64 @@ import com.exposure.handlers.DateHandler;
 import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Fragment representing the profile of the current user
+ */
 public class ProfileFragment extends Fragment {
-    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter, personalitiesAdapter;
-    private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView, personalityTypesRecyclerView;
+
+    private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView,
+            personalityTypesRecyclerView;
     private TextView displayNameText, ageText, preferencesText;
     private ImageView profileImage;
-    private GridView gridView;
-    private Map<String, Bitmap> bitmaps;
+    private ProgressBar progressBar;
     private GridViewAdapter gridViewAdapter;
     private CurrentUser currentUser;
+    private Map<String, Bitmap> bitmaps;
     private List<String> imagePaths;
+
     private byte[] profileByteArray;
-    private ProgressBar progressBar;
+    private static Bitmap profileImageBitmap;
 
-    public static ProfileFragment newInstance(CurrentUser currentUser) {
-        ProfileFragment profileFragment = new ProfileFragment();
-        Bundle args =  new Bundle();
-        args.putSerializable("current user", currentUser);
-        profileFragment.setArguments(args);
-        return profileFragment;
-    }
-
+    /**
+     * Empty constructor for the profile fragment
+     */
     public ProfileFragment() {
-        // Required empty public constructor
+        /* Required empty public constructor */
     }
 
+    /**
+     * Called upon creating the profile fragment and initialises the current user and their
+     * corresponding images
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentUser = (CurrentUser) getArguments().getSerializable("current user");
+        currentUser = MainActivity.getCurrentUser();
         bitmaps = MainActivity.getBitmaps();
         imagePaths = MainActivity.getImagePaths();
     }
 
+    /**
+     * Initialises the view of the profile fragment and loads any of the required
+     * information if it has not already been loaded.
+     * @param inflater inflater to convert the profile fragment xml to a view
+     * @param container view group for the view
+     * @param savedInstanceState previously save instance state
+     * @return newly created view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        /* Inflate the layout for this fragment */
+        final View view = inflater.inflate(R.layout.fragment_profile, container,
+                false);
 
         assert null != getActivity();
 
@@ -81,11 +92,12 @@ public class ProfileFragment extends Fragment {
         areasLivedInRecyclerView = view.findViewById(R.id.areas_lived_in_recycler_view);
         hobbiesRecyclerView = view.findViewById(R.id.hobbies_recycler_view);
         personalityTypesRecyclerView = view.findViewById(R.id.personality_types_recycler_view);
+
         displayNameText = view.findViewById(R.id.display_name);
         ageText = view.findViewById(R.id.age);
         preferencesText = view.findViewById(R.id.preferences);
         profileImage = view.findViewById(R.id.profile_image);
-        gridView = view.findViewById(R.id.image_grid_view);
+        GridView gridView = view.findViewById(R.id.image_grid_view);
         progressBar = view.findViewById(R.id.progress_bar);
 
         gridViewAdapter = new GridViewAdapter(getContext(), bitmaps, imagePaths);
@@ -93,7 +105,8 @@ public class ProfileFragment extends Fragment {
 
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position,
+                                           long id) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Delete Image")
@@ -102,7 +115,8 @@ public class ProfileFragment extends Fragment {
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        UserMediaHandler.deleteImageFromFirebase(gridViewAdapter.getItem(position));
+                                        UserMediaHandler.deleteImageFromFirebase(
+                                                gridViewAdapter.getItem(position));
                                         bitmaps.remove(gridViewAdapter.getItem(position));
                                         imagePaths.remove(position);
                                         gridViewAdapter.notifyDataSetChanged();
@@ -127,17 +141,27 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Update the current user who's profile is being represented by this fragment
+     * @param currentUser the new current user
+     */
     public void updateCurrentUser(CurrentUser currentUser) {
         this.currentUser = currentUser;
         initialiseFields();
     }
 
-
+    /**
+     * Initialise the fields of the current user's profile
+     */
     private void initialiseFields() {
-        studyLocationsAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPlacesStudied(), false);
-        areasLivedInAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPlacesLived(), false);
-        hobbiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getHobbies(), false);
-        personalitiesAdapter = new ChipsRecyclerViewAdapter(getActivity(), currentUser.getPersonalities(), false);
+        ChipsRecyclerViewAdapter studyLocationsAdapter = new ChipsRecyclerViewAdapter(getActivity(),
+                currentUser.getPlacesStudied(), false);
+        ChipsRecyclerViewAdapter areasLivedInAdapter = new ChipsRecyclerViewAdapter(getActivity(),
+                currentUser.getPlacesLived(), false);
+        ChipsRecyclerViewAdapter hobbiesAdapter = new ChipsRecyclerViewAdapter(getActivity(),
+                currentUser.getHobbies(), false);
+        ChipsRecyclerViewAdapter personalitiesAdapter = new ChipsRecyclerViewAdapter(getActivity(),
+                currentUser.getPersonalities(), false);
 
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
@@ -146,7 +170,8 @@ public class ProfileFragment extends Fragment {
 
         /* Set the display name to the nickname if it exists, otherwise just use the users name */
         displayNameText.setText(
-                currentUser.getNickname() == null ? currentUser.getName() : currentUser.getNickname());
+                currentUser.getNickname() == null ? currentUser.getName() :
+                        currentUser.getNickname());
 
         /* Set the users age if they have entered their birthday */
         if (null != currentUser.getBirthday()) {
@@ -164,37 +189,73 @@ public class ProfileFragment extends Fragment {
         if (!preferences.isEmpty()) {
             Collections.sort(preferences);
 
-            String preferencesString = "Interested in " + preferences.get(0);
+            StringBuilder preferencesString = new StringBuilder("Interested in " +
+                    preferences.get(0));
 
             for (int i = 1; i < preferences.size(); i++) {
-                preferencesString += ", " + preferences.get(i);
+                preferencesString.append(", ").append(preferences.get(i));
             }
 
-            preferencesText.setText(preferencesString);
+            preferencesText.setText(preferencesString.toString());
         }
 
-        profileByteArray = new byte[1024*1024];
-
-        UserMediaHandler.downloadProfilePhotoFromFirebase(currentUser.getUid(), profileByteArray, profileByteArray.length, new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success){
-                    profileImage.setImageBitmap(BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length));
-                } else {
-                    Toast.makeText(getContext(), "Failed to download profile image", Toast.LENGTH_SHORT).show();
+        if (null == profileImageBitmap) {
+            profileByteArray = new byte[1024 * 1024];
+            UserMediaHandler.downloadProfilePhotoFromFirebase(
+                    currentUser.getUid(),
+                    profileByteArray,
+                    profileByteArray.length,
+                    new OnCompleteCallback() {
+                @Override
+                public void update(boolean success, String message) {
+                    if (success) {
+                        profileImageBitmap = BitmapFactory.decodeByteArray(profileByteArray,
+                                0, profileByteArray.length);
+                        profileImage.setImageBitmap(profileImageBitmap);
+                    } else {
+                        Toast.makeText(getContext(),
+                                "Failed to download profile image",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            profileImage.setImageBitmap(profileImageBitmap);
+        }
     }
 
-    /* Will need to refactor this */
+    /**
+     * Adds a bitmap to be displayed in the user's images in their profile
+     * @param id id representing the bitmap
+     * @param bitmap the bitmap itself
+     */
     public void addBitmap(String id, Bitmap bitmap) {
         bitmaps.put(id, bitmap);
         imagePaths.add(id);
         gridViewAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Sets the visibility of the progress bar
+     * @param visibility indicates whether the progress bar should be visible or not visible
+     */
     public void setProgressBarVisibility(int visibility) {
         progressBar.setVisibility(visibility);
+    }
+
+    /**
+     * Getter for the profile image bitmap
+     * @return profile image as a Bitmap
+     */
+    public static Bitmap getProfileImageBitmap() {
+        return profileImageBitmap;
+    }
+
+    /**
+     * Setter for the profile image bitmap
+     * @param bitmap profile image as a Bitmap
+     */
+    public static void setProfileImageBitmap(Bitmap bitmap) {
+        profileImageBitmap = bitmap;
     }
 }

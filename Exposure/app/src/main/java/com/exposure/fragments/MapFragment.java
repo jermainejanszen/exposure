@@ -2,18 +2,15 @@ package com.exposure.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.Nullable;
 
 import com.exposure.R;
 import com.exposure.activities.MainActivity;
@@ -26,15 +23,22 @@ import com.exposure.constants.RequestCodes;
 import com.exposure.handlers.DistanceHandler;
 import com.exposure.handlers.UserInformationHandler;
 import com.exposure.user.CurrentUser;
-import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.Serializable;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
 
+/**
+ * Fragment representing the map displaying all users available to match within, organised
+ * according to their geographical distance from the current user
+ */
 public class MapFragment extends Fragment {
 
     private List<MapListItem> fifteenKM;
@@ -54,58 +58,110 @@ public class MapFragment extends Fragment {
     private View view;
     private RelativeLayout loadingCover;
 
+    /**
+     * Empty constructor for the map fragment
+     */
     public MapFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Called upon creating the activity
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (null == FirebaseAuth.getInstance().getCurrentUser()) {
+            return;
+        }
+
+        final DocumentReference userProfileRef = FirebaseFirestore.getInstance()
+                .collection("Profiles")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        userProfileRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value,
+                                @Nullable FirebaseFirestoreException error) {
+                if (null != error) {
+                    return;
+                }
+
+                if (null != value && value.exists()) {
+                    final CurrentUser currentUser = new CurrentUser(
+                            FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    UserInformationHandler.convertDocumentSnapshotToUser(value, currentUser);
+                    UserInformationHandler.downloadCurrentUserConnections(
+                            currentUser,
+                            new OnCompleteCallback() {
+                        @Override
+                        public void update(boolean success, String message) {
+                            for (int i = allUsers.size() - 1; i >= 0; i--) {
+                                CurrentUser user = allUsers.get(i);
+                                if (currentUser.isConnected(user.getUid())) {
+                                    allUsers.remove(i);
+                                    removeConnectedUserFromRegions(user.getUid());
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
+    /**
+     * Initialises the view of the maps fragment and loads any of the required
+     * information if it has not already been loaded.
+     * @param inflater inflater to convert the maps fragment xml to a view
+     * @param container view group for the view
+     * @param savedInstanceState previously save instance state
+     * @return newly created view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        /* Inflate the layout for this fragment */
         view = inflater.inflate(R.layout.fragment_map, container, false);
 
         loadingCover = view.findViewById(R.id.map_loading_cover);
-        loadingCover.setVisibility(View.VISIBLE);
 
         assert null != getActivity();
 
-        allUsers = new ArrayList<>();
+        /* Load all users if they haven't already been loaded */
+        if (null == allUsers) {
+            loadingCover.setVisibility(View.VISIBLE);
+            allUsers = new ArrayList<>();
+            updateMapUsers();
+        } else {
+            setup(view);
+        }
 
+        return view;
+    }
+
+    /**
+     * Updates the current users map items to accommodate for new users as well as new
+     * connections
+     */
+    private void updateMapUsers() {
         UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
             @Override
             public void update(boolean success, String message) {
                 if (success) {
                     setup(view);
+                    mapUsersToRegions();
                 }
             }
         });
-
-        return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (RequestCodes.VIEW_PROFILE_REQUEST == requestCode) {
-            loadingCover.setVisibility(View.VISIBLE);
-            allUsers.clear();
-            UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
-                @Override
-                public void update(boolean success, String message) {
-                    if (success) {
-                        setup(view);
-                    }
-                }
-            });
-        }
-    }
-
+    /**
+     * Sets up the map view showing all users, ordered on their screen by their geographical
+     * distance from the current user
+     * @param view the view
+     */
     private void setup(View view) {
 
         OnMapItemPressedCallback callback = new OnMapItemPressedCallback() {
@@ -117,65 +173,43 @@ public class MapFragment extends Fragment {
 
         if (null == fifteenKM) {
             fifteenKM = new ArrayList<>();
-        } else {
-            fifteenKM.clear();
         }
 
         if (null == nineKM) {
             nineKM = new ArrayList<>();
-        } else {
-            nineKM.clear();
         }
 
         if (null == sixKM) {
             sixKM = new ArrayList<>();
-        } else {
-            sixKM.clear();
         }
 
         if (null == threeKM) {
             threeKM = new ArrayList<>();
-        } else {
-            threeKM.clear();
         }
 
         if (null == zeroKM) {
             zeroKM = new ArrayList<>();
-        } else {
-            zeroKM.clear();
         }
 
         if (null == fifteenMapAdapter) {
             fifteenMapAdapter = new MapRecyclerViewAdapter(fifteenKM, callback);
-        } else {
-            fifteenMapAdapter.syncData();
         }
 
         if (null == nineMapAdapter) {
             nineMapAdapter = new MapRecyclerViewAdapter(nineKM, callback);
-        } else {
-            nineMapAdapter.syncData();
         }
 
         if (null == sixMapAdapter) {
             sixMapAdapter = new MapRecyclerViewAdapter(sixKM, callback);
-        } else {
-            sixMapAdapter.syncData();
         }
 
         if (null == threeMapAdapter) {
             threeMapAdapter = new MapRecyclerViewAdapter(threeKM, callback);
-        } else {
-            threeMapAdapter.syncData();
         }
 
         if (null == zeroMapAdapter) {
             zeroMapAdapter = new MapRecyclerViewAdapter(zeroKM, callback);
-        } else {
-            zeroMapAdapter.syncData();
         }
-
-        mapUsersToRegions();
 
         RecyclerView fifteenMapRecyclerView = view.findViewById(R.id.map_15k_recycler);
         RecyclerView nineMapRecyclerView = view.findViewById(R.id.map_9k_recycler);
@@ -190,81 +224,113 @@ public class MapFragment extends Fragment {
         zeroMapRecyclerView.setAdapter(zeroMapAdapter);
     }
 
+    /**
+     * Adds users to the different distance ranges on the maps page according to their geographical
+     * distance from the current user
+     */
+    private void mapUsersToRegions() {
+
+        final CurrentUser currentUser = MainActivity.getCurrentUser();
+
+        OnCompleteCallback callback = new OnCompleteCallback() {
+            int calls = 0;
+
+            @Override
+            public synchronized void update(boolean success, String message) {
+                calls += 1;
+
+                if (calls == allUsers.size()) {
+                    fifteenMapAdapter.notifyDataSetChanged();
+                    nineMapAdapter.notifyDataSetChanged();
+                    sixMapAdapter.notifyDataSetChanged();
+                    threeMapAdapter.notifyDataSetChanged();
+                    zeroMapAdapter.notifyDataSetChanged();
+                    loadingCover.setVisibility(View.INVISIBLE);
+                }
+            }
+        };
+
+        for (int i = allUsers.size() - 1; i >= 0; i--) {
+            CurrentUser user = allUsers.get(i);
+            if (currentUser.isConnected(user.getUid())) {
+                allUsers.remove(i);
+            }
+        }
+
+        for (int i = 0; i < allUsers.size(); i++) {
+            CurrentUser otherUser = allUsers.get(i);
+
+            int distance = DistanceHandler.distanceInKM(currentUser, otherUser);
+            if (distance <= 2) {
+                zeroKM.add(new MapListItem(otherUser.getUid(), callback));
+            } else if (distance <= 5) {
+                threeKM.add(new MapListItem(otherUser.getUid(), callback));
+            } else if (distance <= 8) {
+                sixKM.add(new MapListItem(otherUser.getUid(), callback));
+            } else if (distance <= 15) {
+                nineKM.add(new MapListItem(otherUser.getUid(), callback));
+            } else {
+                fifteenKM.add(new MapListItem(otherUser.getUid(), callback));
+            }
+        }
+    }
+
+    /**
+     * Removes the user with the given idea from their respective container.
+     * Called to remove a user once they have been connected.
+     * @param uid uid of the user to remove
+     */
+    private void removeConnectedUserFromRegions(String uid) {
+
+        for (MapListItem item : zeroKM) {
+            if (item.getUid().equals(uid)) {
+                zeroKM.remove(item);
+                zeroMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+        for (MapListItem item : threeKM) {
+            if (item.getUid().equals(uid)) {
+                threeKM.remove(item);
+                threeMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+        for (MapListItem item : sixKM) {
+            if (item.getUid().equals(uid)) {
+                sixKM.remove(item);
+                sixMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+        for (MapListItem item : nineKM) {
+            if (item.getUid().equals(uid)) {
+                nineKM.remove(item);
+                nineMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+        for (MapListItem item : fifteenKM) {
+            if (item.getUid().equals(uid)) {
+                fifteenKM.remove(item);
+                fifteenMapAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+    }
+
+    /**
+     * Upon clicking on another user's image on the map, user is taken to view their profile
+     * @param uid the uid of the other user who's image has been clicked on
+     */
     private void onMapItemPressed(String uid) {
         Intent intent = new Intent(getContext(), ViewOtherProfileActivity.class);
         intent.putExtra("Uid", uid);
         startActivityForResult(intent, RequestCodes.VIEW_PROFILE_REQUEST);
-    }
-
-    private void mapUsersToRegions() {
-        final OnCompleteCallback finishedCallback = new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    fifteenMapAdapter.notifyDataSetChanged();
-                    nineMapAdapter.notifyDataSetChanged();
-                    sixMapAdapter.notifyDataSetChanged();
-                    threeMapAdapter.notifyDataSetChanged();
-                    zeroMapAdapter.notifyDataSetChanged();
-                }
-                loadingCover.setVisibility(View.INVISIBLE);
-            }
-        };
-
-        final OnCompleteCallback intermediateCallback = new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    fifteenMapAdapter.notifyDataSetChanged();
-                    nineMapAdapter.notifyDataSetChanged();
-                    sixMapAdapter.notifyDataSetChanged();
-                    threeMapAdapter.notifyDataSetChanged();
-                    zeroMapAdapter.notifyDataSetChanged();
-                }
-            }
-        };
-
-        //TODO: Perhaps be better to pass in current user as a serializable
-        final CurrentUser currentUser = MainActivity.getCurrentUser();
-
-        UserInformationHandler.downloadCurrentUserConnections(currentUser, new OnCompleteCallback() {
-            @Override
-            public void update(boolean success, String message) {
-                if (success) {
-                    boolean newConnections = false;
-
-                    for (int i = 0; i < allUsers.size(); i++) {
-                        CurrentUser otherUser = allUsers.get(i);
-
-                        if (currentUser.isConnected(otherUser.getUid())) {
-                            continue;
-                        }
-
-                        OnCompleteCallback notifyCallback =
-                                (i == allUsers.size() - 1) ? finishedCallback : intermediateCallback;
-
-                        newConnections = true;
-
-                        int distance = DistanceHandler.distanceInKM(currentUser, otherUser);
-                        if (distance <= 2) {
-                            zeroKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        } else if (distance <= 5) {
-                            threeKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        } else if (distance <= 8) {
-                            sixKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        } else if (distance <= 15) {
-                            nineKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        } else {
-                            fifteenKM.add(new MapListItem(otherUser.getUid(), notifyCallback));
-                        }
-                    }
-                    if (!newConnections) {
-                        finishedCallback.update(true, "finished");
-                    }
-                } else {
-                    finishedCallback.update(false, "failed to download user data");
-                }
-            }
-        });
     }
 }

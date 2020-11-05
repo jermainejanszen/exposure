@@ -54,7 +54,7 @@
                         android:id="@+id/display_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Display Name"
+                        android:text=""
                         android:textColor="@color/Primary400"
                         />
 
@@ -253,7 +253,7 @@
                     android:layout_centerVertical="true"
                     android:background="@drawable/add"
                     android:onClick="onUploadImageClick"
-                    />
+                    android:contentDescription="@string/upload_image_button" />
 
             </RelativeLayout>
 

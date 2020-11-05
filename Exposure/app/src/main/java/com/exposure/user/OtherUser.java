@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Used to store information about other users that the current user
- * may have a connection with.
+ * Used to store information about other users that the current user may have a connection with
  */
 public class OtherUser extends User {
 
-    private List<String> exposedInfo;
+    private final List<String> exposedInfo;
 
-    /* Constructor */
+    /**
+     * Constructor for the other user
+     * @param uid uid of the user
+     */
     public OtherUser(String uid) {
         super(uid);
         exposedInfo = new ArrayList<>();
@@ -21,6 +23,11 @@ public class OtherUser extends User {
         exposedInfo.add(UserField.PROFILE_IMAGE.toString());
     }
 
+    /**
+     * Second constructor used when reconstructing the OtherUser
+     * object from Firestore
+     * @param connectionItem ConnectionItem for the other user
+     */
     public OtherUser(ConnectionItem connectionItem) {
         super(connectionItem.getUid());
         this.exposedInfo = connectionItem.getExposedInfo();
@@ -39,22 +46,17 @@ public class OtherUser extends User {
      * Exposes the given field.
      * @param field Field to expose.
      */
-    public ConnectionItem exposeDetail(UserField field) {
+    public void exposeDetail(UserField field) {
         if(!checkDetailExposed(field)) {
             this.exposedInfo.add(field.toString());
         }
-        return this.toConnectionItem();
+        this.toConnectionItem();
     }
 
     /**
-     * Hides the given field.
-     * @param field Field to hide.
+     * Creates new connection item for this other user
+     * @return the connection item
      */
-    public ConnectionItem hideDetail(UserField field) {
-        this.exposedInfo.remove(field.toString());
-        return this.toConnectionItem();
-    }
-
     public ConnectionItem toConnectionItem() {
         return new ConnectionItem(this.getUid(), exposedInfo);
     }

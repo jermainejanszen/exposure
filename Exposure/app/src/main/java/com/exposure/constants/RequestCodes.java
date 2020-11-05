@@ -1,6 +1,10 @@
 package com.exposure.constants;
 
+/**
+ * Request codes for activities
+ */
 public class RequestCodes {
+
     public static int TAKE_PHOTO_REQUEST = 101;
     public static int CHOOSE_FROM_LIBRARY_REQUEST = 102;
     public static int RETRIEVE_IMAGE_REQUEST;
@@ -13,4 +17,5 @@ public class RequestCodes {
     public static int SAVE_LIE_REQUEST = 109;
     public static int GAME_RESULT = 110;
     public static int VIEW_PROFILE_REQUEST = 111;
+
 }

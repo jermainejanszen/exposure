@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -35,7 +36,8 @@
             android:layout_centerVertical="true"
             android:text=""
             android:onClick="onUserBarPressed"
-            android:layout_toEndOf="@id/message_user_image" />
+            android:layout_toEndOf="@id/message_user_image"
+            tools:ignore="RelativeOverlap" />
 
         <ImageButton
             android:id="@+id/message_open_button"
@@ -48,7 +50,8 @@
             android:layout_alignParentEnd="true"
             android:tint="@color/Secondary500"
             android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
-            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24" />
+            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"
+            android:contentDescription="@string/message_open_button" />
 
     </RelativeLayout>
 
@@ -103,7 +106,8 @@
             app:srcCompat="@drawable/ic_baseline_send_24"
             android:src="@drawable/ic_baseline_send_24"
             android:background="#00000000"
-            android:onClick="onSendPressed"/>
+            android:onClick="onSendPressed"
+            android:contentDescription="@string/send_button" />
 
     </LinearLayout>
 

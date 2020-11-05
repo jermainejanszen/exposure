@@ -1,31 +1,33 @@
 package com.exposure.adapters;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
-import com.exposure.activities.ViewOtherProfileActivity;
 import com.exposure.callback.OnMapItemPressedCallback;
 
-import java.io.Serializable;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerViewAdapter.ViewHolder> {
+/**
+ * Recycler view adapter for representing users on the map fragment
+ */
+public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerViewAdapter.ViewHolder>
+{
     private final OnMapItemPressedCallback callback;
     private final List<MapListItem> data;
 
+    /**
+     * The constructor for the MapRecyclerViewAdapter
+     * @param data the list of map list items
+     * @param callback notifies the calling class that the task has been executed
+     */
     public MapRecyclerViewAdapter(List<MapListItem> data, OnMapItemPressedCallback callback) {
         this.callback = callback;
         this.data = data;
@@ -53,21 +55,26 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
             });
         }
 
+    /**
+     * Returns the number of map list items in the list
+     * @return the number of map list items in the list
+     */
     @Override
     public int getItemCount() {
         return data.size();
     }
 
+    /**
+     * Returns the list of map list items
+     * @return the list of map list items
+     */
     public List<MapListItem> getData() {
         return this.data;
     }
 
-    public void syncData() {
-        for (MapListItem item : data) {
-            item.loadFields();
-        }
-    }
-
+    /**
+     * View holder for each of the map recycler view items
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView profileImage;
         private final TextView name;
@@ -78,10 +85,18 @@ public class MapRecyclerViewAdapter extends RecyclerView.Adapter<MapRecyclerView
             name = itemView.findViewById(R.id.map_name);
         }
 
+        /**
+         * Gets the circle profile image of the other user
+         * @return The circle profile image of the other user
+         */
         public CircleImageView getProfileImage() {
             return profileImage;
         }
 
+        /**
+         * Gets the name of the other user
+         * @return the name of the other user
+         */
         public TextView getName() {
             return name;
         }

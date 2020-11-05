@@ -32,6 +32,7 @@
         android:elevation="3dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/chat_search_bar_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search"
@@ -45,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="78dp"
-        android:paddingBottom="0dp"
+        android:paddingBottom="57.5dp"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

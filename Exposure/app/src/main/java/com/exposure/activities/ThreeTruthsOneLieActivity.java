@@ -1,19 +1,18 @@
 package com.exposure.activities;
 
-import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.exposure.R;
 import com.exposure.callback.OnCompleteCallback;
 import com.exposure.constants.ResultCodes;
-import com.exposure.popups.LostGameActivity;
-import com.exposure.popups.WonGameActivity;
+import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
 import com.exposure.user.OtherUser;
 
@@ -22,8 +21,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
+/**
+ * Activity handling the three truths and one lie game
+ */
 public class ThreeTruthsOneLieActivity extends AppCompatActivity {
 
     OtherUser otherUser;
@@ -34,6 +37,12 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
     Button[] inputFields = new Button[4];
     int indexOfLie;
 
+    /**
+     * Upon creating the activity, the view is set up, the truths and lies about the other user are
+     * read in and put in a random order, and then presented on the screen for the user to choose
+     * the lie from
+     * @param savedInstanceState saved instance state for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -53,10 +62,19 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
             finish();
         }
 
+        final CircleImageView profileImage = findViewById(R.id.game_user_image);
+        TextView profileName = findViewById(R.id.game_user_name);
+        profileName.setText(otherUser.getNickname());
+
+        TextView gameSubtitle = findViewById(R.id.game_subtitle);
+        String subtitle = "Guess which one is the lie to learn a little bit more about " +
+                otherUser.getNickname() + ".";
+        gameSubtitle.setText(subtitle);
+
         truths = otherUser.getTruths();
         lies = otherUser.getLies();
 
-        /** randomise order of truths and lies **/
+        /* Randomise order of truths and lies */
         Collections.shuffle(truths);
         Collections.shuffle(lies);
 
@@ -65,13 +83,13 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
         mapTruthsLiesToView.put("Truth 3", truths.get(2));
         mapTruthsLiesToView.put("Lie", lies.get(0));
 
-        /** randomly assign lie and truths to view **/
+        /* Randomly assign lie and truths to view */
         List mapKeys = new ArrayList(mapTruthsLiesToView.keySet());
         Collections.shuffle(mapKeys);
         int i = 0;
         while (i < 4) {
             for (Object key : mapKeys) {
-                // Access keys/values in a random order
+                /* Access keys/values in a random order */
                 inputFields[i].setText(mapTruthsLiesToView.get(key));
                 if (key == "Lie"){
                     indexOfLie = i;
@@ -80,6 +98,7 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
             }
         }
 
+        /* Set listeners to determine which tile the user clicks on as their guess */
         for (int k = 0; k < 4; k++){
             final int finalK = k;
             inputFields[k].setOnClickListener(new View.OnClickListener() {
@@ -93,15 +112,41 @@ public class ThreeTruthsOneLieActivity extends AppCompatActivity {
                 }
             });
         }
+
+        final byte[] profileByteArray = new byte[1024*1024];
+        UserMediaHandler.downloadProfilePhotoFromFirebase(otherUser.getUid(), profileByteArray,
+                profileByteArray.length, new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                Bitmap profileBitmap = BitmapFactory.decodeByteArray(profileByteArray, 0,
+                        profileByteArray.length);
+                profileImage.setImageBitmap(profileBitmap);
+            }
+        });
     }
 
+    /**
+     * Upon correctly choosing the correct lie, the user wins the game and activity finishes
+     */
     public void wonGame() {
         setResult(ResultCodes.WON_GAME);
         finish();
     }
 
+    /**
+     * Upon correctly choosing the incorrect lie, the user loses the game and activity finishes
+     */
     public void lostGame() {
         setResult(ResultCodes.LOST_GAME);
         finish();
+    }
+
+    /**
+     * Calls the native back pressed button. Used to provide back press functionality to
+     * UI back buttons.
+     * @param view The current view
+     */
+    public void onBackPressed(View view) {
+        super.onBackPressed();
     }
 }
