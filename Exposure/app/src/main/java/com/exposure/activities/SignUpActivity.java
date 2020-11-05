@@ -76,9 +76,6 @@ public class SignUpActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            Toast.makeText(getApplicationContext(), "Successful sign up.",
-                                    Toast.LENGTH_LONG).show();
-
                             final UserProfileChangeRequest profileUpdates = new
                                     UserProfileChangeRequest.Builder()
                                     .setDisplayName(fullName)
