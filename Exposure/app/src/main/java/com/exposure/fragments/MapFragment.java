@@ -2,16 +2,15 @@ package com.exposure.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
-import androidx.annotation.Nullable;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.Nullable;
 
 import com.exposure.R;
 import com.exposure.activities.MainActivity;
@@ -23,8 +22,8 @@ import com.exposure.callback.OnMapItemPressedCallback;
 import com.exposure.constants.RequestCodes;
 import com.exposure.handlers.DistanceHandler;
 import com.exposure.handlers.UserInformationHandler;
-import com.exposure.handlers.UserMediaHandler;
 import com.exposure.user.CurrentUser;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,7 +33,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -60,8 +58,6 @@ public class MapFragment extends Fragment {
     private View view;
     private RelativeLayout loadingCover;
 
-    private OnCompleteCallback callback;
-
     /**
      * Empty constructor for the map fragment
      */
@@ -70,31 +66,31 @@ public class MapFragment extends Fragment {
     }
 
     /**
-     * Call upon creating the activity
+     * Called upon creating the activity
      * @param savedInstanceState saved instance state for the activity
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (null == FirebaseAuth.getInstance().getUid()) {
+        if (null == FirebaseAuth.getInstance().getCurrentUser()) {
             return;
         }
 
         final DocumentReference userProfileRef = FirebaseFirestore.getInstance()
                 .collection("Profiles")
-                .document(FirebaseAuth.getInstance().getUid());
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         userProfileRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+            public void onEvent(@Nullable DocumentSnapshot value,
+                                @Nullable FirebaseFirestoreException error) {
                 if (null != error) {
                     return;
                 }
 
                 if (null != value && value.exists()) {
                     final CurrentUser currentUser = new CurrentUser(
-                            FirebaseAuth.getInstance().getUid());
-                    // TODO: update main activity static current user with this new one
+                            FirebaseAuth.getInstance().getCurrentUser().getUid());
                     UserInformationHandler.convertDocumentSnapshotToUser(value, currentUser);
                     UserInformationHandler.downloadCurrentUserConnections(
                             currentUser,
@@ -116,22 +112,24 @@ public class MapFragment extends Fragment {
     }
 
     /**
-     * On creating the view, TODO
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * Initialises the view of the maps fragment and loads any of the required
+     * information if it has not already been loaded.
+     * @param inflater inflater to convert the maps fragment xml to a view
+     * @param container view group for the view
+     * @param savedInstanceState previously save instance state
+     * @return newly created view
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        /* Inflate the layout for this fragment */
         view = inflater.inflate(R.layout.fragment_map, container, false);
 
         loadingCover = view.findViewById(R.id.map_loading_cover);
 
         assert null != getActivity();
 
+        /* Load all users if they haven't already been loaded */
         if (null == allUsers) {
             loadingCover.setVisibility(View.VISIBLE);
             allUsers = new ArrayList<>();
@@ -143,7 +141,10 @@ public class MapFragment extends Fragment {
         return view;
     }
 
-    // TODO : Javadocs
+    /**
+     * Updates the current users map items to accommodate for new users as well as new
+     * connections
+     */
     private void updateMapUsers() {
         UserInformationHandler.downloadOtherUsers(allUsers, new OnCompleteCallback() {
             @Override
@@ -274,9 +275,12 @@ public class MapFragment extends Fragment {
         }
     }
 
-    // TODO : Javadocs
+    /**
+     * Removes the user with the given idea from their respective container.
+     * Called to remove a user once they have been connected.
+     * @param uid uid of the user to remove
+     */
     private void removeConnectedUserFromRegions(String uid) {
-        Log.d("SDAASDASD", "CALLED REMOVED CONNECT USERS FROM REGIIONS");
 
         for (MapListItem item : zeroKM) {
             if (item.getUid().equals(uid)) {
@@ -296,7 +300,6 @@ public class MapFragment extends Fragment {
 
         for (MapListItem item : sixKM) {
             if (item.getUid().equals(uid)) {
-                Log.d("SDAASDASD", "FOUND USER TO REMOVESSSSSSSSSSSSSSSS");
                 sixKM.remove(item);
                 sixMapAdapter.notifyDataSetChanged();
                 return;

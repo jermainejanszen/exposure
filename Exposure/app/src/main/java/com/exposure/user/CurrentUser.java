@@ -27,7 +27,12 @@ public class CurrentUser extends User {
         return connections;
     }
 
-    //TODO
+    /**
+     * Gets a ConnectionItem for the given uid
+     * @param uid uid of the user to get the ConnectionItem of
+     * @return the ConnectionItem of the user with the given uid. Null if the current
+     * user is not connected to the user with the given uid
+     */
     public ConnectionItem getConnection(String uid) {
         for (ConnectionItem connection : connections) {
             if (0 == connection.getUid().compareTo(uid)) {
@@ -37,10 +42,18 @@ public class CurrentUser extends User {
         return null;
     }
 
+    /**
+     * Sets the current user's connections
+     * @param connections connections to set
+     */
     public void setConnections(List<ConnectionItem> connections) {
         this.connections = connections;
     }
 
+    /**
+     * Adds the given connection if the current user is not already connected to the given user
+     * @param connectionItem new ConnectionItem to add
+     */
     public void addConnection(ConnectionItem connectionItem) {
         ConnectionItem connection = getConnection(connectionItem.getUid());
         if (null != connection) {

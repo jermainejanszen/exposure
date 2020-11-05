@@ -24,9 +24,6 @@ import java.util.Map;
  */
 public class UserMediaHandler {
 
-    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private static StorageReference mStorage = FirebaseStorage.getInstance().getReference();
-
     /**
      * Upload user profile photo to firebase
      * @param profilePhoto the profile photo to be uploaded
@@ -34,6 +31,7 @@ public class UserMediaHandler {
      */
     public static void uploadProfilePhotoToFirebase(Bitmap profilePhoto, final OnCompleteCallback
             onCompleteCallback){
+        final StorageReference mStorage = FirebaseStorage.getInstance().getReference();
         String path = "Profile Photos/" + FirebaseAuth.getInstance().getUid();
 
         final StorageReference mProfilePics = mStorage.child(path);
@@ -65,6 +63,13 @@ public class UserMediaHandler {
      */
     public static void uploadImageToFirebase(String id, Bitmap image, final OnCompleteCallback
             onCompleteCallback) {
+        final StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (null == mAuth.getCurrentUser()) {
+            onCompleteCallback.update(false, "No user logged in");
+            return;
+        }
+
         String refPath = mAuth.getCurrentUser().getUid() + "/Images/" + id;
 
         final StorageReference imageRef = mStorage.child(refPath);
@@ -94,6 +99,7 @@ public class UserMediaHandler {
      */
     public static void downloadImagesFromFirebase(final String uid, final Map<String, Bitmap>
             bitmaps, final List<String> imagePaths, final OnCompleteCallback onCompleteCallback) {
+        final StorageReference mStorage = FirebaseStorage.getInstance().getReference();
         String path = uid + "/Images/";
 
         Log.d("UserMedia", path);
@@ -104,7 +110,6 @@ public class UserMediaHandler {
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(final ListResult listResult) {
-                        final List<StorageReference> imageRefs = listResult.getItems();
                         final int size = 1024 * 1024;
 
                         Log.d("SIZE", "" + listResult.getItems().size());
@@ -150,6 +155,12 @@ public class UserMediaHandler {
      * @param id the id of the image to delete from firebase
      */
     public static void deleteImageFromFirebase(String id) {
+        final StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (null == mAuth.getCurrentUser()) {
+            return;
+        }
+
         String refPath = mAuth.getCurrentUser().getUid() + "/Images/" + id;
 
         final StorageReference imageRef = mStorage.child(refPath);
@@ -179,7 +190,8 @@ public class UserMediaHandler {
      */
     public static void downloadProfilePhotoFromFirebase(String uid, final byte[] profilePicture,
                                                         final long photoSize, final
-                                                        OnCompleteCallback onCompleteCallback){
+                                                        OnCompleteCallback onCompleteCallback) {
+        final StorageReference mStorage = FirebaseStorage.getInstance().getReference();
         final StorageReference mProfilePics = mStorage.child("Profile Photos" + "/" + uid);
 
         mProfilePics.getBytes(photoSize).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -197,7 +209,11 @@ public class UserMediaHandler {
         });
     }
 
-    // TODO : Javadocs
+    /**
+     * Compresses the given Bitmap and returns the compressed image as a byte array
+     * @param bitmap Bitmap to compress
+     * @return byte array of compressed image
+     */
     private static byte[] compress(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -207,7 +223,7 @@ public class UserMediaHandler {
 
         Log.d("COMPRESSING", "IMAGE SIZE IS " + imageSize);
 
-        // Quality compression depends on the original size of the photo
+        /* Quality compression depends on the original size of the photo */
         if (imageSize > 2 * megabyte) {
             qualityCompression = 10;
         } else if (imageSize > megabyte) {

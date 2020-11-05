@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -41,7 +42,7 @@
             android:textColor="@color/Primary400"
             android:textSize="18sp"
             android:onClick="onSaveClick"
-            />
+            tools:ignore="RelativeOverlap" />
 
     </RelativeLayout>
 
@@ -70,7 +71,8 @@
                 android:layout_marginEnd="18dp"
                 android:onClick="onLogoutPress"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:textColor="@color/Secondary500"/>
+                android:textColor="@color/Secondary500"
+                tools:ignore="RelativeOverlap" />
 
             <RelativeLayout
                 android:id="@+id/profile_image_section"
@@ -143,7 +145,7 @@
                         android:maxLength="20"
                         android:inputType="textPersonName"
                         android:background="@android:color/transparent"
-                        />
+                        android:importantForAutofill="no" />
 
                     <View
                         android:layout_width="match_parent"
@@ -182,7 +184,7 @@
                         android:maxLength="20"
                         android:inputType="textPersonName"
                         android:background="@android:color/transparent"
-                        />
+                        android:importantForAutofill="no" />
 
                     <View
                         android:layout_width="match_parent"
@@ -221,7 +223,7 @@
                         android:maxLength="10"
                         android:inputType="date"
                         android:background="@android:color/transparent"
-                        />
+                        android:importantForAutofill="no" />
 
                     <View
                         android:layout_width="match_parent"
@@ -325,7 +327,8 @@
                         android:maxLength="30"
                         android:inputType="textEmailAddress"
                         android:background="@android:color/transparent"
-                        android:importantForAutofill="no" />
+                        android:importantForAutofill="no"
+                        tools:ignore="LabelFor" />
 
                     <Button
                         android:id="@+id/update_location_button"
@@ -336,7 +339,8 @@
                         android:text="@string/update"
                         android:onClick="onUpdateLocationClick"
                         app:icon="@drawable/ic_baseline_location_on_24"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"/>
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                        tools:ignore="RelativeOverlap" />
 
             </RelativeLayout>
 
@@ -392,7 +396,7 @@
                         android:maxLength="30"
                         android:inputType="textEmailAddress"
                         android:background="@android:color/transparent"
-                        />
+                        android:importantForAutofill="no" />
 
                     <View
                         android:layout_width="match_parent"
@@ -431,7 +435,7 @@
                         android:textSize="14sp"
                         android:inputType="phone"
                         android:background="@android:color/transparent"
-                        />
+                        android:importantForAutofill="no" />
 
                 </RelativeLayout>
 
@@ -491,7 +495,8 @@
                     android:layout_toEndOf="@id/study_locations_recycler_view"
                     android:layout_centerVertical="true"
                     android:onClick="addPlaceStudiedAt"
-                    android:background="@drawable/add"/>
+                    android:background="@drawable/add"
+                    android:contentDescription="@string/add_item" />
 
                 <View
                     android:layout_width="match_parent"
@@ -538,7 +543,8 @@
                     android:layout_toEndOf="@id/areas_lived_in_recycler_view"
                     android:onClick="addPlaceLived"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/add"/>
+                    android:background="@drawable/add"
+                    android:contentDescription="@string/add_item" />
 
                 <View
                     android:layout_width="match_parent"
@@ -585,7 +591,8 @@
                     android:layout_toEndOf="@id/hobbies_recycler_view"
                     android:layout_centerVertical="true"
                     android:onClick="addHobby"
-                    android:background="@drawable/add"/>
+                    android:background="@drawable/add"
+                    android:contentDescription="@string/add_item" />
 
                 <View
                     android:layout_width="match_parent"
@@ -632,7 +639,8 @@
                     android:layout_toEndOf="@id/personality_types_recycler_view"
                     android:layout_centerVertical="true"
                     android:onClick="addPersonalityTrait"
-                    android:background="@drawable/add"/>
+                    android:background="@drawable/add"
+                    android:contentDescription="@string/add_item" />
 
                 <View
                     android:layout_width="match_parent"
@@ -679,7 +687,8 @@
                     android:layout_toEndOf="@id/truths_recycler_view"
                     android:layout_centerVertical="true"
                     android:onClick="addTruth"
-                    android:background="@drawable/add"/>
+                    android:background="@drawable/add"
+                    android:contentDescription="@string/add_item" />
 
                 <View
                     android:layout_width="match_parent"
@@ -726,7 +735,8 @@
                     android:layout_toEndOf="@id/lies_recycler_view"
                     android:layout_centerVertical="true"
                     android:onClick="addLie"
-                    android:background="@drawable/add"/>
+                    android:background="@drawable/add"
+                    android:contentDescription="@string/add_item" />
 
             </RelativeLayout>
 

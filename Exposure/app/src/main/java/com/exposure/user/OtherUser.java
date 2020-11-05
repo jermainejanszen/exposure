@@ -8,11 +8,11 @@ import java.util.List;
  */
 public class OtherUser extends User {
 
-    private List<String> exposedInfo;
+    private final List<String> exposedInfo;
 
     /**
      * Constructor for the other user
-     * @param uid
+     * @param uid uid of the user
      */
     public OtherUser(String uid) {
         super(uid);
@@ -23,6 +23,11 @@ public class OtherUser extends User {
         exposedInfo.add(UserField.PROFILE_IMAGE.toString());
     }
 
+    /**
+     * Second constructor used when reconstructing the OtherUser
+     * object from Firestore
+     * @param connectionItem ConnectionItem for the other user
+     */
     public OtherUser(ConnectionItem connectionItem) {
         super(connectionItem.getUid());
         this.exposedInfo = connectionItem.getExposedInfo();
@@ -41,11 +46,11 @@ public class OtherUser extends User {
      * Exposes the given field.
      * @param field Field to expose.
      */
-    public ConnectionItem exposeDetail(UserField field) {
+    public void exposeDetail(UserField field) {
         if(!checkDetailExposed(field)) {
             this.exposedInfo.add(field.toString());
         }
-        return this.toConnectionItem();
+        this.toConnectionItem();
     }
 
     /**

@@ -85,12 +85,11 @@ public class AddUserFieldActivity extends Activity {
     private void save() {
         if (addedField.getText().toString().trim().isEmpty()) {
             setResult(RESULT_CANCELED);
-            finish();
         } else {
             Intent intent = new Intent();
             intent.putExtra("New Field", addedField.getText().toString());
             setResult(RESULT_OK, intent);
-            finish();
         }
+        finish();
     }
 }

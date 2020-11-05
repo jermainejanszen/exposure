@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,7 @@ import java.util.List;
  * Fragment representing the list of existing chats the user has with their matches
  */
 public class ChatsFragment extends Fragment {
+
     private static ChatsRecyclerViewAdapter chatsAdapter;
 
     private List<ChatListItem> chats;
@@ -46,7 +46,7 @@ public class ChatsFragment extends Fragment {
      * Empty public constructor for the chats fragment
      */
     public ChatsFragment() {
-        // Required empty public constructor
+        /* Required empty public constructor */
     }
 
     /**
@@ -59,16 +59,17 @@ public class ChatsFragment extends Fragment {
     }
 
     /**
-     * //TODO: this
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * Initialises the view of the chats fragment and loads any of the required
+     * information if it has not already been loaded.
+     * @param inflater inflater to convert the chats fragment xml to a view
+     * @param container view group for the view
+     * @param savedInstanceState previously save instance state
+     * @return newly created view
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        /* Inflate the layout for this fragment */
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
 
         assert null != getActivity();
@@ -87,6 +88,8 @@ public class ChatsFragment extends Fragment {
             }
         };
 
+        /* Keeps track of loading chat items and defines what should be done when all
+        *  of the items have been loaded */
         final OnCompleteCallback itemLoadCallback = new OnCompleteCallback() {
             int calls = 0;
 
@@ -133,7 +136,11 @@ public class ChatsFragment extends Fragment {
         return view;
     }
 
-    // TODO : Javadocs
+    /**
+     * Filters the chat list to show only items where the given text is contained
+     * within the user's name
+     * @param text text to filter for
+     */
     private void filterChats(String text) {
         text = text.toLowerCase();
         List<ChatListItem> filteredList = new ArrayList<>();
@@ -202,6 +209,9 @@ public class ChatsFragment extends Fragment {
         chatsAdapter = null;
     }
 
+    /**
+     * Sorts the chat such that most recent ones appear at the top
+     */
     private void sortChats() {
         Collections.sort(chats, new Comparator<ChatListItem>() {
             @Override
@@ -216,6 +226,10 @@ public class ChatsFragment extends Fragment {
         });
     }
 
+    /**
+     * Adds a listener to the search bar so that the chats can be filtered whenever
+     * the user types into it
+     */
     private void setupSearchBarListener() {
         if (null == searchBar) {
             return;
@@ -238,6 +252,9 @@ public class ChatsFragment extends Fragment {
         });
     }
 
+    /**
+     * Clears the search bar when the user leaves and returns to the chats fragment
+     */
     @Override
     public void onResume() {
         super.onResume();
