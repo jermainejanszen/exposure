@@ -37,27 +37,25 @@ import java.util.Map;
  * Fragment representing the profile of the current user
  */
 public class ProfileFragment extends Fragment {
-    private ChipsRecyclerViewAdapter studyLocationsAdapter, areasLivedInAdapter, hobbiesAdapter,
-            personalitiesAdapter;
+
     private RecyclerView studyLocationsRecyclerView, areasLivedInRecyclerView, hobbiesRecyclerView,
             personalityTypesRecyclerView;
     private TextView displayNameText, ageText, preferencesText;
     private ImageView profileImage;
-    private GridView gridView;
-    private Map<String, Bitmap> bitmaps;
+    private ProgressBar progressBar;
     private GridViewAdapter gridViewAdapter;
     private CurrentUser currentUser;
+    private Map<String, Bitmap> bitmaps;
     private List<String> imagePaths;
-    private byte[] profileByteArray;
-    private ProgressBar progressBar;
 
+    private byte[] profileByteArray;
     private static Bitmap profileImageBitmap;
 
     /**
      * Empty constructor for the profile fragment
      */
     public ProfileFragment() {
-        // Required empty public constructor
+        /* Required empty public constructor */
     }
 
     /**
@@ -73,11 +71,18 @@ public class ProfileFragment extends Fragment {
         imagePaths = MainActivity.getImagePaths();
     }
 
-    // TODO : Javadocs
+    /**
+     * Initialises the view of the profile fragment and loads any of the required
+     * information if it has not already been loaded.
+     * @param inflater inflater to convert the profile fragment xml to a view
+     * @param container view group for the view
+     * @param savedInstanceState previously save instance state
+     * @return newly created view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        /* Inflate the layout for this fragment */
         final View view = inflater.inflate(R.layout.fragment_profile, container,
                 false);
 
@@ -87,11 +92,12 @@ public class ProfileFragment extends Fragment {
         areasLivedInRecyclerView = view.findViewById(R.id.areas_lived_in_recycler_view);
         hobbiesRecyclerView = view.findViewById(R.id.hobbies_recycler_view);
         personalityTypesRecyclerView = view.findViewById(R.id.personality_types_recycler_view);
+
         displayNameText = view.findViewById(R.id.display_name);
         ageText = view.findViewById(R.id.age);
         preferencesText = view.findViewById(R.id.preferences);
         profileImage = view.findViewById(R.id.profile_image);
-        gridView = view.findViewById(R.id.image_grid_view);
+        GridView gridView = view.findViewById(R.id.image_grid_view);
         progressBar = view.findViewById(R.id.progress_bar);
 
         gridViewAdapter = new GridViewAdapter(getContext(), bitmaps, imagePaths);
@@ -99,7 +105,8 @@ public class ProfileFragment extends Fragment {
 
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position,
+                                           long id) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Delete Image")
@@ -147,13 +154,13 @@ public class ProfileFragment extends Fragment {
      * Initialise the fields of the current user's profile
      */
     private void initialiseFields() {
-        studyLocationsAdapter = new ChipsRecyclerViewAdapter(getActivity(),
+        ChipsRecyclerViewAdapter studyLocationsAdapter = new ChipsRecyclerViewAdapter(getActivity(),
                 currentUser.getPlacesStudied(), false);
-        areasLivedInAdapter = new ChipsRecyclerViewAdapter(getActivity(),
+        ChipsRecyclerViewAdapter areasLivedInAdapter = new ChipsRecyclerViewAdapter(getActivity(),
                 currentUser.getPlacesLived(), false);
-        hobbiesAdapter = new ChipsRecyclerViewAdapter(getActivity(),
+        ChipsRecyclerViewAdapter hobbiesAdapter = new ChipsRecyclerViewAdapter(getActivity(),
                 currentUser.getHobbies(), false);
-        personalitiesAdapter = new ChipsRecyclerViewAdapter(getActivity(),
+        ChipsRecyclerViewAdapter personalitiesAdapter = new ChipsRecyclerViewAdapter(getActivity(),
                 currentUser.getPersonalities(), false);
 
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
@@ -182,13 +189,14 @@ public class ProfileFragment extends Fragment {
         if (!preferences.isEmpty()) {
             Collections.sort(preferences);
 
-            String preferencesString = "Interested in " + preferences.get(0);
+            StringBuilder preferencesString = new StringBuilder("Interested in " +
+                    preferences.get(0));
 
             for (int i = 1; i < preferences.size(); i++) {
-                preferencesString += ", " + preferences.get(i);
+                preferencesString.append(", ").append(preferences.get(i));
             }
 
-            preferencesText.setText(preferencesString);
+            preferencesText.setText(preferencesString.toString());
         }
 
         if (null == profileImageBitmap) {
@@ -228,17 +236,25 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     * Sets the visability of the progress bar
+     * Sets the visibility of the progress bar
      * @param visibility indicates whether the progress bar should be visible or not visible
      */
     public void setProgressBarVisibility(int visibility) {
         progressBar.setVisibility(visibility);
     }
 
+    /**
+     * Getter for the profile image bitmap
+     * @return profile image as a Bitmap
+     */
     public static Bitmap getProfileImageBitmap() {
         return profileImageBitmap;
     }
 
+    /**
+     * Setter for the profile image bitmap
+     * @param bitmap profile image as a Bitmap
+     */
     public static void setProfileImageBitmap(Bitmap bitmap) {
         profileImageBitmap = bitmap;
     }
