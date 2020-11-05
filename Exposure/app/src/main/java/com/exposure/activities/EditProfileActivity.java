@@ -113,6 +113,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if (RequestCodes.RETRIEVE_IMAGE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
+                if (null == data) return;
                 String source = data.getStringExtra("Source");
                 if ("Image Capture".equals(source)) {
                     profileBitmap = (Bitmap) data.getExtras().get("data");
@@ -134,6 +135,7 @@ public class EditProfileActivity extends AppCompatActivity {
         /* Upon changing the user's places lived, updates user's profile with the new details */
         if (RequestCodes.SAVE_PLACE_LIVED_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
+                if (null == data) return;
                 currentUser.getPlacesLived().add(data.getStringExtra("New Field"));
                 areasLivedInAdapter.notifyDataSetChanged();
             }
@@ -141,6 +143,7 @@ public class EditProfileActivity extends AppCompatActivity {
         /* Upon changing the user's places studied, updates user's profile with the new details */
         if (RequestCodes.SAVE_PLACE_STUDIED_AT_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
+                if (null == data) return;
                 currentUser.getPlacesStudied().add(data.getStringExtra("New Field"));
                 studyLocationsAdapter.notifyDataSetChanged();
             }
@@ -148,6 +151,7 @@ public class EditProfileActivity extends AppCompatActivity {
         /* Upon changing the user's hobbies, updates user's profile with the new details */
         if (RequestCodes.SAVE_HOBBY_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
+                if (null == data) return;
                 currentUser.getHobbies().add(data.getStringExtra("New Field"));
                 hobbiesAdapter.notifyDataSetChanged();
             }
@@ -155,6 +159,7 @@ public class EditProfileActivity extends AppCompatActivity {
         /* Upon changing the user's personality traits, updates user's profile with new details */
         if (RequestCodes.SAVE_PERSONALITY_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
+                if (null == data) return;
                 currentUser.getPersonalities().add(data.getStringExtra("New Field"));
                 personalitiesAdapter.notifyDataSetChanged();
             }
@@ -162,6 +167,7 @@ public class EditProfileActivity extends AppCompatActivity {
         /* Upon changing the user's truths, updates user's profile with the new details */
         if (RequestCodes.SAVE_TRUTH_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
+                if (null == data) return;
                 currentUser.getTruths().add(data.getStringExtra("New Field"));
                 truthsAdapter.notifyDataSetChanged();
             }
@@ -169,6 +175,7 @@ public class EditProfileActivity extends AppCompatActivity {
         /* Upon changing the user's lies, updates user's profile with the new details */
         if (RequestCodes.SAVE_LIE_REQUEST == requestCode) {
             if (RESULT_OK == resultCode) {
+                if (null == data) return;
                 currentUser.getLies().add(data.getStringExtra("New Field"));
                 liesAdapter.notifyDataSetChanged();
             }
@@ -482,7 +489,7 @@ public class EditProfileActivity extends AppCompatActivity {
         currentUser.setBirthday(birthdayDate);
 
         /* If no nickname provided, set it to null for data consistency and edit text hints */
-        currentUser.setNickname(nickname.isEmpty() ? null : nickname);
+        currentUser.setNickname(nickname.trim().isEmpty() ? null : nickname);
 
         /* If no phone number is provided, set to null for data consistency and edit text hints */
         currentUser.setPhone(phone.isEmpty() ? null : phone);
