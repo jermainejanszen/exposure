@@ -1,7 +1,5 @@
 package com.exposure.handlers;
 
-import android.util.Log;
-
 import com.exposure.user.CurrentUser;
 
 /**
@@ -17,8 +15,11 @@ public class DistanceHandler {
      * @return distance in kilometres between the two users
      */
     public static int distanceInKM(CurrentUser a, CurrentUser b) {
+        if (null == a || null == b) {
+            throw new IllegalArgumentException();
+        }
+
         if (a.getLocation().size() != 2 || b.getLocation().size() != 2) {
-            Log.d("DISTANCE", "One user doesn't have location data!");
             return 10000;
         }
 
@@ -37,7 +38,6 @@ public class DistanceHandler {
 
         double c = 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
         int distance = (int) Math.round(EARTH_RADIUS * c);
-        Log.d("DISTANCE", String.valueOf(distance));
 
         return distance;
     }
