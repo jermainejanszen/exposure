@@ -16,7 +16,7 @@
         android:background="@drawable/message_background"
         android:backgroundTint="@color/Secondary100"
         android:paddingVertical="7.5dp"
-        android:paddingHorizontal="12.5dp"
+        android:paddingHorizontal="15dp"
         android:maxEms="15"/>
 
 </RelativeLayout>
