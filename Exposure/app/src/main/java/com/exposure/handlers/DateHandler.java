@@ -21,6 +21,9 @@ public class DateHandler {
      * @return the translated date in string format
      */
     public static String convertToString(Date date) {
+        if (null == date) {
+            return null;
+        }
         return sdf.format(date);
     }
 
@@ -31,6 +34,9 @@ public class DateHandler {
      * @throws ParseException exception is thrown if the date cannot be parsed
      */
     public static Date convertToDate(String dateString) throws ParseException {
+        if (null == dateString) {
+            return null;
+        }
         return sdf.parse(dateString);
     }
 
@@ -41,6 +47,10 @@ public class DateHandler {
      * @return the number of years between the two different data objects
      */
     public static int yearsBetween(Date earliest, Date latest) {
+        if (null == earliest || null == latest) {
+            throw new IllegalArgumentException();
+        }
+
         Calendar a = new GregorianCalendar();
         a.setTime(earliest);
 
