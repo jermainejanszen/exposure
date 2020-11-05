@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent" >
 
     <RelativeLayout
         android:id="@+id/win_dialog_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginHorizontal="36dp">
+        android:layout_marginHorizontal="36dp"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/congratulations"
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="18dp"
-            android:text="Congratulations!"
+            android:text="@string/congratulations"
             android:textAlignment="center"
             android:textColor="@color/Primary300"
             android:textSize="40sp" />
@@ -30,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginVertical="8dp"
             android:layout_below="@id/congratulations"
-            android:text="You caught the lie! You have unlocked the following information about your match:"
+            android:text="@string/you_caught_the_lie"
             android:textAlignment="center" />
 
 

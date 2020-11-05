@@ -2,6 +2,7 @@
 
     <!-- General -->
     <string name="app_name">Exposure</string>
+    <string name="app_logo">App logo.</string>
 
     <!-- Sign up and Log in -->
     <string name="name">Name</string>
@@ -30,7 +31,7 @@
     <string name="truths">Truths</string>
     <string name="change_profile_picture">Change profile picture</string>
     <string name="nickname">Nickname</string>
-    <string name="birthday">Birthday</string>
+    <string name="birthday">01/01/2000</string>
     <string name="bio">Bio</string>
     <string name="contact_information">Contact Information</string>
     <string name="phone">Phone</string>
@@ -47,7 +48,9 @@
     <string name="save">Save</string>
     <string name="location">Location</string>
     <string name="update">Update</string>
+    <string name="add_item">Add item.</string>
     <string name="update_location">Update Location</string>
+    <string name="upload_image_button">Upload image button.</string>
     <string name="choose_from_library">Choose from library</string>
     <string name="take_photo">Take photo</string>
     <string name="logout">Logout</string>
@@ -55,6 +58,9 @@
     <!-- Chats Page -->
     <string name="search">Search</string>
     <string name="message_placeholder">Aa</string>
+    <string name="open_chat_button">Open chat button.</string>
+    <string name="message_open_button">Message open button.</string>
+    <string name="send_button">Send button.</string>
 
     <!-- Maps Page -->
     <string name="fifteen_plus_km">15+ KM</string>
@@ -69,5 +75,10 @@
     <string name="play_game">Play</string>
     <string name="continue_to_next">Continue</string>
     <string name="game_3t1l_title">3 Truths and 1 Lie</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="you_caught_the_lie">You caught the lie! You have unlocked the following information about your match:</string>
+    <string name="game_back_button">Game back button.</string>
+    <string name="oh_no">Oh No!</string>
+    <string name="you_missed_the_lie">You missed the lie. Better luck next time.</string>
 
 </resources>

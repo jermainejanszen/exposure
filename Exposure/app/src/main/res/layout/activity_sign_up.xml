@@ -29,7 +29,7 @@
             android:layout_marginBottom="5dp"
             android:layout_centerHorizontal="true"
             android:background="@drawable/logo"
-            />
+            android:contentDescription="@string/app_logo" />
 
         <TextView
             android:id="@+id/exposure_text"

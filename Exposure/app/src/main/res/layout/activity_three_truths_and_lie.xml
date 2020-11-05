@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -35,10 +36,11 @@
             android:layout_centerVertical="true"
             android:text=""
             android:layout_toEndOf="@id/game_user_image"
-            android:onClick="onBackPressed" />
+            android:onClick="onBackPressed"
+            tools:ignore="RelativeOverlap" />
 
         <ImageButton
-            android:id="@+id/game_open_button"
+            android:id="@+id/game_back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -48,7 +50,8 @@
             android:tint="@color/Secondary500"
             android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"
-            android:onClick="onBackPressed" />
+            android:onClick="onBackPressed"
+            android:contentDescription="@string/game_back_button" />
 
     </RelativeLayout>
 
@@ -88,7 +91,8 @@
         android:layout_below="@id/game_title_container"
         android:orientation="horizontal"
         android:layout_marginHorizontal="12dp"
-        android:layout_marginBottom="36dp">
+        android:layout_marginBottom="36dp"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/game_left_buttons"
@@ -106,7 +110,8 @@
                 android:backgroundTint="@color/Secondary100"
                 android:textColor="@color/Secondary800"
                 android:text=""
-                app:cornerRadius="25dp" />
+                app:cornerRadius="25dp"
+                tools:ignore="NestedWeights" />
 
             <Button
                 android:id="@+id/input_3"
@@ -136,7 +141,8 @@
                 android:backgroundTint="@color/Secondary100"
                 android:textColor="@color/Secondary800"
                 android:text=""
-                app:cornerRadius="25dp" />
+                app:cornerRadius="25dp"
+                tools:ignore="NestedWeights" />
 
             <Button
                 android:id="@+id/input_2"
