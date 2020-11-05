@@ -1,33 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/message_item_full"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:baselineAligned="false"
-    android:paddingVertical="6dp"
-    android:paddingHorizontal="14dp" >
+    android:layout_marginBottom="7.5dp"
+    android:layout_marginHorizontal="14dp" >
 
-    <RelativeLayout
-        android:id="@+id/message_background"
+    <TextView
+        android:textAlignment="textStart"
+        android:id="@+id/message_contents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:background="@drawable/message_background"
         android:backgroundTint="@color/Secondary100"
-        android:layoutDirection="rtl"
-        android:layout_alignParentEnd="true"
-        tools:ignore="UselessParent">
-
-        <TextView
-            android:textAlignment="textStart"
-            android:id="@+id/message_contents"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_margin="12dp"
-            android:maxEms="15"/>
-
-    </RelativeLayout>
+        android:paddingVertical="7.5dp"
+        android:paddingHorizontal="12.5dp"
+        android:maxEms="15"/>
 
 </RelativeLayout>
