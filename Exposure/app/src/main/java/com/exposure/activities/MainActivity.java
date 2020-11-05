@@ -278,4 +278,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main,
                 fragment).commit();
     }
+
+    /**
+     * Override back pressed so it doesn't go back to login activity.
+     */
+    @Override
+    public void onBackPressed() {
+        /* Do nothing */
+    }
 }
