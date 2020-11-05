@@ -66,27 +66,6 @@ public class LoginActivityTest {
     }
 
     @Test
-    public void successfulLoginTest() {
-        ActivityScenario<LoginActivity> activity = ActivityScenario.launch(LoginActivity.class);
-        onView(withId(R.id.email_edit_text)).perform(typeText("ben@exposure.com"), closeSoftKeyboard());
-        onView(withId(R.id.password_edit_text)).perform(typeText("123456"), closeSoftKeyboard());
-        onView(withId(R.id.login_button)).perform(click());
-
-        /* Sleep current thread to allow login process to occur */
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        onView(withId(R.id.activity_login)).check(doesNotExist());
-        onView(withId(R.id.activity_main)).check(matches(isDisplayed()));
-
-        /* Log the user out */
-        FirebaseAuth.getInstance().signOut();
-    }
-
-    @Test
     public void unsuccessfulLoginTest() {
         ActivityScenario<LoginActivity> activity = ActivityScenario.launch(LoginActivity.class);
         onView(withId(R.id.email_edit_text)).perform(typeText("hacker@hacks.com"), closeSoftKeyboard());
