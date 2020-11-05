@@ -147,7 +147,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, LostGameActivity.class);
                 startActivity(intent);
             }
-            progressCover.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -301,7 +300,6 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
     public void onPlayPressed(View view) {
         Intent gameIntent = new Intent(this, ThreeTruthsOneLieActivity.class);
         gameIntent.putExtra("other user", otherUser);
-        progressCover.setVisibility(View.VISIBLE);
         startActivityForResult(gameIntent, RequestCodes.GAME_RESULT);
     }
 
