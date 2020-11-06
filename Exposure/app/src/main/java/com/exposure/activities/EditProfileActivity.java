@@ -200,37 +200,6 @@ public class EditProfileActivity extends AppCompatActivity {
      */
     private void initialiseFields() {
 
-        /* Creates new recycler views for user profile fields */
-        studyLocationsAdapter = new ChipsRecyclerViewAdapter(this,
-                currentUser.getPlacesStudied(), true);
-        areasLivedInAdapter = new ChipsRecyclerViewAdapter(this,
-                currentUser.getPlacesLived(), true);
-        hobbiesAdapter = new ChipsRecyclerViewAdapter(this,
-                currentUser.getHobbies(), true);
-        personalitiesAdapter = new ChipsRecyclerViewAdapter(this,
-                currentUser.getPersonalities(), true);
-        truthsAdapter = new ChipsRecyclerViewAdapter(this,
-                currentUser.getTruths(), true);
-        liesAdapter = new ChipsRecyclerViewAdapter(this,
-                currentUser.getLies(), true);
-
-        /* Sets elements of the view to each recycler view */
-        RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
-        RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
-        RecyclerView hobbiesRecyclerView = findViewById(R.id.hobbies_recycler_view);
-        RecyclerView truthsRecyclerView = findViewById(R.id.truths_recycler_view);
-        RecyclerView liesRecyclerView = findViewById(R.id.lies_recycler_view);
-        RecyclerView personalityTypesRecyclerView =
-                findViewById(R.id.personality_types_recycler_view);
-
-        /* Sets the adapter for each recycler view */
-        studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
-        areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
-        hobbiesRecyclerView.setAdapter(hobbiesAdapter);
-        truthsRecyclerView.setAdapter(truthsAdapter);
-        liesRecyclerView.setAdapter(liesAdapter);
-        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
-
         /* Set field labels for required fields */
         final TextView nameLabel = findViewById(R.id.name_text);
         final TextView nicknameLabel = findViewById(R.id.nickname_text);
@@ -253,6 +222,55 @@ public class EditProfileActivity extends AppCompatActivity {
         femalesCheckBox = findViewById(R.id.female_checkbox);
         othersCheckBox = findViewById(R.id.other_checkbox);
         progressBar = findViewById(R.id.progress_bar);
+
+        /* Creates new recycler views for user profile fields */
+        OnCompleteCallback onDeleteCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    if (checkTruthsValid()) {
+                        truthsLabel.setTextColor(getColor(R.color.Text));
+                    } else {
+                        truthsLabel.setTextColor(getColor(R.color.Red));
+                    }
+
+                    if (checkLiesValid()) {
+                        liesLabel.setTextColor(getColor(R.color.Text));
+                    } else {
+                        liesLabel.setTextColor(getColor(R.color.Red));
+                    }
+                }
+            }
+        };
+        studyLocationsAdapter = new ChipsRecyclerViewAdapter(this,
+                currentUser.getPlacesStudied(), true, onDeleteCallback);
+        areasLivedInAdapter = new ChipsRecyclerViewAdapter(this,
+                currentUser.getPlacesLived(), true, onDeleteCallback);
+        hobbiesAdapter = new ChipsRecyclerViewAdapter(this,
+                currentUser.getHobbies(), true, onDeleteCallback);
+        personalitiesAdapter = new ChipsRecyclerViewAdapter(this,
+                currentUser.getPersonalities(), true, onDeleteCallback);
+        truthsAdapter = new ChipsRecyclerViewAdapter(this,
+                currentUser.getTruths(), true, onDeleteCallback);
+        liesAdapter = new ChipsRecyclerViewAdapter(this,
+                currentUser.getLies(), true, onDeleteCallback);
+
+        /* Sets elements of the view to each recycler view */
+        RecyclerView studyLocationsRecyclerView = findViewById(R.id.study_locations_recycler_view);
+        RecyclerView areasLivedInRecyclerView = findViewById(R.id.areas_lived_in_recycler_view);
+        RecyclerView hobbiesRecyclerView = findViewById(R.id.hobbies_recycler_view);
+        RecyclerView truthsRecyclerView = findViewById(R.id.truths_recycler_view);
+        RecyclerView liesRecyclerView = findViewById(R.id.lies_recycler_view);
+        RecyclerView personalityTypesRecyclerView =
+                findViewById(R.id.personality_types_recycler_view);
+
+        /* Sets the adapter for each recycler view */
+        studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
+        areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
+        hobbiesRecyclerView.setAdapter(hobbiesAdapter);
+        truthsRecyclerView.setAdapter(truthsAdapter);
+        liesRecyclerView.setAdapter(liesAdapter);
+        personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
 
         /* Sets the text shown on the profile page for each field according to the information
         stored in the current user object */

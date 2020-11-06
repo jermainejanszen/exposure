@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exposure.R;
+import com.exposure.callback.OnCompleteCallback;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class ChipsRecyclerViewAdapter extends
     private final Context context;
     private final List<String> data;
     private final boolean editable;
+    private final OnCompleteCallback onDeleteCallback;
 
     /**
      * Constructor for the ChipsRecyclerViewAdapter
@@ -30,10 +32,12 @@ public class ChipsRecyclerViewAdapter extends
      * @param data the field data used by the adapter
      * @param editable indicates whether or not the field is editable by the user
      */
-    public ChipsRecyclerViewAdapter(Context context, List<String> data, boolean editable) {
+    public ChipsRecyclerViewAdapter(Context context, List<String> data, boolean editable,
+                                    OnCompleteCallback onDeleteCallback) {
         this.context = context;
         this.data = data;
         this.editable = editable;
+        this.onDeleteCallback = onDeleteCallback;
     }
 
     /**
@@ -72,6 +76,7 @@ public class ChipsRecyclerViewAdapter extends
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             data.remove(position);
+                                            onDeleteCallback.update(true, "Deleted item");
                                             notifyDataSetChanged();
                                         }
                                     })

@@ -161,29 +161,35 @@ public class ViewOtherProfileActivity extends AppCompatActivity {
             connectButton.setVisibility(View.VISIBLE);
         }
 
+        OnCompleteCallback onDeleteCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                /* Do nothing */
+            }
+        };
         studyLocationsAdapter = new ChipsRecyclerViewAdapter(this,
-                otherUser.getPlacesStudied(), false);
+                otherUser.getPlacesStudied(), false, onDeleteCallback);
         unknownStudyLocationsAdapter = new ChipsRecyclerViewAdapter(this,
                 initialiseUnexposedArrayList(otherUser.getPlacesStudied().size()),
-                false);
+                false, onDeleteCallback);
 
         areasLivedInAdapter = new ChipsRecyclerViewAdapter(this,
-                otherUser.getPlacesLived(), false);
+                otherUser.getPlacesLived(), false, onDeleteCallback);
         unknownAreasLivedInAdapter = new ChipsRecyclerViewAdapter(this,
                 initialiseUnexposedArrayList(otherUser.getPlacesLived().size()),
-                false);
+                false, onDeleteCallback);
 
         hobbiesAdapter = new ChipsRecyclerViewAdapter(this,
-                otherUser.getHobbies(), false);
+                otherUser.getHobbies(), false, onDeleteCallback);
         unknownHobbiesAdapter = new ChipsRecyclerViewAdapter(this,
                 initialiseUnexposedArrayList(otherUser.getHobbies().size()),
-                false);
+                false, onDeleteCallback);
 
         personalitiesAdapter = new ChipsRecyclerViewAdapter(this,
-                otherUser.getPersonalities(), false);
+                otherUser.getPersonalities(), false, onDeleteCallback);
         unknownPersonalitiesAdapter = new ChipsRecyclerViewAdapter(this,
                 initialiseUnexposedArrayList(otherUser.getPersonalities().size()),
-                false);
+                false, onDeleteCallback);
 
         /* Set adapters for recycler views */
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
