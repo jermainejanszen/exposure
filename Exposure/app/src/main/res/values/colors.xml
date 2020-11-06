@@ -33,8 +33,10 @@
     <color name="Secondary900">#3C2622</color>
 
     <color name="Outline">#EDEDED</color>
+    <color name="Text">#808080</color>
 
     <color name="White">#FFFFFF</color>
     <color name="Black">#000000</color>
+    <color name="Red">#B75353</color>
 
 </resources>

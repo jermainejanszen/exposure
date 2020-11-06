@@ -154,14 +154,20 @@ public class ProfileFragment extends Fragment {
      * Initialise the fields of the current user's profile
      */
     private void initialiseFields() {
+        OnCompleteCallback onDeleteCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                /* Do nothing */
+            }
+        };
         ChipsRecyclerViewAdapter studyLocationsAdapter = new ChipsRecyclerViewAdapter(getActivity(),
-                currentUser.getPlacesStudied(), false);
+                currentUser.getPlacesStudied(), false, onDeleteCallback);
         ChipsRecyclerViewAdapter areasLivedInAdapter = new ChipsRecyclerViewAdapter(getActivity(),
-                currentUser.getPlacesLived(), false);
+                currentUser.getPlacesLived(), false, onDeleteCallback);
         ChipsRecyclerViewAdapter hobbiesAdapter = new ChipsRecyclerViewAdapter(getActivity(),
-                currentUser.getHobbies(), false);
+                currentUser.getHobbies(), false, onDeleteCallback);
         ChipsRecyclerViewAdapter personalitiesAdapter = new ChipsRecyclerViewAdapter(getActivity(),
-                currentUser.getPersonalities(), false);
+                currentUser.getPersonalities(), false, onDeleteCallback);
 
         studyLocationsRecyclerView.setAdapter(studyLocationsAdapter);
         areasLivedInRecyclerView.setAdapter(areasLivedInAdapter);
@@ -213,9 +219,11 @@ public class ProfileFragment extends Fragment {
                                 0, profileByteArray.length);
                         profileImage.setImageBitmap(profileImageBitmap);
                     } else {
-                        Toast.makeText(getContext(),
-                                "Failed to download profile image",
-                                Toast.LENGTH_SHORT).show();
+                        if (!message.equals("Object does not exist at location.")) {
+                            Toast.makeText(getContext(),
+                                    "Failed to download profile image",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });

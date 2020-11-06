@@ -30,8 +30,10 @@
     <string name="lies">Lies</string>
     <string name="truths">Truths</string>
     <string name="change_profile_picture">Change profile picture</string>
+    <string name="add_profile_picture">Add a profile picture</string>
     <string name="nickname">Nickname</string>
-    <string name="birthday">01/01/2000</string>
+    <string name="birthday">Birthday</string>
+    <string name="birthday_hint">01/01/2000</string>
     <string name="bio">Bio</string>
     <string name="contact_information">Contact Information</string>
     <string name="phone">Phone</string>

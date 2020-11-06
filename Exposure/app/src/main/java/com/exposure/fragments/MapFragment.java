@@ -2,7 +2,6 @@ package com.exposure.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -239,7 +238,7 @@ public class MapFragment extends Fragment {
             public synchronized void update(boolean success, String message) {
                 calls += 1;
 
-                if (calls == allUsers.size()) {
+                if (calls >= allUsers.size()) {
                     fifteenMapAdapter.notifyDataSetChanged();
                     nineMapAdapter.notifyDataSetChanged();
                     sixMapAdapter.notifyDataSetChanged();

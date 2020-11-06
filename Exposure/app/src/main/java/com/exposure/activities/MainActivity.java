@@ -89,9 +89,11 @@ public class MainActivity extends AppCompatActivity {
                                             if (success) {
                                                 UserMediaHandler.downloadImagesFromFirebase
                                                         (currentUser.getUid(), bitmaps,
-                                                                imagePaths, new OnCompleteCallback() {
+                                                                imagePaths,
+                                                                new OnCompleteCallback() {
                                                     @Override
-                                                    public void update(boolean success, String message) {
+                                                    public void update(boolean success,
+                                                                       String message) {
                                                         setup();
                                                         progressBar.setVisibility(View.INVISIBLE);
                                                     }
