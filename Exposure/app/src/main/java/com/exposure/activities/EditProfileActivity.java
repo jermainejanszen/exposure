@@ -54,6 +54,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Activity allows user to edit their profile information and photos
@@ -811,7 +813,10 @@ public class EditProfileActivity extends AppCompatActivity {
      * @return true if the email is valid
      */
     private boolean checkEmailValid(String email) {
-        return !email.isEmpty();
+        Pattern emailRegex =
+                Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = emailRegex.matcher(email);
+        return !email.isEmpty() && matcher.find();
     }
 
     /**
