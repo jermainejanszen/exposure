@@ -779,22 +779,46 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Checks whether the user has a profile image uploaded
+     * @return true if the user has a profile image
+     */
     private boolean checkProfileImageValid() {
         return null != profileBitmap;
     }
 
+    /**
+     * Checks if the given name is valid
+     * @param name the name to check
+     * @return true if the name is valid
+     */
     private boolean checkNameValid(String name) {
         return !name.isEmpty();
     }
 
+    /**
+     * Checks if the given nickname is valid
+     * @param nickname the nickname to check
+     * @return true if the name is valid
+     */
     private boolean checkNicknameValid(String nickname) {
         return !nickname.isEmpty();
     }
 
+    /**
+     * Checks if the given email is valid
+     * @param email the email to check
+     * @return true if the email is valid
+     */
     private boolean checkEmailValid(String email) {
         return !email.isEmpty();
     }
 
+    /**
+     * Checks if the given birthday is valid
+     * @param birthday the birthday to check
+     * @return true if the birthday is valid
+     */
     private boolean checkBirthdayValid(String birthday) {
         if (birthday.contains("-")) {
             return false;
@@ -818,19 +842,35 @@ public class EditProfileActivity extends AppCompatActivity {
         return !birthday.isEmpty();
     }
 
+    /**
+     * Checks if the preferences entered are valid
+     * @return true if the preferences are valid
+     */
     private boolean checkPreferencesValid() {
         return !(!malesCheckBox.isChecked() && !femalesCheckBox.isChecked() &&
                 !othersCheckBox.isChecked());
     }
 
+    /**
+     * Checks if the users location is valid
+     * @return true if the location is valid
+     */
     private boolean checkLocationValid() {
         return currentUser.getLocation().size() == 2;
     }
 
+    /**
+     * Checks if the truths list is valid
+     * @return true if the truth list is valid
+     */
     private boolean checkTruthsValid() {
         return currentUser.getTruths().size() >= 3;
     }
 
+    /**
+     * Checks if the lies list is valid
+     * @return true if the lie list is valid
+     */
     private boolean checkLiesValid() {
         return currentUser.getLies().size() >= 1;
     }
