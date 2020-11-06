@@ -97,7 +97,7 @@ public class ChatsFragment extends Fragment {
             public synchronized void update(boolean success, String message) {
                 calls += 1;
 
-                if (calls == chats.size()) {
+                if (calls >= chats.size()) {
                     sortChats();
                     setupSearchBarListener();
                     filterChats(searchBar.getText().toString());

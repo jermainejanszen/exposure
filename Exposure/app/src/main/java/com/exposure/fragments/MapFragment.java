@@ -239,7 +239,7 @@ public class MapFragment extends Fragment {
             public synchronized void update(boolean success, String message) {
                 calls += 1;
 
-                if (calls == allUsers.size()) {
+                if (calls >= allUsers.size()) {
                     fifteenMapAdapter.notifyDataSetChanged();
                     nineMapAdapter.notifyDataSetChanged();
                     sixMapAdapter.notifyDataSetChanged();
