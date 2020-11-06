@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
@@ -12,8 +13,11 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -65,6 +69,11 @@ public class EditProfileActivity extends AppCompatActivity {
     private Bitmap profileBitmap;
     private LocationManager lm;
 
+    private OnCompleteCallback locationChangeCallback;
+    private OnCompleteCallback truthAddedCallback;
+    private OnCompleteCallback lieAddedCallback;
+    private OnCompleteCallback profileImageAddedCallback;
+
     /* Result launcher to request user permission to read current location */
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), new
@@ -89,7 +98,6 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         currentUser = (CurrentUser) getIntent().getSerializableExtra("current user");
-        initialiseFields();
 
         profileBitmap = ProfileFragment.getProfileImageBitmap();
         profileImage = findViewById(R.id.profile_image);
@@ -97,6 +105,8 @@ public class EditProfileActivity extends AppCompatActivity {
         if (null != profileBitmap) {
             profileImage.setImageBitmap(profileBitmap);
         }
+
+        initialiseFields();
 
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
@@ -129,6 +139,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+                profileImageAddedCallback.update(true, "Added profile image");
             }
         }
 
@@ -169,6 +180,7 @@ public class EditProfileActivity extends AppCompatActivity {
             if (RESULT_OK == resultCode) {
                 if (null == data) return;
                 currentUser.getTruths().add(data.getStringExtra("New Field"));
+                truthAddedCallback.update(true, "Added truth");
                 truthsAdapter.notifyDataSetChanged();
             }
         }
@@ -177,6 +189,7 @@ public class EditProfileActivity extends AppCompatActivity {
             if (RESULT_OK == resultCode) {
                 if (null == data) return;
                 currentUser.getLies().add(data.getStringExtra("New Field"));
+                lieAddedCallback.update(true, "Added lie");
                 liesAdapter.notifyDataSetChanged();
             }
         }
@@ -217,6 +230,17 @@ public class EditProfileActivity extends AppCompatActivity {
         truthsRecyclerView.setAdapter(truthsAdapter);
         liesRecyclerView.setAdapter(liesAdapter);
         personalityTypesRecyclerView.setAdapter(personalitiesAdapter);
+
+        /* Set field labels for required fields */
+        final TextView nameLabel = findViewById(R.id.name_text);
+        final TextView nicknameLabel = findViewById(R.id.nickname_text);
+        final TextView emailLabel = findViewById(R.id.email_text);
+        final TextView birthdayLabel = findViewById(R.id.birthday_text);
+        final TextView preferencesLabel = findViewById(R.id.preferences_text);
+        final TextView locationLabel = findViewById(R.id.location_subsection_text);
+        final TextView truthsLabel = findViewById(R.id.truths_text);
+        final TextView liesLabel = findViewById(R.id.lies_text);
+        final TextView profileImageLabel = findViewById(R.id.change_profile_image_button);
 
         /* Sets elements of the view for all remaining fields of the user profile */
         profileImage = findViewById(R.id.profile_image);
@@ -264,6 +288,189 @@ public class EditProfileActivity extends AppCompatActivity {
             TextView cancel = findViewById(R.id.cancel);
             cancel.setVisibility(View.GONE);
         }
+
+        /* Add listeners to required fields */
+        if (!checkNameValid(nameEditText.getText().toString())) {
+            nameLabel.setTextColor(getColor(R.color.Red));
+        }
+        nameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (checkNameValid(charSequence.toString())) {
+                    nameLabel.setTextColor(getColor(R.color.Text));
+                } else {
+                    nameLabel.setTextColor(getColor(R.color.Red));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        if (!checkNicknameValid(nicknameEditText.getText().toString())) {
+            nicknameLabel.setTextColor(getColor(R.color.Red));
+        }
+        nicknameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (checkNicknameValid(charSequence.toString())) {
+                    nicknameLabel.setTextColor(getColor(R.color.Text));
+                } else {
+                    nicknameLabel.setTextColor(getColor(R.color.Red));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        if (!checkEmailValid(emailEditText.getText().toString())) {
+            emailLabel.setTextColor(getColor(R.color.Red));
+        }
+        emailEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (checkEmailValid(charSequence.toString())) {
+                    emailLabel.setTextColor(getColor(R.color.Text));
+                } else {
+                    emailLabel.setTextColor(getColor(R.color.Red));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        if (!checkBirthdayValid(birthdayEditText.getText().toString())) {
+            birthdayLabel.setTextColor(getColor(R.color.Red));
+        }
+        birthdayEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (checkBirthdayValid(charSequence.toString())) {
+                    birthdayLabel.setTextColor(getColor(R.color.Text));
+                } else {
+                    birthdayLabel.setTextColor(getColor(R.color.Red));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        if (!checkPreferencesValid()) {
+            preferencesLabel.setTextColor(getColor(R.color.Red));
+        }
+        CompoundButton.OnCheckedChangeListener preferencesChangeListener =
+                new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (checkPreferencesValid()) {
+                    preferencesLabel.setTextColor(getColor(R.color.Text));
+                } else {
+                    preferencesLabel.setTextColor(getColor(R.color.Red));
+                }
+            }
+        };
+        malesCheckBox.setOnCheckedChangeListener(preferencesChangeListener);
+        femalesCheckBox.setOnCheckedChangeListener(preferencesChangeListener);
+        othersCheckBox.setOnCheckedChangeListener(preferencesChangeListener);
+
+        if (!checkLocationValid()) {
+            locationLabel.setTextColor(getColor(R.color.Red));
+        }
+        locationChangeCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    if (checkLocationValid()) {
+                        locationLabel.setTextColor(getColor(R.color.Text));
+                    } else {
+                        locationLabel.setTextColor(getColor(R.color.Red));
+                    }
+                }
+            }
+        };
+
+        if (!checkTruthsValid()) {
+            truthsLabel.setTextColor(getColor(R.color.Red));
+        }
+        truthAddedCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    if (checkTruthsValid()) {
+                        truthsLabel.setTextColor(getColor(R.color.Text));
+                    } else {
+                        truthsLabel.setTextColor(getColor(R.color.Red));
+                    }
+                }
+            }
+        };
+
+        if (!checkLiesValid()) {
+            liesLabel.setTextColor(getColor(R.color.Red));
+        }
+        lieAddedCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    if (checkLiesValid()) {
+                        liesLabel.setTextColor(getColor(R.color.Text));
+                    } else {
+                        liesLabel.setTextColor(getColor(R.color.Red));
+                    }
+                }
+            }
+        };
+
+        if (!checkProfileImageValid()) {
+            profileImageLabel.setTextColor(getColor(R.color.Red));
+            profileImageLabel.setText(getText(R.string.add_profile_picture));
+        }
+        profileImageAddedCallback = new OnCompleteCallback() {
+            @Override
+            public void update(boolean success, String message) {
+                if (success) {
+                    if (checkProfileImageValid()) {
+                        profileImageLabel.setTextColor(getColor(R.color.Primary400));
+                        profileImageLabel.setText(getText(R.string.change_profile_picture));
+                    } else {
+                        profileImageLabel.setTextColor(getColor(R.color.Red));
+                        profileImageLabel.setText(getText(R.string.add_profile_picture));
+                    }
+                }
+            }
+        };
+
     }
 
     /**
@@ -381,7 +588,10 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onLocationChanged(@NonNull Location location) {
                 if (0 != location.getLatitude() && 0 != location.getLongitude()) {
                     currentUser.setLocation(location.getLatitude(), location.getLongitude());
+                    locationChangeCallback.update(true, "Updated location");
                     progressBar.setVisibility(View.INVISIBLE);
+                } else {
+                    locationChangeCallback.update(false, "Failed to get location");
                 }
             }
         });
@@ -396,7 +606,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public void onSaveClick(View view) {
 
         /* The user must upload a profile picture */
-        if (null == profileBitmap) {
+        if (!checkProfileImageValid()) {
             Toast.makeText(this, "You must upload a profile picture",
                     Toast.LENGTH_LONG).show();
             return;
@@ -410,16 +620,16 @@ public class EditProfileActivity extends AppCompatActivity {
         String birthday = birthdayEditText.getText().toString();
 
         /* Invalid edit checking */
-        if (name.isEmpty()) {
+        if (!checkNameValid(name)) {
             Toast.makeText(this, "Name required", Toast.LENGTH_LONG).show();
             nameEditText.requestFocus();
             return;
-        } else if (nickname.isEmpty()) {
+        } else if (!checkNicknameValid(nickname)) {
             /* Need to check if this email is valid in firebase */
             Toast.makeText(this, "Nickname required", Toast.LENGTH_LONG).show();
             nicknameEditText.requestFocus();
             return;
-        } else if (email.isEmpty()) {
+        } else if (!checkEmailValid(email)) {
             Toast.makeText(this, "Email required", Toast.LENGTH_LONG).show();
             emailEditText.requestFocus();
             return;
@@ -458,26 +668,25 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         /* If the user hasn't selected a preference, create error message */
-        if (!malesCheckBox.isChecked() && !femalesCheckBox.isChecked() &&
-                !othersCheckBox.isChecked()) {
+        if (!checkPreferencesValid()) {
             Toast.makeText(this, "You must select at least one preference",
                     Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (currentUser.getLocation().size() != 2) {
+        if (!checkLocationValid()) {
             Toast.makeText(this, "You must update your current location",
                     Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (currentUser.getTruths().size() < 3) {
+        if (!checkTruthsValid()) {
             Toast.makeText(this, "You must enter at least three truths about " +
                     "yourself", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (currentUser.getLies().size() < 1) {
+        if (!checkLiesValid()) {
             Toast.makeText(this, "You must enter at least one lie about yourself",
                     Toast.LENGTH_LONG).show();
             return;
@@ -551,6 +760,63 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private boolean checkProfileImageValid() {
+        return null != profileBitmap;
+    }
+
+    private boolean checkNameValid(String name) {
+        return !name.isEmpty();
+    }
+
+    private boolean checkNicknameValid(String nickname) {
+        return !nickname.isEmpty();
+    }
+
+    private boolean checkEmailValid(String email) {
+        return !email.isEmpty();
+    }
+
+    private boolean checkBirthdayValid(String birthday) {
+        if (birthday.contains("-")) {
+            return false;
+        }
+
+        Date birthdayDate;
+
+        /* If birthday isn't formatted correctly, create error message */
+        try {
+            birthdayDate = DateHandler.convertToDate(birthday);
+        } catch (ParseException e) {
+            return false;
+        }
+
+        /* If the user has specified an invalid age, create error message */
+        int age = DateHandler.yearsBetween(birthdayDate, new Date());
+        if (age < 18 || age > 120) {
+            return false;
+        }
+
+        return !birthday.isEmpty();
+    }
+
+    private boolean checkPreferencesValid() {
+        return !(!malesCheckBox.isChecked() && !femalesCheckBox.isChecked() &&
+                !othersCheckBox.isChecked());
+    }
+
+    private boolean checkLocationValid() {
+        return currentUser.getLocation().size() == 2;
+    }
+
+    private boolean checkTruthsValid() {
+        return currentUser.getTruths().size() >= 3;
+    }
+
+    private boolean checkLiesValid() {
+        return currentUser.getLies().size() >= 1;
+    }
+
 
     /**
      * Upon clicking to cancel profile edits, finishes the activity and does not update the current
