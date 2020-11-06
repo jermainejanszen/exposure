@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -213,9 +214,11 @@ public class ProfileFragment extends Fragment {
                                 0, profileByteArray.length);
                         profileImage.setImageBitmap(profileImageBitmap);
                     } else {
-                        Toast.makeText(getContext(),
-                                "Failed to download profile image",
-                                Toast.LENGTH_SHORT).show();
+                        if (!message.equals("Object does not exist at location.")) {
+                            Toast.makeText(getContext(),
+                                    "Failed to download profile image",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
