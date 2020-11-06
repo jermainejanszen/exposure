@@ -221,7 +221,7 @@
                         android:layout_toEndOf="@id/birthday_text"
                         android:layout_centerVertical="true"
                         android:paddingVertical="20dp"
-                        android:hint="@string/birthday"
+                        android:hint="@string/birthday_hint"
                         android:textSize="14sp"
                         android:maxLength="10"
                         android:inputType="date"
