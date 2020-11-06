@@ -75,8 +75,6 @@ public class MessageActivity extends Activity {
             docRefID = otherUID.concat(currID);
         }
 
-        Log.d("REF", docRefID);
-
         setContentView(R.layout.activity_message);
 
         CircleImageView profileImage = findViewById(R.id.message_user_image);
@@ -161,7 +159,7 @@ public class MessageActivity extends Activity {
                                 messageRecyclerView.scrollToPosition(messages.size() - 1);
                                 ChatsFragment.syncChatsAdapter();
                             } else {
-                                Log.d("MessageListener", "Data = null");
+                                Log.d("MessageListener", "Data == null");
                             }
                         }
                     });
