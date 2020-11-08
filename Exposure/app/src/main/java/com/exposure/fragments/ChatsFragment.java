@@ -146,6 +146,9 @@ public class ChatsFragment extends Fragment {
         List<ChatListItem> filteredList = new ArrayList<>();
 
         for (ChatListItem item: chats) {
+            if (null == item || null == item.getName()) {
+                continue;
+            }
             if (item.getName().toLowerCase().contains(text)) {
                 filteredList.add(item);
             }
